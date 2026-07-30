@@ -19,7 +19,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-public class TemaNataleDto {
+public class TemaNataleDto implements GenericDto {
 
     private Long id;
 
