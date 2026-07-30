@@ -1,4 +1,4 @@
-package com.azoth.somniazodiaca.entities;
+package com.azoth.somniazodiaca.enums;
 
 public enum Ruolo {
     BASE,
