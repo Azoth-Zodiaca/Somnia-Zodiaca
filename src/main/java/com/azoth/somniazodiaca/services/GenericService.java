@@ -1,7 +1,6 @@
-package com.azoth.somniazodiaca.service;
+package com.azoth.somniazodiaca.services;
 
 import java.util.List;
-import java.util.Map;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -25,8 +24,8 @@ public abstract class GenericService <
     private final R repository;
     private final C converter;
      
-                                        // fe  - ->   CONTROLLER   -(D)->   SERVICE    --(E)->  REPO ---> db
-    public abstract E construct(Map<String,String> params);
+    // // fe  - ->   CONTROLLER   -(D)->   SERVICE    --(E)->  REPO ---> db
+    // public abstract E construct(Map<String,String> params); //TODO: per adesso non usiamo il context
 
     public List<D> getAll(){
         List<E> lista = repository.findAll();
@@ -43,9 +42,9 @@ public abstract class GenericService <
     }
 
      // save() effettua una insert o una update, per decidere controlla se l'id è già presente nel DB
-    public boolean save(Map<String,String> params){
+    public boolean save(D dto){
         try {
-            E e = construct(params);
+            E e = converter.fromDToE(dto);
             repository.save(e);
             return true;
         } catch (Exception excep) {
