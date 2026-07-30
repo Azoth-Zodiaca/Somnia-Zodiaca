@@ -22,14 +22,14 @@ erDiagram
         datetime data_registrazione
         datetime ultimo_accesso
     }
-    transazioni_qi {
-        int id PK
-        int utente_id FK
-        enum tipo
-        int importo
-        varchar descrizione
-        datetime data_transazione
-    }
+    %% transazioni_qi {
+    %%     int id PK
+    %%     int utente_id FK
+    %%     enum tipo
+    %%     int importo
+    %%     varchar descrizione
+    %%     datetime data_transazione
+    %% }
     interpretazioni {
         int id PK
         int sogno_id FK
@@ -37,11 +37,11 @@ erDiagram
         text testo
         datetime data_creazione
     }
-    like_post {
-        int utente_id PK_FK
-        int post_id PK_FK
-        datetime data_creazione
-    }
+    %% like_post {
+    %%     int utente_id PK_FK
+    %%     int post_id PK_FK
+    %%     datetime data_creazione
+    %% }
     post {
         int id PK
         int utente_id FK
@@ -106,10 +106,10 @@ erDiagram
     utenti ||--o{ temi_natali : "utente_id"
     utenti ||--o{ sogni : "utente_id"
     sogni ||--o{ interpretazioni : "sogno_id"
-    utenti ||--o{ transazioni_qi : "utente_id"
+    %% utenti ||--o{ transazioni_qi : "utente_id"
     utenti ||--o{ inventari_cosmetici : "utente_id"
     cosmetici ||--o{ inventari_cosmetici : "cosmetico_id"
     utenti ||--o{ post : "utente_id"
     interpretazioni ||--o{ post : "interpretazione_id"
-    utenti ||--o{ like_post : "utente_id"
-    post ||--o{ like_post : "post_id"
+    %% utenti ||--o{ like_post : "utente_id"
+    %% post ||--o{ like_post : "post_id"

@@ -7,35 +7,27 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@SuperBuilder
+@Table(name = "cosmetici")
 @Getter
 @Setter
 @NoArgsConstructor
-@Table(name = "cosmetici")
+@SuperBuilder
 public class Cosmetico extends BaseEntity {
 
-    @Column(nullable = false, length = 100)
+    @Column(name = "nome", nullable = false, length = 100)
     private String nome;
 
-    @Column(columnDefinition = "TEXT")
+    @Column(name = "descrizione", columnDefinition = "TEXT")
     private String descrizione;
 
-    @Column(name = "prezzo_qi")
+    @Column(name = "prezzo_qi", nullable = false)
     private Integer prezzoQi;
-
-    @Column(length = 255)
-    private String asset;
-
-    @Column(nullable = false)
-    @Builder.Default
-    private Boolean attivo = true;
 
     // Relazione uno-a-molti verso l'inventario per tracciare chi possiede questo cosmetico
     @OneToMany(mappedBy = "cosmetico", cascade = CascadeType.ALL, orphanRemoval = true)
