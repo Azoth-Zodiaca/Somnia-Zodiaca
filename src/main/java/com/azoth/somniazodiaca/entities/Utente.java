@@ -59,6 +59,6 @@ public class Utente extends BaseEntity {
     @Column(name = "ultimo_accesso")
     private LocalDateTime ultimoAccesso;
 
-    @OneToOne(mappedBy = "utenti", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
+    @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private TemaNatale temaNatale;
 }
