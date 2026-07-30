@@ -37,13 +37,13 @@ public class TemaNatale extends BaseEntity {
     @Column(name = "luogo_nascita", nullable = false)
     private String luogoNascita;
 
-    @Column(precision = 10, scale = 7)
+    @Column(name = "latitudine", precision = 10, scale = 7)
     private BigDecimal latitudine;
 
-    @Column(precision = 10, scale = 7)
+    @Column(name = "longitudine", precision = 10, scale = 7)
     private BigDecimal longitudine;
 
-    @Column(length = 100)
+    @Column(name = "timezone", length = 100)
     private String timezone;
 
     @Column(name = "data_creazione", nullable = false)
