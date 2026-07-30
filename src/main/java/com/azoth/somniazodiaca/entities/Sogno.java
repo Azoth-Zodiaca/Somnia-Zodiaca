@@ -13,7 +13,7 @@ import lombok.experimental.SuperBuilder;
 import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "temi_natale")
+@Table(name = "sogni")
 @Getter
 @Setter
 @NoArgsConstructor
