@@ -21,12 +21,10 @@ import lombok.experimental.SuperBuilder;
 public class InventarioCosmetico extends BaseEntity {
 
     @ManyToOne
-    @MapsId("utenteId")
     @JoinColumn(name = "utente_id", nullable = false)
     private Utente utente;
 
     @ManyToOne
-    @MapsId("cosmeticoId")
     @JoinColumn(name = "cosmetico_id", nullable = false)
     private Cosmetico cosmetico;
 

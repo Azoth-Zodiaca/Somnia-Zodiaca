@@ -10,7 +10,6 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import java.time.LocalDateTime;
 
 @Entity
 @Table(name = "sogni")
@@ -25,13 +24,7 @@ public class Sogno extends BaseEntity {
     @JoinColumn(name = "utente_id", referencedColumnName = "id")
     private Utente utente;
 
-    @Column(name = "testo", nullable = false)
+    @Column(name = "testo", nullable = false, columnDefinition = "TEXT")
     private String testo;
-
-    @Column(name = "scadenza_cache", nullable = false)
-    private LocalDateTime scadenzaCache; //valutare se utilizzare ZonedDateTime
-
-    @Column(name = "data_creazione", nullable = false)
-    private LocalDateTime dataCreazione;
 
 }

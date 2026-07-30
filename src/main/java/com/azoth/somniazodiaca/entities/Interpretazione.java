@@ -8,6 +8,7 @@ import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -31,6 +32,7 @@ public class Interpretazione extends BaseEntity {
     @Column(name = "testo", nullable = false, columnDefinition = "TEXT")
     private String testo;
 
-    @Column(name = "data_creazione", nullable = false)
-    private LocalDateTime dataCreazione;
+    // @Column(name = "scadenza_cache", nullable = false)
+    // @Builder.Default
+    // private LocalDateTime scadenzaCache = LocalDateTime.now().plusDays(1); //valutare se utilizzare ZonedDateTime
 }
