@@ -16,6 +16,7 @@ import jakarta.persistence.MappedSuperclass;
 import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
+import lombok.experimental.SuperBuilder;
 
 @Getter
 @NoArgsConstructor(access = AccessLevel.PROTECTED)
@@ -26,6 +27,7 @@ import lombok.NoArgsConstructor;
 //eredità di mapping
 @MappedSuperclass
 @EntityListeners(AuditingEntityListener.class)
+@SuperBuilder
 public abstract class BaseEntity {
 
     /**
