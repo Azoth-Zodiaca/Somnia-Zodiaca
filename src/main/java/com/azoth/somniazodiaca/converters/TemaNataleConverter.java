@@ -28,7 +28,7 @@ public class TemaNataleConverter implements GenericConverter<TemaNatale, TemaNat
 
         if (d.getUtenteId() != null) {
             Utente utente = new Utente();
-            utente.setId(d.getUtenteId()); // da guardare dopo
+            utente.setId(d.getUtenteId()); // TODO: da gestire dopo
             temaNatale.setUtente(utente);
         }
 
