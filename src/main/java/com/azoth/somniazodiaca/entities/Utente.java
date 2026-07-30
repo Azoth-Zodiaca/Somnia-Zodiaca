@@ -4,8 +4,6 @@ import java.time.LocalDateTime;
 
 import com.azoth.somniazodiaca.enums.Ruolo;
 
-import com.azoth.somniazodiaca.enums.Ruolo;
-
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;

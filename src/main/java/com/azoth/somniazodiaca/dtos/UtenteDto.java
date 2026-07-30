@@ -2,7 +2,7 @@ package com.azoth.somniazodiaca.dtos;
 
 import java.time.LocalDateTime;
 
-import com.azoth.somniazodiaca.entities.Ruolo;
+import com.azoth.somniazodiaca.enums.Ruolo;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;
@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-public class UtenteDto {
+public class UtenteDto implements GenericDto {
 
     private Long id;
 

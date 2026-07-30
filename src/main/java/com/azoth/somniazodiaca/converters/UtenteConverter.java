@@ -9,7 +9,7 @@ import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UtenteConverter {
+public class UtenteConverter implements GenericConverter<Utente, UtenteDto> {
 
     private final TemaNataleConverter temaNataleConverter;
 
