@@ -2,7 +2,7 @@ package com.azoth.somniazodiaca.dtos;
 
 import java.time.LocalDateTime;
 
-import com.azoth.somniazodiaca.entities.Ruolo;
+import com.azoth.somniazodiaca.enums.Ruolo;
 
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.Min;

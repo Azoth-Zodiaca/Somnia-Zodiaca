@@ -1,11 +1,14 @@
 package com.azoth.somniazodiaca.entities;
 
+import java.util.Set;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 import jakarta.persistence.UniqueConstraint;
 import lombok.Getter;
@@ -24,7 +27,7 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class SegnoZodiacale extends BaseEntity {
 
-    @Column(name = "nome", nullable = false, length = 100)
+    @Column(name = "nome", nullable = false, length = 10)
     private String nome;
 
     @Column(name = "descrizione", columnDefinition = "TEXT")
@@ -53,4 +56,10 @@ public class SegnoZodiacale extends BaseEntity {
         foreignKey = @ForeignKey(name = "fk_segni_zodiacali_metalli")
     )
     private Metallo metallo;
+
+    @OneToMany(mappedBy = "segnoZodiacale", fetch = FetchType.LAZY) //lato pk segno
+    private Set<Utente> utentiSegno;
+
+    @OneToMany(mappedBy = "ascendente", fetch = FetchType.LAZY) //lato pk ascendente
+    private Set<Utente> utentiAsc;
 }
