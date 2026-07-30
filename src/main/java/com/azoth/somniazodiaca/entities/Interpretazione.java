@@ -1,5 +1,7 @@
 package com.azoth.somniazodiaca.entities;
 
+import java.time.LocalDateTime;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
@@ -10,28 +12,25 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import lombok.experimental.SuperBuilder;
-import java.time.LocalDateTime;
 
 @Entity
-@Table(name = "sogni")
+@Table(name = "interpretazioni")
 @Getter
 @Setter
 @NoArgsConstructor
 @SuperBuilder
+public class Interpretazione extends BaseEntity {
 
-public class Sogno extends BaseEntity {
-    
     @ManyToOne(fetch = FetchType.LAZY)
-    @JoinColumn(name = "utente_id", referencedColumnName = "id")
-    private Utente utente;
+    @JoinColumn(name = "sogno_id", referencedColumnName = "id")
+    private Sogno sogno;
 
-    @Column(name = "testo", nullable = false)
+    @Column(name = "prompt", nullable = false, columnDefinition = "TEXT")
+    private String prompt;
+
+    @Column(name = "testo", nullable = false, columnDefinition = "TEXT")
     private String testo;
-
-    @Column(name = "scadenza_cache", nullable = false)
-    private LocalDateTime scadenzaCache; //valutare se utilizzare ZonedDateTime
 
     @Column(name = "data_creazione", nullable = false)
     private LocalDateTime dataCreazione;
-
 }

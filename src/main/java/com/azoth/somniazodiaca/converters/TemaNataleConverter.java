@@ -1,14 +1,17 @@
 package com.azoth.somniazodiaca.converters;
 
-import org.springframework.core.convert.converter.GenericConverter;
 import org.springframework.stereotype.Service;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
 import com.azoth.somniazodiaca.entities.TemaNatale;
 import com.azoth.somniazodiaca.entities.Utente;
 
+import lombok.RequiredArgsConstructor;
+
 @Service
-public class TemaNataleConverter {
+@RequiredArgsConstructor
+public class TemaNataleConverter implements GenericConverter<TemaNatale, TemaNataleDto> {
 
     public TemaNatale fromDToE(TemaNataleDto d) {
 
@@ -25,7 +28,7 @@ public class TemaNataleConverter {
 
         if (d.getUtenteId() != null) {
             Utente utente = new Utente();
-            utente.setId(d.getUtenteId()); // da guardare dopo
+            utente.setId(d.getUtenteId()); // TODO: da gestire dopo
             temaNatale.setUtente(utente);
         }
 

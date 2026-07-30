@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-public class UtenteDto {
+public class UtenteDto implements GenericDto {
 
     private Long id;
 
