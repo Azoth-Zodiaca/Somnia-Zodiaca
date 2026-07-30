@@ -1,16 +1,14 @@
 erDiagram
-    segno_zodiacale {
+    segni_zodiacali {
         int id PK
         varchar nome UK
         text descrizione
-        text origine
-        text curiosita
         int elemento_id FK
         enum modalita
         int pianeta_id FK
         int metallo_id FK
     }
-    utente {
+    utenti {
         int id PK
         varchar username
         varchar email
@@ -24,7 +22,7 @@ erDiagram
         datetime data_registrazione
         datetime ultimo_accesso
     }
-    transazione_qi {
+    transazioni_qi {
         int id PK
         int utente_id FK
         enum tipo
@@ -32,7 +30,7 @@ erDiagram
         varchar descrizione
         datetime data_transazione
     }
-    interpretazione {
+    interpretazioni {
         int id PK
         int sogno_id FK
         text prompt
@@ -51,7 +49,7 @@ erDiagram
         text testo_visibile
         datetime data_pubblicazione
     }
-    sogno {
+    sogni {
         int id PK
         int utente_id FK
         text testo
@@ -59,13 +57,13 @@ erDiagram
         datetime scadenza_cache
         datetime data_creazione
     }
-    inventario_cosmetico {
+    inventari_cosmetici {
         int utente_id PK_FK
         int cosmetico_id PK_FK
         boolean equipaggiato
         datetime data_acquisto
     }
-    cosmetico {
+    cosmetici {
         int id PK
         varchar nome
         text descrizione
@@ -73,24 +71,22 @@ erDiagram
         varchar asset
         boolean attivo
     }
-    metallo {
-        int id PK
-        varchar nome UK
-        varchar simbolo
-        text descrizione
-    }
-    pianeta {
-        int id PK
-        varchar nome UK
-        varchar simbolo
-        text descrizione
-    }
-    elemento {
+    metalli {
         int id PK
         varchar nome UK
         text descrizione
     }
-    tema_natale {
+    pianeti {
+        int id PK
+        varchar nome UK
+        text descrizione
+    }
+    elementi {
+        int id PK
+        varchar nome UK
+        text descrizione
+    }
+    temi_natali {
         int id PK
         int utente_id FK
         date data_nascita
@@ -102,18 +98,18 @@ erDiagram
         json dati_calcolo
         datetime data_creazione
     }
-    elemento ||--o{ segno_zodiacale : "elemento_id"
-    pianeta ||--o{ segno_zodiacale : "pianeta_id"
-    metallo ||--o{ segno_zodiacale : "metallo_id"
-    segno_zodiacale ||--o{ utente : "segno_zodiacale_id"
-    segno_zodiacale ||--o{ utente : "ascendente_id"
-    utente ||--o{ tema_natale : "utente_id"
-    utente ||--o{ sogno : "utente_id"
-    sogno ||--o{ interpretazione : "sogno_id"
-    utente ||--o{ transazione_qi : "utente_id"
-    utente ||--o{ inventario_cosmetico : "utente_id"
-    cosmetico ||--o{ inventario_cosmetico : "cosmetico_id"
-    utente ||--o{ post : "utente_id"
-    interpretazione ||--o{ post : "interpretazione_id"
-    utente ||--o{ like_post : "utente_id"
+    elementi ||--o{ segni_zodiacali : "elemento_id"
+    pianeti ||--o{ segni_zodiacali : "pianeta_id"
+    metalli ||--o{ segni_zodiacali : "metallo_id"
+    segni_zodiacali ||--o{ utenti : "segno_zodiacale_id"
+    segni_zodiacali ||--o{ utenti : "ascendente_id"
+    utenti ||--o{ temi_natali : "utente_id"
+    utenti ||--o{ sogni : "utente_id"
+    sogni ||--o{ interpretazioni : "sogno_id"
+    utenti ||--o{ transazioni_qi : "utente_id"
+    utenti ||--o{ inventari_cosmetici : "utente_id"
+    cosmetici ||--o{ inventari_cosmetici : "cosmetico_id"
+    utenti ||--o{ post : "utente_id"
+    interpretazioni ||--o{ post : "interpretazione_id"
+    utenti ||--o{ like_post : "utente_id"
     post ||--o{ like_post : "post_id"
