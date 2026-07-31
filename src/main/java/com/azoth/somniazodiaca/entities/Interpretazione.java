@@ -1,6 +1,5 @@
 package com.azoth.somniazodiaca.entities;
 
-import com.azoth.somniazodiaca.enums.ElementoEnum;
 import com.azoth.somniazodiaca.enums.InterpretazioneEnum;
 
 import jakarta.persistence.Column;
