@@ -2,6 +2,8 @@ package com.azoth.somniazodiaca.entities;
 
 import java.util.Set;
 
+import com.azoth.somniazodiaca.enums.PianetaEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,7 +27,7 @@ public class Pianeta extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "nome", nullable = false, unique = true)
-    private Pianeta pianeta;
+    private PianetaEnum pianeta;
 
     @Column(name = "descrizione", columnDefinition = "TEXT")
     private String descrizione;

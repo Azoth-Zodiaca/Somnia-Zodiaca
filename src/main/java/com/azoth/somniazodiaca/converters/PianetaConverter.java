@@ -22,7 +22,7 @@ public class PianetaConverter implements GenericConverter<Pianeta, PianetaDto> {
         if (d.getSegniIds() != null) {
             Set<SegnoZodiacale> segni = d.getSegniIds().stream()
                     .map(id -> {
-                        SegnoZodiacale segno = new SegnoZodiacale();
+                        SegnoZodiacaleEnum segno = new SegnoZodiacaleEnum();
                         segno.setId(id);
                         return segno;
                     })

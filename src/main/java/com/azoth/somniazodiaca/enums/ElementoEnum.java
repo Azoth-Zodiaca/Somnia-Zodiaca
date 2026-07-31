@@ -1,6 +1,6 @@
 package com.azoth.somniazodiaca.enums;
 
-public enum Elemento {
+public enum ElementoEnum {
 
     FUOCO,
     ARIA,

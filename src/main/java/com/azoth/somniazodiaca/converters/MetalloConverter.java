@@ -22,7 +22,7 @@ public class MetalloConverter implements GenericConverter<Metallo, MetalloDto> {
         if (d.getSegniIds() != null) {
             Set<SegnoZodiacale> segni = d.getSegniIds().stream()
                     .map(id -> {
-                        SegnoZodiacale segno = new SegnoZodiacale();
+                        SegnoZodiacaleEnum segno = new SegnoZodiacaleEnum();
                         segno.setId(id);
                         return segno;
                     })

@@ -1,6 +1,6 @@
 package com.azoth.somniazodiaca.enums;
 
-public enum Metallo {
+public enum MetalloEnum {
 
     FERRO,
     RAME,

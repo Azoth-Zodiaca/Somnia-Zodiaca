@@ -2,6 +2,8 @@ package com.azoth.somniazodiaca.entities;
 
 import java.util.Set;
 
+import com.azoth.somniazodiaca.enums.MetalloEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -25,7 +27,7 @@ public class Metallo extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "nome", nullable = false, unique = true)
-    private Metallo metallo;
+    private MetalloEnum metallo;
     
     @Column(name = "descrizione", columnDefinition = "TEXT")
     private String descrizione;

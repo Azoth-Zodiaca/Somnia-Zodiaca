@@ -2,15 +2,15 @@ package com.azoth.somniazodiaca.converters;
 
 import org.springframework.stereotype.Service;
 
-import com.azoth.somniazodiaca.dtos.InventarioCosmeticoDto;
+import com.azoth.somniazodiaca.dtos.AggiuntaInventarioCosmeticoDto;
 import com.azoth.somniazodiaca.entities.Cosmetico;
 import com.azoth.somniazodiaca.entities.InventarioCosmetico;
 import com.azoth.somniazodiaca.entities.Utente;
 
 @Service
-public class InventarioCosmeticoConverter implements GenericConverter<InventarioCosmetico, InventarioCosmeticoDto> {
+public class InventarioCosmeticoConverter implements GenericConverter<InventarioCosmetico, AggiuntaInventarioCosmeticoDto> {
 
-    public InventarioCosmetico fromDToE(InventarioCosmeticoDto d) {
+    public InventarioCosmetico fromDToE(AggiuntaInventarioCosmeticoDto d) {
         InventarioCosmetico e = InventarioCosmetico.builder()
                 .id(d.getId())
                 .equipaggiato(d.getEquipaggiato())
@@ -32,8 +32,8 @@ public class InventarioCosmeticoConverter implements GenericConverter<Inventario
         return e;
     }
 
-    public InventarioCosmeticoDto fromEToD(InventarioCosmetico e) {
-        return InventarioCosmeticoDto.builder()
+    public AggiuntaInventarioCosmeticoDto fromEToD(InventarioCosmetico e) {
+        return AggiuntaInventarioCosmeticoDto.builder()
                 .id(e.getId())
                 .utenteId(e.getUtente() != null ? e.getUtente().getId() : null)
                 .cosmeticoId(e.getCosmetico() != null ? e.getCosmetico().getId() : null)

@@ -1,6 +1,6 @@
 package com.azoth.somniazodiaca.enums;
 
-public enum SegnoZodiacale {
+public enum SegnoZodiacaleEnum {
 
     ARIETE,
     TORO,

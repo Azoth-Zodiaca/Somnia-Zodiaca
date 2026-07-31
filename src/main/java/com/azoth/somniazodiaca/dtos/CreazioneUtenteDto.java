@@ -1,11 +1,11 @@
 package com.azoth.somniazodiaca.dtos;
 
-import java.time.LocalDateTime;
+import java.time.LocalDate;
+import java.time.LocalTime;
 
 import com.azoth.somniazodiaca.enums.Ruolo;
 
 import jakarta.validation.constraints.Email;
-import jakarta.validation.constraints.Min;
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
@@ -18,7 +18,7 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-public class UtenteDto implements GenericDto {
+public class CreazioneUtenteDto implements GenericDto {
 
     private Long id;
 
@@ -33,14 +33,17 @@ public class UtenteDto implements GenericDto {
 
     @NotNull(message = "Il ruolo è obbligatorio")
     private Ruolo ruolo;
+    
+    @NotNull(message = "L'id dell'utente è obbligatorio")
+    private Long utenteId;
 
-    @NotNull(message = "Il QI è obbligatorio")
-    @Min(value = 0, message = "Il QI non può essere negativo")
-    private Integer qi;
+    @NotNull(message = "La data di nascita è obbligatoria")
+    private LocalDate dataNascita;
 
-    private LocalDateTime dataRegistrazione;
+    @NotNull(message = "L'ora di nascita è obbligatoria")
+    private LocalTime oraNascita;
 
-    private LocalDateTime ultimoAccesso;
-
-    private TemaNataleDto temaNatale;
+    @NotBlank(message = "Il luogo di nascita è obbligatorio")
+    @Size(max = 255, message = "Il luogo di nascita può contenere al massimo 255 caratteri")
+    private String luogoNascita;
 }

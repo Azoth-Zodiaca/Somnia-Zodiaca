@@ -1,7 +1,7 @@
 package com.azoth.somniazodiaca.dtos;
 
+import java.time.LocalDateTime;
 
-import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -12,20 +12,15 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-public class PostDto implements GenericDto {
+public class AggiuntaInventarioCosmeticoDto implements GenericDto {
 
     private Long id;
 
     @NotNull(message = "L'id dell'utente è obbligatorio")
     private Long utenteId;
 
-    private Long interpretazioneId;
-
-    @NotBlank(message = "Il testo visibile è obbligatorio")
-    private String testoVisibile;
-
-    // private LocalDateTime dataPubblicazione;
-
-    @NotNull(message = "Il numero di like è obbligatorio")
-    private Integer numeroLike;
+    @NotNull(message = "L'id del cosmetico è obbligatorio")
+    private Long cosmeticoId;
+    
+    private LocalDateTime dataAcquisto;
 }

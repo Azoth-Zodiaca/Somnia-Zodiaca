@@ -1,6 +1,6 @@
 package com.azoth.somniazodiaca.enums;
 
-public enum Pianeta {
+public enum PianetaEnum {
 
     SOLE,
     LUNA,

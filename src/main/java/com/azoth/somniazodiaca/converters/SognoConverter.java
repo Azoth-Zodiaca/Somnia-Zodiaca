@@ -2,14 +2,14 @@ package com.azoth.somniazodiaca.converters;
 
 import org.springframework.stereotype.Service;
 
-import com.azoth.somniazodiaca.dtos.SognoDto;
+import com.azoth.somniazodiaca.dtos.AggiuntaSognoDto;
 import com.azoth.somniazodiaca.entities.Sogno;
 import com.azoth.somniazodiaca.entities.Utente;
 
 @Service
-public class SognoConverter implements GenericConverter<Sogno, SognoDto> {
+public class SognoConverter implements GenericConverter<Sogno, AggiuntaSognoDto> {
 
-    public Sogno fromDToE(SognoDto d) {
+    public Sogno fromDToE(AggiuntaSognoDto d) {
         Sogno e = Sogno.builder()
                 .id(d.getId())
                 .testo(d.getTesto())
@@ -24,8 +24,8 @@ public class SognoConverter implements GenericConverter<Sogno, SognoDto> {
         return e;
     }
 
-    public SognoDto fromEToD(Sogno e) {
-        return SognoDto.builder()
+    public AggiuntaSognoDto fromEToD(Sogno e) {
+        return AggiuntaSognoDto.builder()
                 .id(e.getId())
                 .utenteId(e.getUtente() != null ? e.getUtente().getId() : null)
                 .testo(e.getTesto())

@@ -2,6 +2,9 @@ package com.azoth.somniazodiaca.entities;
 
 import java.util.Set;
 
+import com.azoth.somniazodiaca.enums.Modalita;
+import com.azoth.somniazodiaca.enums.SegnoZodiacaleEnum;
+
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
@@ -19,10 +22,7 @@ import lombok.Setter;
 import lombok.experimental.SuperBuilder;
 
 @Entity
-@Table(
-    name = "segni_zodiacali",
-    uniqueConstraints = @UniqueConstraint(name = "uk_segni_zodiacali_nome", columnNames = "nome")
-)
+@Table(name = "segni_zodiacali", uniqueConstraints = @UniqueConstraint(name = "uk_segni_zodiacali_nome", columnNames = "nome"))
 @Getter
 @Setter
 @SuperBuilder
@@ -31,38 +31,30 @@ public class SegnoZodiacale extends BaseEntity {
 
     @Enumerated(EnumType.STRING)
     @Column(name = "nome", nullable = false, unique = true)
-    private SegnoZodiacale segnoZodiacale;
+    private SegnoZodiacaleEnum segnoZodiacale;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "modalita", nullable = false, unique = true)
+    private Modalita modalita;
 
     @Column(name = "descrizione", columnDefinition = "TEXT")
     private String descrizione;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(
-        name = "elemento_id",
-        referencedColumnName = "id",
-        foreignKey = @ForeignKey(name = "fk_segni_zodiacali_elementi")
-    )
+    @JoinColumn(name = "elemento_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_segni_zodiacali_elementi"))
     private Elemento elemento;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(
-        name = "pianeta_id",
-        referencedColumnName = "id",
-        foreignKey = @ForeignKey(name = "fk_segni_zodiacali_pianeti")
-    )
+    @JoinColumn(name = "pianeta_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_segni_zodiacali_pianeti"))
     private Pianeta pianeta;
 
     @ManyToOne(fetch = FetchType.LAZY, optional = false)
-    @JoinColumn(
-        name = "metallo_id",
-        referencedColumnName = "id",
-        foreignKey = @ForeignKey(name = "fk_segni_zodiacali_metalli")
-    )
+    @JoinColumn(name = "metallo_id", referencedColumnName = "id", foreignKey = @ForeignKey(name = "fk_segni_zodiacali_metalli"))
     private Metallo metallo;
 
-    @OneToMany(mappedBy = "segnoZodiacale", fetch = FetchType.LAZY) //lato pk segno
+    @OneToMany(mappedBy = "segnoZodiacale", fetch = FetchType.LAZY) // lato pk segno
     private Set<Utente> utentiSegno;
 
-    @OneToMany(mappedBy = "ascendente", fetch = FetchType.LAZY) //lato pk ascendente
+    @OneToMany(mappedBy = "ascendente", fetch = FetchType.LAZY) // lato pk ascendente
     private Set<Utente> utentiAsc;
 }
