@@ -1,6 +1,6 @@
 package com.azoth.somniazodiaca.dtos;
 
-import java.time.LocalDateTime;
+import java.util.List;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
@@ -13,15 +13,17 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @NoArgsConstructor
 @SuperBuilder
-public class AggiuntaSognoDto implements GenericDto {
+public class CosmeticoDto implements GenericDto {
 
     private Long id;
 
-    @NotNull(message = "L'id dell'utente è obbligatorio")
-    private Long utenteId;
+    @NotBlank(message = "Il nome del cosmetico è obbligatorio")
+    private String nome;
 
-    @NotBlank(message = "Il testo del sogno è obbligatorio")
-    private String testo;
+    private String descrizione;
 
-    private LocalDateTime dataCreazione;
+    @NotNull(message = "Il prezzo QI è obbligatorio")
+    private Integer prezzoQi;
+
+    private List<Long> inventariIds;
 }

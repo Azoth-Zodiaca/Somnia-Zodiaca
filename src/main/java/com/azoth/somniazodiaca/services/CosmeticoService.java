@@ -1,10 +1,13 @@
 package com.azoth.somniazodiaca.services;
 
+import org.springframework.stereotype.Service;
+
 import com.azoth.somniazodiaca.converters.CosmeticoConverter;
 import com.azoth.somniazodiaca.dtos.CosmeticoDto;
 import com.azoth.somniazodiaca.entities.Cosmetico;
 import com.azoth.somniazodiaca.repositories.CosmeticoRepository;
 
+@Service
 public class CosmeticoService extends GenericService<Long, Cosmetico, CosmeticoDto, CosmeticoConverter, CosmeticoRepository> {
 
     public CosmeticoService(CosmeticoRepository repository, CosmeticoConverter converter) {

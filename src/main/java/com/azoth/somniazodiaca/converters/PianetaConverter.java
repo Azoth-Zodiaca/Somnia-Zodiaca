@@ -15,17 +15,13 @@ public class PianetaConverter implements GenericConverter<Pianeta, PianetaDto> {
     public Pianeta fromDToE(PianetaDto d) {
         Pianeta e = Pianeta.builder()
                 .id(d.getId())
-                .nome(d.getNome())
+                .pianeta(d.getPianeta())
                 .descrizione(d.getDescrizione())
                 .build();
 
         if (d.getSegniIds() != null) {
             Set<SegnoZodiacale> segni = d.getSegniIds().stream()
-                    .map(id -> {
-                        SegnoZodiacaleEnum segno = new SegnoZodiacaleEnum();
-                        segno.setId(id);
-                        return segno;
-                    })
+                    .map(id -> SegnoZodiacale.builder().id(id).build())
                     .collect(Collectors.toSet());
             e.setSegni(segni);
         }
@@ -36,7 +32,7 @@ public class PianetaConverter implements GenericConverter<Pianeta, PianetaDto> {
     public PianetaDto fromEToD(Pianeta e) {
         PianetaDto d = PianetaDto.builder()
                 .id(e.getId())
-                .nome(e.getNome())
+                .pianeta(e.getPianeta())
                 .descrizione(e.getDescrizione())
                 .build();
 

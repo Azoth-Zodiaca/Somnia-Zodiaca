@@ -15,17 +15,13 @@ public class MetalloConverter implements GenericConverter<Metallo, MetalloDto> {
     public Metallo fromDToE(MetalloDto d) {
         Metallo e = Metallo.builder()
                 .id(d.getId())
-                .nome(d.getNome())
+                .metallo(d.getMetallo())
                 .descrizione(d.getDescrizione())
                 .build();
 
         if (d.getSegniIds() != null) {
             Set<SegnoZodiacale> segni = d.getSegniIds().stream()
-                    .map(id -> {
-                        SegnoZodiacaleEnum segno = new SegnoZodiacaleEnum();
-                        segno.setId(id);
-                        return segno;
-                    })
+                    .map(id -> SegnoZodiacale.builder().id(id).build())
                     .collect(Collectors.toSet());
             e.setSegni(segni);
         }
@@ -36,7 +32,7 @@ public class MetalloConverter implements GenericConverter<Metallo, MetalloDto> {
     public MetalloDto fromEToD(Metallo e) {
         MetalloDto d = MetalloDto.builder()
                 .id(e.getId())
-                .nome(e.getNome())
+                .metallo(e.getMetallo())
                 .descrizione(e.getDescrizione())
                 .build();
 

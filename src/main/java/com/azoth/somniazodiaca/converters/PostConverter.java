@@ -19,14 +19,12 @@ public class PostConverter implements GenericConverter<Post, PostDto> {
                 .build();
 
         if (d.getUtenteId() != null) {
-            Utente utente = new Utente();
-            utente.setId(d.getUtenteId());
+            Utente utente = Utente.builder().id(d.getUtenteId()).build();
             e.setUtente(utente);
         }
-
+ 
         if (d.getInterpretazioneId() != null) {
-            Interpretazione interpretazione = new Interpretazione();
-            interpretazione.setId(d.getInterpretazioneId());
+            Interpretazione interpretazione = Interpretazione.builder().id(d.getInterpretazioneId()).build();
             e.setInterpretazione(interpretazione);
         }
 

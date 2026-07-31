@@ -14,25 +14,23 @@ public class SegnoZodiacaleConverter implements GenericConverter<SegnoZodiacale,
     public SegnoZodiacale fromDToE(SegnoZodiacaleDto d) {
         SegnoZodiacale e = SegnoZodiacale.builder()
                 .id(d.getId())
-                .nome(d.getNome())
+                .segnoZodiacale(d.getSegnoZodiacale())
+                .modalita(d.getModalita())
                 .descrizione(d.getDescrizione())
                 .build();
 
         if (d.getElementoId() != null) {
-            Elemento elemento = new Elemento();
-            elemento.setId(d.getElementoId());
+            Elemento elemento = Elemento.builder().id(d.getElementoId()).build();
             e.setElemento(elemento);
         }
-
+ 
         if (d.getPianetaId() != null) {
-            Pianeta pianeta = new Pianeta();
-            pianeta.setId(d.getPianetaId());
+            Pianeta pianeta = Pianeta.builder().id(d.getPianetaId()).build();
             e.setPianeta(pianeta);
         }
-
+ 
         if (d.getMetalloId() != null) {
-            Metallo metallo = new Metallo();
-            metallo.setId(d.getMetalloId());
+            Metallo metallo = Metallo.builder().id(d.getMetalloId()).build();
             e.setMetallo(metallo);
         }
 
@@ -42,7 +40,8 @@ public class SegnoZodiacaleConverter implements GenericConverter<SegnoZodiacale,
     public SegnoZodiacaleDto fromEToD(SegnoZodiacale e) {
         return SegnoZodiacaleDto.builder()
                 .id(e.getId())
-                .nome(e.getNome())
+                .segnoZodiacale(e.getSegnoZodiacale())
+                .modalita(e.getModalita())
                 .descrizione(e.getDescrizione())
                 .elementoId(e.getElemento() != null ? e.getElemento().getId() : null)
                 .pianetaId(e.getPianeta() != null ? e.getPianeta().getId() : null)

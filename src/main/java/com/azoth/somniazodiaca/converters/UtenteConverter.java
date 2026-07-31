@@ -4,14 +4,16 @@ import org.springframework.stereotype.Service;
 
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.entities.Utente;
+import com.azoth.somniazodiaca.entities.SegnoZodiacale;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UtenteConverter implements GenericConverter {
+public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
 
     private final TemaNataleConverter temaNataleConverter;
+    private final SegnoZodiacaleConverter segnoZodiacaleConverter;
 
     public Utente fromDToE(UtenteDetail d) {
 
@@ -24,6 +26,14 @@ public class UtenteConverter implements GenericConverter {
                 .dataRegistrazione(d.getDataRegistrazione())
                 .ultimoAccesso(d.getUltimoAccesso())
                 .build();
+
+        if (d.getSegnoZodiacale() != null) {
+            e.setSegnoZodiacale(segnoZodiacaleConverter.fromDToE(d.getSegnoZodiacale()));
+        }
+
+        if (d.getAscendente() != null) {
+            e.setAscendente(segnoZodiacaleConverter.fromDToE(d.getAscendente()));
+        }
 
         if (d.getTemaNatale() != null) {
             e.setTemaNatale(temaNataleConverter.fromDToE(d.getTemaNatale()));
@@ -44,11 +54,18 @@ public class UtenteConverter implements GenericConverter {
                 .ultimoAccesso(e.getUltimoAccesso())
                 .build();
 
+        if (e.getSegnoZodiacale() != null) {
+            d.setSegnoZodiacale(segnoZodiacaleConverter.fromEToD(e.getSegnoZodiacale()));
+        }
+
+        if (e.getAscendente() != null) {
+            d.setAscendente(segnoZodiacaleConverter.fromEToD(e.getAscendente()));
+        }
+
         if (e.getTemaNatale() != null) {
             d.setTemaNatale(temaNataleConverter.fromEToD(e.getTemaNatale()));
         }
 
         return d;
     }
-
 }

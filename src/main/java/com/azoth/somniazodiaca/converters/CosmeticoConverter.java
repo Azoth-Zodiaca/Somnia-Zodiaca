@@ -23,13 +23,9 @@ public class CosmeticoConverter implements GenericConverter<Cosmetico, Cosmetico
                 .build();
 
         if (d.getInventariIds() != null) {
-            Set<InventarioCosmetico> inventari = d.getInventariIds().stream()
-                    .map(id -> {
-                        InventarioCosmetico inv = new InventarioCosmetico();
-                        inv.setId(id);
-                        return inv;
-                    })
-                    .collect(Collectors.toSet());
+            List<InventarioCosmetico> inventari = d.getInventariIds().stream()
+                    .map((Long id) -> InventarioCosmetico.builder().id(id).build())
+                    .collect(Collectors.toList());
             e.setInventari(inventari);
         }
 

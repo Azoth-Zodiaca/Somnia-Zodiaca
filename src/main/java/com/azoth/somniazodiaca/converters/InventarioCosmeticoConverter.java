@@ -18,14 +18,12 @@ public class InventarioCosmeticoConverter implements GenericConverter<Inventario
                 .build();
 
         if (d.getUtenteId() != null) {
-            Utente utente = new Utente();
-            utente.setId(d.getUtenteId());
+            Utente utente = Utente.builder().id(d.getUtenteId()).build();
             e.setUtente(utente);
         }
-
+ 
         if (d.getCosmeticoId() != null) {
-            Cosmetico cosmetico = new Cosmetico();
-            cosmetico.setId(d.getCosmeticoId());
+            Cosmetico cosmetico = Cosmetico.builder().id(d.getCosmeticoId()).build();
             e.setCosmetico(cosmetico);
         }
 

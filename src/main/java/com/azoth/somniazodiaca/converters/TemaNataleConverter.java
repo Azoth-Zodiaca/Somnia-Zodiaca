@@ -1,7 +1,6 @@
 package com.azoth.somniazodiaca.converters;
 
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestMapping;
 
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
 import com.azoth.somniazodiaca.entities.TemaNatale;
@@ -27,8 +26,7 @@ public class TemaNataleConverter implements GenericConverter<TemaNatale, TemaNat
                 .build();
 
         if (d.getUtenteId() != null) {
-            Utente utente = new Utente();
-            utente.setId(d.getUtenteId()); // TODO: da gestire dopo
+            Utente utente = Utente.builder().id(d.getUtenteId()).build();
             temaNatale.setUtente(utente);
         }
 

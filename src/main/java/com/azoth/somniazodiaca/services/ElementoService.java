@@ -1,10 +1,13 @@
 package com.azoth.somniazodiaca.services;
 
+import org.springframework.stereotype.Service;
+
 import com.azoth.somniazodiaca.converters.ElementoConverter;
 import com.azoth.somniazodiaca.dtos.ElementoDto;
 import com.azoth.somniazodiaca.entities.Elemento;
 import com.azoth.somniazodiaca.repositories.ElementoRepository;
 
+@Service
 public class ElementoService extends GenericService<Long, Elemento, ElementoDto, ElementoConverter, ElementoRepository> {
 
     public ElementoService(ElementoRepository repository, ElementoConverter converter) {

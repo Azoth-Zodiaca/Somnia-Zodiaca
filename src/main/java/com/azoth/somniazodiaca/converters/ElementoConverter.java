@@ -16,17 +16,13 @@ public class ElementoConverter implements GenericConverter<Elemento, ElementoDto
     public Elemento fromDToE(ElementoDto d) {
         Elemento e = Elemento.builder()
                 .id(d.getId())
-                .nome(d.getNome())
+                .elemento(d.getElemento())
                 .descrizione(d.getDescrizione())
                 .build();
 
         if (d.getSegniIds() != null) {
             Set<SegnoZodiacale> segni = d.getSegniIds().stream()
-                    .map(id -> {
-                        SegnoZodiacaleEnum segno = new SegnoZodiacaleEnum();
-                        segno.setId(id);
-                        return segno;
-                    })
+                    .map(id -> SegnoZodiacale.builder().id(id).build())
                     .collect(Collectors.toSet());
             e.setSegni(segni);
         }
@@ -37,7 +33,7 @@ public class ElementoConverter implements GenericConverter<Elemento, ElementoDto
     public ElementoDto fromEToD(Elemento e) {
         ElementoDto d = ElementoDto.builder()
                 .id(e.getId())
-                .nome(e.getNome())
+                .elemento(e.getElemento())
                 .descrizione(e.getDescrizione())
                 .build();
 

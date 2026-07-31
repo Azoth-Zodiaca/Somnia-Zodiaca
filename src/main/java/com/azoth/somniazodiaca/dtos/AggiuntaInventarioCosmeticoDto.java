@@ -2,6 +2,8 @@ package com.azoth.somniazodiaca.dtos;
 
 import java.time.LocalDateTime;
 
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -21,6 +23,9 @@ public class AggiuntaInventarioCosmeticoDto implements GenericDto {
 
     @NotNull(message = "L'id del cosmetico è obbligatorio")
     private Long cosmeticoId;
-    
+
+    @NotNull(message = "Il campo equipaggiato è obbligatorio")
+    private Boolean equipaggiato;
+
     private LocalDateTime dataAcquisto;
 }

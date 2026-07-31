@@ -16,8 +16,7 @@ public class SognoConverter implements GenericConverter<Sogno, AggiuntaSognoDto>
                 .build();
 
         if (d.getUtenteId() != null) {
-            Utente utente = new Utente();
-            utente.setId(d.getUtenteId());
+            Utente utente = Utente.builder().id(d.getUtenteId()).build();
             e.setUtente(utente);
         }
 
@@ -29,7 +28,7 @@ public class SognoConverter implements GenericConverter<Sogno, AggiuntaSognoDto>
                 .id(e.getId())
                 .utenteId(e.getUtente() != null ? e.getUtente().getId() : null)
                 .testo(e.getTesto())
-                .dataCreazione(e.getDataCreazione())
+                .dataCreazione(e.getCreatedAt())
                 .build();
     }
 }

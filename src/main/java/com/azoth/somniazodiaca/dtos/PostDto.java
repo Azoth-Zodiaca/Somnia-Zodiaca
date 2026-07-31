@@ -1,6 +1,8 @@
 package com.azoth.somniazodiaca.dtos;
 
 
+import java.time.LocalDateTime;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -24,7 +26,7 @@ public class PostDto implements GenericDto {
     @NotBlank(message = "Il testo visibile è obbligatorio")
     private String testoVisibile;
 
-    // private LocalDateTime dataPubblicazione;
+    private LocalDateTime dataPubblicazione;
 
     @NotNull(message = "Il numero di like è obbligatorio")
     private Integer numeroLike;

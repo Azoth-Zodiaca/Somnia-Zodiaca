@@ -31,6 +31,10 @@ public class CreazioneUtenteDto implements GenericDto {
     @Size(max = 255, message = "L'email può contenere al massimo 255 caratteri")
     private String email;
 
+    @NotBlank(message = "La password è obbligatoria")
+    @Size(min = 8, message = "La password deve contenere almeno 8 caratteri")
+    private String password;
+ 
     @NotNull(message = "Il ruolo è obbligatorio")
     private Ruolo ruolo;
 
