@@ -2,12 +2,14 @@ package com.azoth.somniazodiaca.controllers;
 
 import java.util.Optional;
 
+import jakarta.servlet.http.HttpSession;
+import jakarta.validation.Valid;
+
 import com.azoth.somniazodiaca.dtos.CreazioneUtenteDto;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.services.UtenteService;
 
-import jakarta.validation.Valid;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -24,8 +26,22 @@ public class AuthController {
         this.utenteService = utenteService;
     }
 
+    private Optional<Long> getCurrentUserId(HttpSession session) {
+        Object value = session.getAttribute("currentUserId");
+        if (value instanceof Long) {
+            return Optional.of((Long) value);
+        }
+        if (value instanceof Integer) {
+            return Optional.of(((Integer) value).longValue());
+        }
+        return Optional.empty();
+    }
+
     @GetMapping("/login")
-    public String loginPage() {
+    public String loginPage(HttpSession session) {
+        if (getCurrentUserId(session).isPresent()) {
+            return "redirect:/profilo";
+        }
         return "login";
     }
 
@@ -33,20 +49,26 @@ public class AuthController {
     public String login(
             @RequestParam String usernameOrEmail,
             @RequestParam String password,
-            Model model) {
+            Model model,
+            HttpSession session) {
 
         Optional<UtenteDetail> utente = utenteService.authenticate(usernameOrEmail, password);
         if (utente.isEmpty()) {
             model.addAttribute("loginError", "Credenziali non valide");
+            model.addAttribute("usernameOrEmail", usernameOrEmail);
             return "login";
         }
 
-        model.addAttribute("utente", utente.get());
-        return "profilo";
+        UtenteDetail saved = utente.get();
+        session.setAttribute("currentUserId", saved.getId());
+        return "redirect:/profilo";
     }
 
     @GetMapping("/registrazione")
-    public String registrationPage(Model model) {
+    public String registrationPage(HttpSession session, Model model) {
+        if (getCurrentUserId(session).isPresent()) {
+            return "redirect:/profilo";
+        }
         model.addAttribute("creazioneUtenteDto", new CreazioneUtenteDto());
         return "registrazione";
     }
@@ -55,7 +77,8 @@ public class AuthController {
     public String register(
             @Valid CreazioneUtenteDto dto,
             BindingResult bindingResult,
-            Model model) {
+            Model model,
+            HttpSession session) {
 
         dto.setRuolo(Ruolo.BASE);
 
@@ -72,7 +95,13 @@ public class AuthController {
         }
 
         UtenteDetail saved = utenteService.register(dto);
-        model.addAttribute("utente", saved);
-        return "profilo";
+        session.setAttribute("currentUserId", saved.getId());
+        return "redirect:/profilo";
+    }
+
+    @PostMapping("/logout")
+    public String logout(HttpSession session) {
+        session.invalidate();
+        return "redirect:/login";
     }
 }

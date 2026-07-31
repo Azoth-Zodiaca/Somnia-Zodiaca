@@ -4,7 +4,6 @@ import org.springframework.stereotype.Service;
 
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.entities.Utente;
-import com.azoth.somniazodiaca.entities.SegnoZodiacale;
 
 import lombok.RequiredArgsConstructor;
 

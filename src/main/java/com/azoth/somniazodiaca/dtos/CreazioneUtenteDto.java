@@ -34,7 +34,7 @@ public class CreazioneUtenteDto implements GenericDto {
     @NotBlank(message = "La password è obbligatoria")
     @Size(min = 8, message = "La password deve contenere almeno 8 caratteri")
     private String password;
- 
+    
     @NotNull(message = "Il ruolo è obbligatorio")
     private Ruolo ruolo;
 

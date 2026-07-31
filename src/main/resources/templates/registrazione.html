@@ -1,35 +1,41 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout" th:object="${creazioneUtenteDto}">
 <head>
     <title>Registrazione - Somnia Zodiaca</title>
 </head>
 <body>
 <section>
     <h1>Registrazione</h1>
-    <form th:action="@{/registrazione}" method="post">
+    <form th:action="@{/registrazione}" method="post" th:object="${creazioneUtenteDto}">
         <div>
             <label for="username">Username</label>
-            <input type="text" id="username" name="username" required />
+            <input type="text" id="username" th:field="*{username}" />
+            <p class="error" th:if="${#fields.hasErrors('username')}" th:errors="*{username}"></p>
         </div>
         <div>
             <label for="email">Email</label>
-            <input type="email" id="email" name="email" required />
+            <input type="email" id="email" th:field="*{email}" />
+            <p class="error" th:if="${#fields.hasErrors('email')}" th:errors="*{email}"></p>
         </div>
         <div>
             <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
+            <input type="password" id="password" th:field="*{password}" />
+            <p class="error" th:if="${#fields.hasErrors('password')}" th:errors="*{password}"></p>
         </div>
         <div>
             <label for="dataNascita">Data di nascita</label>
-            <input type="date" id="dataNascita" name="dataNascita" required />
+            <input type="date" id="dataNascita" th:field="*{dataNascita}" />
+            <p class="error" th:if="${#fields.hasErrors('dataNascita')}" th:errors="*{dataNascita}"></p>
         </div>
         <div>
             <label for="oraNascita">Ora di nascita</label>
-            <input type="time" id="oraNascita" name="oraNascita" required />
+            <input type="time" id="oraNascita" th:field="*{oraNascita}" />
+            <p class="error" th:if="${#fields.hasErrors('oraNascita')}" th:errors="*{oraNascita}"></p>
         </div>
         <div>
             <label for="luogoNascita">Luogo di nascita</label>
-            <input type="text" id="luogoNascita" name="luogoNascita" required />
+            <input type="text" id="luogoNascita" th:field="*{luogoNascita}" />
+            <p class="error" th:if="${#fields.hasErrors('luogoNascita')}" th:errors="*{luogoNascita}"></p>
         </div>
         <button type="submit">Registrati</button>
     </form>

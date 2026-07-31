@@ -16,6 +16,13 @@
         <a th:href="@{/inventario}">Inventario</a>
         <a th:href="@{/tema-natale}">Tema Natale</a>
         <a th:href="@{/profilo}">Profilo</a>
+        <span th:if="${utente == null}">
+            <a th:href="@{/login}">Login</a>
+            <a th:href="@{/registrazione}">Registrati</a>
+        </span>
+        <form th:if="${utente != null}" th:action="@{/logout}" method="post" class="nav-logout">
+            <button type="submit">Logout</button>
+        </form>
     </nav>
 </header>
 <main th:replace="~{::body}"></main>

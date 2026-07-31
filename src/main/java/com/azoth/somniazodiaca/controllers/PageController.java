@@ -16,7 +16,6 @@ import com.azoth.somniazodiaca.dtos.AggiuntaSognoDto;
 import com.azoth.somniazodiaca.dtos.CosmeticoDto;
 import com.azoth.somniazodiaca.dtos.PostDto;
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
-import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.services.CosmeticoService;
 import com.azoth.somniazodiaca.services.InventarioCosmeticoService;
 import com.azoth.somniazodiaca.services.PostService;
@@ -85,7 +84,7 @@ public class PageController {
             HttpSession session) {
         Optional<Long> currentUserId = getCurrentUserId(session);
         if (currentUserId.isEmpty()) {
-            model.addAttribute("oracoloError", "Devi effettuare il login per inviare un sogno.");
+            model.addAttribute("loginError", "Devi effettuare il login per inviare un sogno.");
             return "login";
         }
 
@@ -108,14 +107,16 @@ public class PageController {
     }
 
     @GetMapping("/social")
-    public String social(Model model) {
+    public String social(Model model, HttpSession session) {
+        bindUtente(model, session);
         List<PostDto> posts = postService.getAll();
         model.addAttribute("posts", posts);
         return "social";
     }
 
     @GetMapping("/shop")
-    public String shop(Model model) {
+    public String shop(Model model, HttpSession session) {
+        bindUtente(model, session);
         List<CosmeticoDto> cosmetici = cosmeticoService.getAll();
         model.addAttribute("cosmetici", cosmetici);
         return "shop";

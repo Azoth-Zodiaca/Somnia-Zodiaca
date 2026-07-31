@@ -6,10 +6,13 @@
 <body>
 <section>
     <h1>Accedi</h1>
+    <div th:if="${loginError}">
+        <p class="error" th:text="${loginError}"></p>
+    </div>
     <form th:action="@{/login}" method="post">
         <div>
             <label for="usernameOrEmail">Username o email</label>
-            <input type="text" id="usernameOrEmail" name="usernameOrEmail" required />
+            <input type="text" id="usernameOrEmail" name="usernameOrEmail" th:value="${usernameOrEmail}" required />
         </div>
         <div>
             <label for="password">Password</label>
