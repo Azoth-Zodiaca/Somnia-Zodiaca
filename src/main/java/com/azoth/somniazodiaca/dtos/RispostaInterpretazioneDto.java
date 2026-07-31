@@ -1,5 +1,7 @@
 package com.azoth.somniazodiaca.dtos;
 
+import com.azoth.somniazodiaca.enums.InterpretazioneEnum;
+
 import jakarta.validation.constraints.NotBlank;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -15,7 +17,7 @@ public class RispostaInterpretazioneDto implements GenericDto {
     private Long utenteId;    
 
     @NotBlank
-    private Enum tipologia;
+    private InterpretazioneEnum interpretazioneEnum;
 
     @NotBlank
     private String testo;
