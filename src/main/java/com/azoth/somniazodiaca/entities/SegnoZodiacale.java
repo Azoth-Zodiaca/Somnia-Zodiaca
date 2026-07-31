@@ -4,6 +4,8 @@ import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.ForeignKey;
 import jakarta.persistence.JoinColumn;
@@ -27,8 +29,9 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class SegnoZodiacale extends BaseEntity {
 
-    @Column(name = "nome", nullable = false, length = 10)
-    private String nome;
+    @Enumerated(EnumType.STRING)
+    @Column(name = "nome", nullable = false, unique = true)
+    private SegnoZodiacale segnoZodiacale;
 
     @Column(name = "descrizione", columnDefinition = "TEXT")
     private String descrizione;

@@ -4,6 +4,8 @@ import java.util.Set;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
@@ -21,9 +23,10 @@ import lombok.experimental.SuperBuilder;
 @NoArgsConstructor
 public class Metallo extends BaseEntity {
 
-    @Column(name = "nome", nullable = false, length = 100)
-    private String nome;
-
+    @Enumerated(EnumType.STRING)
+    @Column(name = "nome", nullable = false, unique = true)
+    private Metallo metallo;
+    
     @Column(name = "descrizione", columnDefinition = "TEXT")
     private String descrizione;
 
