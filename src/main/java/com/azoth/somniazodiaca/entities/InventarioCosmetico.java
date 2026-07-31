@@ -5,6 +5,7 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
+import jakarta.persistence.UniqueConstraint;
 import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -16,7 +17,12 @@ import lombok.experimental.SuperBuilder;
 @Setter
 @SuperBuilder
 @NoArgsConstructor
-@Table(name = "inventario_cosmetici")
+@Table(
+    name = "inventari_cosmetici",
+    uniqueConstraints = @UniqueConstraint(
+        name = "uq_utente_ruolo",
+        columnNames = {"utente_id", "cosmetico_id"}
+))
 public class InventarioCosmetico extends BaseEntity {
 
     @ManyToOne
@@ -35,3 +41,5 @@ public class InventarioCosmetico extends BaseEntity {
     @Builder.Default
     private LocalDateTime dataAcquisto = LocalDateTime.now();
 }
+
+
