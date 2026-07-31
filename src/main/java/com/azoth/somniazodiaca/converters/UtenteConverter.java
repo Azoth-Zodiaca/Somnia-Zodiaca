@@ -2,18 +2,18 @@ package com.azoth.somniazodiaca.converters;
 
 import org.springframework.stereotype.Service;
 
-import com.azoth.somniazodiaca.dtos.UtenteDto;
+import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.entities.Utente;
 
 import lombok.RequiredArgsConstructor;
 
 @Service
 @RequiredArgsConstructor
-public class UtenteConverter implements GenericConverter<Utente, UtenteDto> {
+public class UtenteConverter implements GenericConverter {
 
     private final TemaNataleConverter temaNataleConverter;
 
-    public Utente fromDToE(UtenteDto d) {
+    public Utente fromDToE(UtenteDetail d) {
 
         Utente e = Utente.builder()
                 .id(d.getId())
@@ -32,9 +32,9 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDto> {
         return e;
     }
 
-    public UtenteDto fromEToD(Utente e) {
+    public UtenteDetail fromEToD(Utente e) {
 
-        UtenteDto d = UtenteDto.builder()
+        UtenteDetail d = UtenteDetail.builder()
                 .id(e.getId())
                 .username(e.getUsername())
                 .email(e.getEmail())

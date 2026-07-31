@@ -33,9 +33,6 @@ public class CreazioneUtenteDto implements GenericDto {
 
     @NotNull(message = "Il ruolo è obbligatorio")
     private Ruolo ruolo;
-    
-    @NotNull(message = "L'id dell'utente è obbligatorio")
-    private Long utenteId;
 
     @NotNull(message = "La data di nascita è obbligatoria")
     private LocalDate dataNascita;
