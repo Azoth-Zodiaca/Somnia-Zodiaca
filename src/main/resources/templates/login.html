@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Login - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Accedi</h1>
+    <form th:action="@{/login}" method="post">
+        <div>
+            <label for="usernameOrEmail">Username o email</label>
+            <input type="text" id="usernameOrEmail" name="usernameOrEmail" required />
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+        </div>
+        <button type="submit">Accedi</button>
+    </form>
+    <p>Non hai un account? <a th:href="@{/registrazione}">Registrati</a></p>
+</section>
+</body>
+</html>

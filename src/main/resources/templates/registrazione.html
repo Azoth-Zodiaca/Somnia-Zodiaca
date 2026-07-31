@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Registrazione - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Registrazione</h1>
+    <form th:action="@{/registrazione}" method="post">
+        <div>
+            <label for="username">Username</label>
+            <input type="text" id="username" name="username" required />
+        </div>
+        <div>
+            <label for="email">Email</label>
+            <input type="email" id="email" name="email" required />
+        </div>
+        <div>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password" required />
+        </div>
+        <div>
+            <label for="dataNascita">Data di nascita</label>
+            <input type="date" id="dataNascita" name="dataNascita" required />
+        </div>
+        <div>
+            <label for="oraNascita">Ora di nascita</label>
+            <input type="time" id="oraNascita" name="oraNascita" required />
+        </div>
+        <div>
+            <label for="luogoNascita">Luogo di nascita</label>
+            <input type="text" id="luogoNascita" name="luogoNascita" required />
+        </div>
+        <button type="submit">Registrati</button>
+    </form>
+</section>
+</body>
+</html>

@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Community - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Community</h1>
+    <div th:if="${posts != null}">
+        <ul>
+            <li th:each="post : ${posts}">
+                <p th:text="${post.testoVisibile}"></p>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${posts == null}">
+        <p>Nessun post disponibile.</p>
+    </div>
+</section>
+</body>
+</html>

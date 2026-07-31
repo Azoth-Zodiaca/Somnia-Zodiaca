@@ -1,0 +1,18 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Oracolo - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Oracolo</h1>
+    <form th:action="@{/oracolo}" method="post">
+        <div>
+            <label for="testo">Racconta il tuo sogno</label>
+            <textarea id="testo" name="testo" rows="6" required></textarea>
+        </div>
+        <button type="submit">Consulta l'oracolo</button>
+    </form>
+</section>
+</body>
+</html>

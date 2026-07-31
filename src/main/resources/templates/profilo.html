@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Profilo - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Profilo</h1>
+    <div th:if="${utente != null}">
+        <p>Username: <span th:text="${utente.username}"></span></p>
+        <p>Email: <span th:text="${utente.email}"></span></p>
+        <p>QI: <span th:text="${utente.qi}"></span></p>
+    </div>
+    <div th:if="${utente == null}">
+        <p>Utente non trovato.</p>
+    </div>
+</section>
+</body>
+</html>

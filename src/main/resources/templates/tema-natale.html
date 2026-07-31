@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Tema Natale - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Tema Natale</h1>
+    <div th:if="${temaNatale != null}">
+        <p>Data di nascita: <span th:text="${temaNatale.dataNascita}"></span></p>
+        <p>Ora di nascita: <span th:text="${temaNatale.oraNascita}"></span></p>
+        <p>Luogo: <span th:text="${temaNatale.luogoNascita}"></span></p>
+    </div>
+    <div th:if="${temaNatale == null}">
+        <p>Nessun tema natale salvato.</p>
+    </div>
+</section>
+</body>
+</html>

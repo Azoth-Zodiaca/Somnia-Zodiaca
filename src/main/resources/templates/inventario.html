@@ -1,0 +1,22 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Inventario - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Inventario</h1>
+    <div th:if="${inventario != null}">
+        <ul>
+            <li th:each="item : ${inventario}">
+                <span th:text="${item.cosmeticoId}"></span>
+                <span th:text="${item.equipaggiato} ? ' (Equipaggiato)' : ''"></span>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${inventario == null}">
+        <p>Inventario vuoto.</p>
+    </div>
+</section>
+</body>
+</html>

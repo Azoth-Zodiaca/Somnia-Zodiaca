@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Wallet - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Wallet</h1>
+    <div th:if="${utente != null}">
+        <p>Saldo QI: <span th:text="${utente.qi}"></span></p>
+    </div>
+    <div th:if="${utente == null}">
+        <p>Utente non trovato.</p>
+    </div>
+</section>
+</body>
+</html>

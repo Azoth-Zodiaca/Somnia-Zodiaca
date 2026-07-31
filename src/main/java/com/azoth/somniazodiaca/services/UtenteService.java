@@ -62,4 +62,8 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     public List<UtenteDetail> getAllUsers() {
         return getAll();
     }
+
+    public Optional<UtenteDetail> findById(Long id) {
+        return getRepository().findById(id).map(getConverter()::fromEToD);
+    }
 }

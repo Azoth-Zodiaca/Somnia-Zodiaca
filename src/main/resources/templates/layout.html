@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:fragment="layout">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:replace="~{::title}">Somnia Zodiaca</title>
+    <link rel="stylesheet" th:href="@{/assets/styles.css}" />
+</head>
+<body>
+<header class="header">
+    <nav class="nav">
+        <a th:href="@{/}">Home</a>
+        <a th:href="@{/oracolo}">Oracolo</a>
+        <a th:href="@{/social}">Community</a>
+        <a th:href="@{/shop}">Shop</a>
+        <a th:href="@{/inventario}">Inventario</a>
+        <a th:href="@{/tema-natale}">Tema Natale</a>
+        <a th:href="@{/profilo}">Profilo</a>
+    </nav>
+</header>
+<main th:replace="~{::body}"></main>
+<footer class="footer">
+    <p>© 2026 Somnia Zodiaca</p>
+</footer>
+</body>
+</html>

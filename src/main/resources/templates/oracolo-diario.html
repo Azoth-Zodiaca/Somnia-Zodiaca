@@ -1,0 +1,21 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
+<head>
+    <title>Diario dei sogni - Somnia Zodiaca</title>
+</head>
+<body>
+<section>
+    <h1>Diario dei sogni</h1>
+    <div th:if="${sogni != null}">
+        <ul>
+            <li th:each="sogno : ${sogni}">
+                <strong th:text="${sogno.testo}"></strong>
+            </li>
+        </ul>
+    </div>
+    <div th:if="${sogni == null}">
+        <p>Nessun sogno salvato.</p>
+    </div>
+</section>
+</body>
+</html>
