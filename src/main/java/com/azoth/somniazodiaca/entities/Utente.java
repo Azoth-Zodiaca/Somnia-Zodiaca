@@ -14,6 +14,7 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
+import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -33,8 +34,13 @@ public class Utente extends BaseEntity {
     @Column(name = "email", nullable = false, unique = true, length = 255)
     private String email;
 
-    @Column(name = "password", nullable = false)
-    private String password;
+    /**
+     * Contiene soltanto l'hash della password, mai la password in chiaro.
+     * Il prefisso {bcrypt} permette al DelegatingPasswordEncoder di riconoscere
+     * l'algoritmo usato e rende più semplice una futura migrazione degli hash.
+     */
+    @Column(name = "password_hash", nullable = false, length = 255)
+    private String passwordHash;
 
     @Enumerated(EnumType.STRING)
     @Column(name = "ruolo", nullable = false)
@@ -49,10 +55,8 @@ public class Utente extends BaseEntity {
     private SegnoZodiacale ascendente;
 
     @Column(name = "qi", nullable = false)
-    private Integer qi;
-
-    @Column(name = "data_registrazione", nullable = false)
-    private LocalDateTime dataRegistrazione;
+    @Builder.Default
+    private Integer qi = 0;
 
     @Column(name = "ultimo_accesso")
     private LocalDateTime ultimoAccesso;

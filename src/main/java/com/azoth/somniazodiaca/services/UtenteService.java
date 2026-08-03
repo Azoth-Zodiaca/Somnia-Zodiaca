@@ -28,36 +28,35 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         return getRepository().findByEmail(email).map(getConverter()::fromEToD);
     }
 
-    public Optional<UtenteDetail> authenticate(String usernameOrEmail, String password) {
-        return getRepository()
-                .findByUsernameOrEmail(usernameOrEmail, usernameOrEmail)
-                .filter(u -> u.getPassword() != null && u.getPassword().equals(password))
-                .map(getConverter()::fromEToD);
-    }
+    // public Optional<UtenteDetail> authenticate(String usernameOrEmail, String password) {
+    //     return getRepository()
+    //             .findByUsernameOrEmail(usernameOrEmail)
+    //             .filter(u -> u.getPassword() != null && u.getPassword().equals(password))
+    //             .map(getConverter()::fromEToD);
+    // }
 
-    public UtenteDetail register(CreazioneUtenteDto dto) {
-        Utente utente = Utente.builder()
-                .username(dto.getUsername())
-                .email(dto.getEmail())
-                .password(dto.getPassword())
-                .ruolo(dto.getRuolo())
-                .qi(250)
-                .dataRegistrazione(LocalDateTime.now())
-                .ultimoAccesso(LocalDateTime.now())
-                .build();
+    // public UtenteDetail register(CreazioneUtenteDto dto) {
+    //     Utente utente = Utente.builder()
+    //             .username(dto.getUsername())
+    //             .email(dto.getEmail())
+    //             .password(dto.getPassword())
+    //             .ruolo(dto.getRuolo())
+    //             .qi(250)
+    //             .ultimoAccesso(LocalDateTime.now())
+    //             .build();
 
-        TemaNatale temaNatale = TemaNatale.builder()
-                .utente(utente)
-                .dataNascita(dto.getDataNascita())
-                .oraNascita(dto.getOraNascita())
-                .luogoNascita(dto.getLuogoNascita())
-                .dataCreazione(LocalDateTime.now())
-                .build();
+    //     TemaNatale temaNatale = TemaNatale.builder()
+    //             .utente(utente)
+    //             .dataNascita(dto.getDataNascita())
+    //             .oraNascita(dto.getOraNascita())
+    //             .luogoNascita(dto.getLuogoNascita())
+    //             .dataCreazione(LocalDateTime.now())
+    //             .build();
 
-        utente.setTemaNatale(temaNatale);
-        getRepository().save(utente);
-        return getConverter().fromEToD(utente);
-    }
+    //     utente.setTemaNatale(temaNatale);
+    //     getRepository().save(utente);
+    //     return getConverter().fromEToD(utente);
+    // }
 
     public List<UtenteDetail> getAllUsers() {
         return getAll();

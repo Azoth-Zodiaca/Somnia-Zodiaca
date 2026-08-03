@@ -126,7 +126,8 @@ public class PageController {
     public String inventario(Model model, HttpSession session) {
         Optional<Long> currentUserId = getCurrentUserId(session);
         if (currentUserId.isPresent()) {
-            List<AggiuntaInventarioCosmeticoDto> inventario = inventarioCosmeticoService.findByUtenteId(currentUserId.get());
+            List<AggiuntaInventarioCosmeticoDto> inventario = inventarioCosmeticoService
+                    .findByUtenteId(currentUserId.get());
             model.addAttribute("inventario", inventario);
             bindUtente(model, session);
         }

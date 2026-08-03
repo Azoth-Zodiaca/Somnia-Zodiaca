@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org" th:fragment="app-layout">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title th:text="${title}">Somnia Zodiaca</title>
+    <link
+        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
+        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/styles.css}" />
+    <script th:src="@{/js/app.js}" defer></script>
+    <script th:src="@{/js/data.js}" defer></script>
+</head>
+
+<body>
+
+    <div id="app-root" class="app" th:fragment="sidebar">
+
+        <aside class="sidebar">
+
+            <div class="brand">
+                <div class="brand-mark">◈</div>
+                <div class="font-display" style="font-size:20px">Quicksilver</div>
+            </div>
+
+            <nav>
+                <a href="index.html" class="active"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                        stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M3 9l9-7 9 7v11a2 2 0 0 1-2 2h-4v-7h-6v7H5a2 2 0 0 1-2-2z" />
+                    </svg><span>Dashboard</span></a>
+                <a href="tema-natale.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M21 12.79A9 9 0 1 1 11.21 3a7 7 0 0 0 9.79 9.79Z" />
+                    </svg><span>Tema Natale</span></a>
+                <a href="oracolo.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 3l1.5 4.5L18 9l-4.5 1.5L12 15l-1.5-4.5L6 9l4.5-1.5Z" />
+                        <path d="M19 16l.7 2.1L22 19l-2.3.9L19 22l-.7-2.1L16 19l2.3-.9Z" />
+                    </svg><span>Oracolo</span></a>
+                <a href="social.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M17 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="9" cy="7" r="4" />
+                        <path d="M23 21v-2a4 4 0 0 0-3-3.87" />
+                        <path d="M16 3.13a4 4 0 0 1 0 7.75" />
+                    </svg><span>Social</span></a>
+                <a href="shop.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4Z" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <path d="M16 10a4 4 0 0 1-8 0" />
+                    </svg><span>Shop</span></a>
+                <a href="inventario.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M4 10c0-3 2-5 5-5h6c3 0 5 2 5 5v9a2 2 0 0 1-2 2H6a2 2 0 0 1-2-2Z" />
+                        <path d="M8 21v-5a4 4 0 0 1 8 0v5" />
+                        <path d="M9 5V4a3 3 0 0 1 6 0v1" />
+                    </svg><span>Inventario</span></a>
+                <a href="wallet.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 12V8H4a2 2 0 0 1-2-2c0-1 1-2 2-2h14v4" />
+                        <path d="M2 6v12a2 2 0 0 0 2 2h16v-4" />
+                        <circle cx="16" cy="14" r="1.5" />
+                    </svg><span>Wallet</span></a>
+                <a href="progressi.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 9H4a2 2 0 0 1-2-2V5h4" />
+                        <path d="M18 9h2a2 2 0 0 0 2-2V5h-4" />
+                        <path d="M6 4h12v6a6 6 0 0 1-12 0Z" />
+                        <path d="M10 20h4" />
+                        <path d="M12 15v5" />
+                    </svg><span>Progressi</span></a>
+                <div class="divider"></div>
+                <a href="impostazioni.html"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"
+                        stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="12" cy="12" r="3" />
+                        <path
+                            d="M19.4 15a1.7 1.7 0 0 0 .3 1.8l.1.1a2 2 0 1 1-2.8 2.8l-.1-.1a1.7 1.7 0 0 0-1.8-.3 1.7 1.7 0 0 0-1 1.5V21a2 2 0 1 1-4 0v-.1a1.7 1.7 0 0 0-1.1-1.5 1.7 1.7 0 0 0-1.8.3l-.1.1a2 2 0 1 1-2.8-2.8l.1-.1a1.7 1.7 0 0 0 .3-1.8 1.7 1.7 0 0 0-1.5-1H3a2 2 0 1 1 0-4h.1a1.7 1.7 0 0 0 1.5-1.1 1.7 1.7 0 0 0-.3-1.8l-.1-.1a2 2 0 1 1 2.8-2.8l.1.1a1.7 1.7 0 0 0 1.8.3H9a1.7 1.7 0 0 0 1-1.5V3a2 2 0 1 1 4 0v.1a1.7 1.7 0 0 0 1 1.5 1.7 1.7 0 0 0 1.8-.3l.1-.1a2 2 0 1 1 2.8 2.8l-.1.1a1.7 1.7 0 0 0-.3 1.8V9a1.7 1.7 0 0 0 1.5 1H21a2 2 0 1 1 0 4h-.1a1.7 1.7 0 0 0-1.5 1Z" />
+                    </svg><span>Impostazioni</span></a>
+            </nav>
+
+            <div class="premium-ad" style="padding:16px">
+                <div class="ritual-border p-4">
+                    <div class="txt-xs uppercase tracking-widest text-gold">Premium</div>
+                    <div class="font-display txt-lg mt-1">Custode del Cielo</div>
+                    <p class="txt-xs text-muted mt-1">+500 QI mensili, letture illimitate, cosmetici esclusivi.</p>
+                    <a href="../premium.html" class="mt-3 iflex items-center gap-1 txt-xs fw-500 text-gold">Scopri di
+                        più →</a>
+                </div>
+            </div>
+
+            <a href="profilo.html" class="flex items-center gap-3 px-4 py-4 border-t" style="text-decoration:none">
+                <div
+                    style="width:40px;height:40px;border-radius:9999px;display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:18px;background:linear-gradient(135deg, var(--el-fire), oklch(.28 .06 290))">
+                    L</div>
+                <div class="flex-1 min-w-0">
+                    <div class="txt-sm fw-500 truncate">@lunadark</div>
+                    <div class="txt-xs text-muted">♌ Leone</div>
+                </div>
+            </a>
+        </aside>
+
+    </div>
+
+</body>
+
+</html>

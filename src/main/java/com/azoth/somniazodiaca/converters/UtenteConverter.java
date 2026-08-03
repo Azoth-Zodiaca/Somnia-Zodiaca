@@ -22,7 +22,6 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .email(d.getEmail())
                 .ruolo(d.getRuolo())
                 .qi(d.getQi())
-                .dataRegistrazione(d.getDataRegistrazione())
                 .ultimoAccesso(d.getUltimoAccesso())
                 .build();
 
@@ -49,7 +48,6 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .email(e.getEmail())
                 .ruolo(e.getRuolo())
                 .qi(e.getQi())
-                .dataRegistrazione(e.getDataRegistrazione())
                 .ultimoAccesso(e.getUltimoAccesso())
                 .build();
 

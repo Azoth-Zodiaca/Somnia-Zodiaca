@@ -4,6 +4,7 @@ import java.util.Optional;
 
 import jakarta.servlet.http.HttpSession;
 import jakarta.validation.Valid;
+import lombok.extern.slf4j.Slf4j;
 
 import com.azoth.somniazodiaca.dtos.CreazioneUtenteDto;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
@@ -18,6 +19,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 @Controller
+@Slf4j
 public class AuthController {
 
     private final UtenteService utenteService;
@@ -38,30 +40,8 @@ public class AuthController {
     }
 
     @GetMapping("/login")
-    public String loginPage(HttpSession session) {
-        if (getCurrentUserId(session).isPresent()) {
-            return "redirect:/profilo";
-        }
-        return "login";
-    }
-
-    @PostMapping("/login")
-    public String login(
-            @RequestParam String usernameOrEmail,
-            @RequestParam String password,
-            Model model,
-            HttpSession session) {
-
-        Optional<UtenteDetail> utente = utenteService.authenticate(usernameOrEmail, password);
-        if (utente.isEmpty()) {
-            model.addAttribute("loginError", "Credenziali non valide");
-            model.addAttribute("usernameOrEmail", usernameOrEmail);
-            return "login";
-        }
-
-        UtenteDetail saved = utente.get();
-        session.setAttribute("currentUserId", saved.getId());
-        return "redirect:/profilo";
+    public String login() {
+        return "auth/login";
     }
 
     @GetMapping("/registrazione")
@@ -73,35 +53,29 @@ public class AuthController {
         return "registrazione";
     }
 
-    @PostMapping("/registrazione")
-    public String register(
-            @Valid CreazioneUtenteDto dto,
-            BindingResult bindingResult,
-            Model model,
-            HttpSession session) {
+    // @PostMapping("/registrazione")
+    // public String register(
+    //         @Valid CreazioneUtenteDto dto,
+    //         BindingResult bindingResult,
+    //         Model model,
+    //         HttpSession session) {
 
-        dto.setRuolo(Ruolo.BASE);
+    //     dto.setRuolo(Ruolo.BASE);
 
-        if (utenteService.findByUsername(dto.getUsername()).isPresent()) {
-            bindingResult.rejectValue("username", "error.username", "Username già in uso");
-        }
+    //     if (utenteService.findByUsername(dto.getUsername()).isPresent()) {
+    //         bindingResult.rejectValue("username", "error.username", "Username già in uso");
+    //     }
 
-        if (utenteService.findByEmail(dto.getEmail()).isPresent()) {
-            bindingResult.rejectValue("email", "error.email", "Email già in uso");
-        }
+    //     if (utenteService.findByEmail(dto.getEmail()).isPresent()) {
+    //         bindingResult.rejectValue("email", "error.email", "Email già in uso");
+    //     }
 
-        if (bindingResult.hasErrors()) {
-            return "registrazione";
-        }
+    //     if (bindingResult.hasErrors()) {
+    //         return "registrazione";
+    //     }
 
-        UtenteDetail saved = utenteService.register(dto);
-        session.setAttribute("currentUserId", saved.getId());
-        return "redirect:/profilo";
-    }
-
-    @PostMapping("/logout")
-    public String logout(HttpSession session) {
-        session.invalidate();
-        return "redirect:/login";
-    }
+    //     UtenteDetail saved = utenteService.register(dto);
+    //     session.setAttribute("currentUserId", saved.getId());
+    //     return "redirect:/profilo";
+    // }
 }
