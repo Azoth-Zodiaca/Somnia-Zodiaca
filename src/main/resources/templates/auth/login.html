@@ -1,26 +1,48 @@
 <!DOCTYPE html>
-<html lang="it" xmlns:th="http://www.thymeleaf.org" th:replace="layout :: layout">
-<head>
-    <title>Login - Somnia Zodiaca</title>
-</head>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/layout :: head('Accesso')}"></head>
+
 <body>
-<section>
-    <h1>Accedi</h1>
-    <div th:if="${loginError}">
-        <p class="error" th:text="${loginError}"></p>
+
+  <section style="min-height:100vh;display:grid;grid-template-columns:1fr 1fr">
+
+    <div class="flex items-center justify-center p-8">
+
+      <div class="w-full" style="max-width:400px">
+
+        <p class="txt-xs uppercase tracking-widest text-quicksilver">Accedi</p>
+        <h1 class="mt-1 txt-4xl font-display">Il tuo cielo ti attende</h1>
+
+        <p class="alert error" th:if="${param.error}">
+          Username o password non validi.
+        </p>
+        <p class="alert success" th:if="${param.logout}">
+          Disconnessione completata correttamente.
+        </p>
+
+        <form class="mt-8 grid gap-4" th:action="@{/login}" method="post">
+
+          <label class="txt-xs uppercase tracking-widest text-muted">Email o username</label>
+          <input class="field mt-1_5" placeholder="luna@quicksilver.app">
+
+          <div class="flex items-center justify-between mb-1_5"><label
+              class="txt-xs uppercase tracking-widest text-muted">Password</label></div>
+          <input type="password" class="field" placeholder="••••••••">
+
+
+          <button type="submit" class="btn btn-primary btn-lg mt-2">Entra nel cielo →</button>
+
+        </form>
+
+        <p class="mt-8 text-center txt-sm text-muted">Non hai un account? <a href="registrazione.html"
+            class="text-quicksilver fw-500">Crea il tuo</a></p>
+
+      </div>
+
     </div>
-    <form th:action="@{/login}" method="post">
-        <div>
-            <label for="usernameOrEmail">Username o email</label>
-            <input type="text" id="usernameOrEmail" name="usernameOrEmail" th:value="${usernameOrEmail}" required />
-        </div>
-        <div>
-            <label for="password">Password</label>
-            <input type="password" id="password" name="password" required />
-        </div>
-        <button type="submit">Accedi</button>
-    </form>
-    <p>Non hai un account? <a th:href="@{/registrazione}">Registrati</a></p>
-</section>
+
+  </section>
 </body>
+
 </html>
