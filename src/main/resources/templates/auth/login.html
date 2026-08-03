@@ -1,18 +1,18 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 
-<head th:replace="~{fragments/layout :: head('Accesso')}"></head>
+<head th:replace="~{fragments/layout :: head('Accesso', @{/css/login-style.css})}"></head>
 
 <body>
 
-  <section style="min-height:100vh;display:grid;grid-template-columns:1fr 1fr">
+  <section class="auth-layout">
 
-    <div class="flex items-center justify-center p-8">
+    <div class="auth-panel">
 
-      <div class="w-full" style="max-width:400px">
+      <div class="auth-box">
 
-        <p class="txt-xs uppercase tracking-widest text-quicksilver">Accedi</p>
-        <h1 class="mt-1 txt-4xl font-display">Il tuo cielo ti attende</h1>
+        <p class="label-caps text-accent">Accedi</p>
+        <h1 class="auth-title">Il tuo cielo ti attende</h1>
 
         <p class="alert error" th:if="${param.error}">
           Username o password non validi.
@@ -21,22 +21,20 @@
           Disconnessione completata correttamente.
         </p>
 
-        <form class="mt-8 grid gap-4" th:action="@{/login}" method="post">
+        <form class="auth-form" th:action="@{/login}" method="post">
 
-          <label class="txt-xs uppercase tracking-widest text-muted">Email o username</label>
-          <input class="field mt-1_5" placeholder="luna@quicksilver.app">
+          <label class="label-caps text-muted" for="username">Email o username</label>
+          <input class="form-input" id="username" name="username" type="text" autocomplete="username" required autofocus placeholder="luna@quicksilver.app">
 
-          <div class="flex items-center justify-between mb-1_5"><label
-              class="txt-xs uppercase tracking-widest text-muted">Password</label></div>
-          <input type="password" class="field" placeholder="••••••••">
+          <label class="label-caps text-muted" for="password">Password</label>
+          <input class="form-input" type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••">
 
-
-          <button type="submit" class="btn btn-primary btn-lg mt-2">Entra nel cielo →</button>
+          <button class="btn btn-primary btn-large space-top-sm" type="submit" >Entra nel cielo →</button>
 
         </form>
 
-        <p class="mt-8 text-center txt-sm text-muted">Non hai un account? <a href="registrazione.html"
-            class="text-quicksilver fw-500">Crea il tuo</a></p>
+        <p class="auth-footer text-center text-sm text-muted">Non hai un account? <a href="registrazione.html"
+            class="text-accent font-medium">Crea il tuo</a></p>
 
       </div>
 

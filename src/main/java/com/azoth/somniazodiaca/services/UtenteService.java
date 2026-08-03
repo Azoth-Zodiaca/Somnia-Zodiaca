@@ -1,15 +1,12 @@
 package com.azoth.somniazodiaca.services;
 
-import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.azoth.somniazodiaca.converters.UtenteConverter;
-import com.azoth.somniazodiaca.dtos.CreazioneUtenteDto;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
-import com.azoth.somniazodiaca.entities.TemaNatale;
 import com.azoth.somniazodiaca.entities.Utente;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 
