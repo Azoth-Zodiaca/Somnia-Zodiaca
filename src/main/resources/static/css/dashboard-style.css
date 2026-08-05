@@ -212,6 +212,10 @@ svg {
   width: 100%
 }
 
+.block {
+  display: block
+}
+
 /* surface primitives */
 .surface {
   background: var(--color-surface);
@@ -294,6 +298,16 @@ button,
   background: linear-gradient(90deg, var(--color-gold), oklch(.9 .12 90));
   color: #000;
   font-weight: 600
+}
+
+/* size modifiers, replacing former one-off inline style="height:..." on buttons */
+.btn-tall {
+  height: 40px
+}
+
+.btn-compact {
+  height: 36px;
+  font-size: 13px
 }
 
 /* progress bar */
@@ -488,6 +502,12 @@ button,
   display: none
 }
 
+/* placeholder sidebar-toggle button, currently unused/empty on every
+   screen size — was previously forced hidden via an inline style */
+.lg-only {
+  display: none
+}
+
 @media (max-width:1023px) {
   /* sidebar.css defines .sidebar for every page that uses it; only this
      page has a .mobile-nav fallback, so the hide-on-mobile rule for the
@@ -503,10 +523,6 @@ button,
 
   .topbar {
     padding: 0 16px
-  }
-
-  .lg-only {
-    display: none
   }
 
   .mobile-nav {

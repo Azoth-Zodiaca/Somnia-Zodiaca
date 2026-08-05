@@ -4,10 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class InventarioController {
+public class SocialController {
 
-    @GetMapping("/inventario")
-    public String inventario() {
-        return "inventario/inventario";
+    @GetMapping("/social")
+    public String social() {
+        return "social/social";
     }
 }

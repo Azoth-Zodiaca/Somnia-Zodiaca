@@ -5,13 +5,11 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title th:text="${title}">Somnia Zodiaca</title>
-    <link
-        href="https://fonts.googleapis.com/css2?family=Cormorant+Garamond:wght@400;500;600;700&family=Inter:wght@300;400;500;600;700&family=JetBrains+Mono:wght@400;500&display=swap"
-        rel="stylesheet">
+    <link rel="stylesheet" th:href="@{/css/fonts.css}" />
     <link rel="stylesheet" th:href="${styleSheetPath}" />
     <link rel="stylesheet" th:href="@{/css/sidebar.css}" />
-    <!-- <script th:src="@{/js/app.js}" defer></script>
-    <script th:src="@{/js/data.js}" defer></script> -->
+    <script th:src="@{/js/data.js}" defer></script>
+    <script th:src="@{/js/app.js}" defer></script>
 </head>
 
 <body>
@@ -22,7 +20,7 @@
 
             <div class="brand">
                 <div class="brand-mark">◈</div>
-                <div class="font-display" style="font-size:20px">Quicksilver</div>
+                <div class="font-display brand-title">Quicksilver</div>
             </div>
 
             <nav>
@@ -81,7 +79,7 @@
                     </svg><span>Impostazioni</span></a>
             </nav>
 
-            <div class="premium-ad" style="padding:16px">
+            <div class="premium-ad">
                 <div class="ritual-border p-4">
                     <div class="txt-xs uppercase tracking-widest text-gold">Premium</div>
                     <div class="font-display txt-lg mt-1">Custode del Cielo</div>
@@ -91,10 +89,8 @@
                 </div>
             </div>
 
-            <a href="profilo.html" class="flex items-center gap-3 px-4 py-4 border-t" style="text-decoration:none">
-                <div
-                    style="width:40px;height:40px;border-radius:9999px;display:grid;place-items:center;font-family:'Cormorant Garamond',serif;font-size:18px;background:linear-gradient(135deg, var(--el-fire), oklch(.28 .06 290))">
-                    L</div>
+            <a href="profilo.html" class="flex items-center gap-3 px-4 py-4 border-t">
+                <div class="avatar-mark">L</div>
                 <div class="flex-1 min-w-0">
                     <div class="txt-sm fw-500 truncate">@lunadark</div>
                     <div class="txt-xs text-muted">♌ Leone</div>

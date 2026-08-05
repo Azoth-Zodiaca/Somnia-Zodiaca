@@ -64,38 +64,35 @@ public class SecurityConfig {
                 // Esempio: se una pagina è visibile solo agli admin, questa regola va scritta qui.
                 // Non basta nascondere un bottone nell'interfaccia: la vera protezione deve stare lato server.
                 .authorizeHttpRequests(authorize -> authorize
-                        // Queste risorse sono pubbliche.
-                        // Significa che anche un visitatore non registrato può aprirle.
-                        // Serve per la pagina di login, la pagina di errore e i file statici come CSS e JS.
-                        .requestMatchers("/login", "/accesso-negato", "/error", "/css/**", "/js/**", "/favicon.ico")
-                        .permitAll()
-
-                        // Queste operazioni cambiano dati importanti.
-                        // Per questo le riserviamo solo a chi ha il ruolo ADMIN.
-                        // In generale: "ADMIN" è l'utente con i permessi più ampi.
-                        // TODO: da modificare
+                        // Public entry points and static resources.
                         .requestMatchers(
-                                "/clienti/nuovo", "/clienti/*/modifica",
-                                "/guide/nuova", "/guide/*/modifica",
-                                "/tour/nuovo", "/tour/*/modifica",
-                                "/partenze/nuova", "/partenze/*/modifica"
-                        ).hasRole("ADMIN")
+                                "/",
+                                "/index",
+                                "/login",
+                                "/accesso-negato",
+                                "/error",
+                                "/css/**",
+                                "/js/**",
+                                "/fonts/**",
+                                "/favicon.ico"
+                        ).permitAll()
 
-                        // Le richieste POST di solito servono per creare, modificare o cancellare dati.
-                        // Quindi anche queste sono riservate all'admin.
-                        // TODO: da modificare
-                        .requestMatchers(HttpMethod.POST,
-                                "/clienti/**", "/guide/**", "/tour/**", "/partenze/**"
-                        ).hasRole("ADMIN")
+                        // Application pages that are protected and require a logged-in user.
+                        .requestMatchers(
+                                "/dashboard",
+                                "/oracolo",
+                                "/oracolo/diario",
+                                "/social",
+                                "/shop",
+                                "/inventario",
+                                "/tema-natale",
+                                "/profilo",
+                                "/wallet",
+                                "/impostazioni",
+                                "/progressi"
+                        ).authenticated()
 
-                        // Le prenotazioni possono essere gestite sia dall'admin sia dall'operatore.
-                        // "hasAnyRole" significa: basta avere uno dei ruoli elencati.
-                        // TODO: da modificare
-                        .requestMatchers("/prenotazioni/**")
-                        .hasAnyRole("ADMIN", "OPERATORE")
-
-                        // Tutto il resto non è pubblico.
-                        // Se una richiesta arriva qui, Spring controlla solo che l'utente sia loggato.
+                        // Everything else must be authenticated as well.
                         .anyRequest().authenticated()
                 )
 

@@ -4,10 +4,10 @@ import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.GetMapping;
 
 @Controller
-public class InventarioController {
+public class OracoloController {
 
-    @GetMapping("/inventario")
-    public String inventario() {
-        return "inventario/inventario";
+    @GetMapping("/oracolo")
+    public String oracolo() {
+        return "oracolo/oracolo";
     }
 }

@@ -215,6 +215,10 @@ svg {
   font-size: 18px
 }
 
+.brand-title {
+  font-size: 20px
+}
+
 .sidebar nav {
   flex: 1;
   padding: 0 12px;
@@ -252,4 +256,19 @@ svg {
   height: 1px;
   background: var(--border);
   margin: 16px 0
+}
+
+.premium-ad {
+  padding: 16px
+}
+
+.avatar-mark {
+  width: 40px;
+  height: 40px;
+  border-radius: 9999px;
+  display: grid;
+  place-items: center;
+  font-family: "Cormorant Garamond", serif;
+  font-size: 18px;
+  background: linear-gradient(135deg, var(--el-fire), oklch(.28 .06 290))
 }
