@@ -69,6 +69,7 @@ public class SecurityConfig {
                                 "/",
                                 "/index",
                                 "/login",
+                                "/registrazione",
                                 "/accesso-negato",
                                 "/error",
                                 "/css/**",
@@ -90,7 +91,7 @@ public class SecurityConfig {
                                 "/wallet",
                                 "/impostazioni",
                                 "/progressi"
-                        ).authenticated() // a queste non può accedere chiunque
+                        ).authenticated() // a queste puoi accedere solo se autenticato
 
                         // Everything else must be authenticated as well.
                         .anyRequest().authenticated()

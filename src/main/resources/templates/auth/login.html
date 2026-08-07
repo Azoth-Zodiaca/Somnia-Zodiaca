@@ -18,13 +18,13 @@
           Username o password non validi.
         </p>
         <p class="alert success" th:if="${param.logout}">
-          Disconnessione completata correttamente.
+          Disconnessione effettuata.
         </p>
 
         <form class="auth-form" th:action="@{/login}" method="post">
 
           <label class="label-caps text-muted" for="username">Email o username</label>
-          <input class="form-input" id="username" name="username" type="text" autocomplete="username" required autofocus placeholder="luna@quicksilver.app">
+          <input class="form-input" id="username" name="username" type="text" autocomplete="username" required autofocus placeholder="Melinoe">
 
           <label class="label-caps text-muted" for="password">Password</label>
           <input class="form-input" type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••">
@@ -33,8 +33,8 @@
 
         </form>
 
-        <p class="auth-footer text-center text-sm text-muted">Non hai un account? <a href="registrazione.html"
-            class="text-accent font-medium">Crea il tuo</a></p>
+        <p class="auth-footer text-center text-sm text-muted">Non hai un account? <a th:href= "@{/registrazione}"
+            class="text-accent font-medium">Creane uno</a></p>
 
       </div>
 
