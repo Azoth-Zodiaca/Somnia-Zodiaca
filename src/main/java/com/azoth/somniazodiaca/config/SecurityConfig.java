@@ -75,7 +75,7 @@ public class SecurityConfig {
                                 "/js/**",
                                 "/fonts/**",
                                 "/favicon.ico"
-                        ).permitAll()
+                        ).permitAll() // a queste può accedere chiunque
 
                         // Application pages that are protected and require a logged-in user.
                         .requestMatchers(
@@ -90,7 +90,7 @@ public class SecurityConfig {
                                 "/wallet",
                                 "/impostazioni",
                                 "/progressi"
-                        ).authenticated()
+                        ).authenticated() // a queste non può accedere chiunque
 
                         // Everything else must be authenticated as well.
                         .anyRequest().authenticated()
