@@ -3,52 +3,57 @@
 
 <head th:replace="~{fragments/layout :: head('Registrazione', @{/css/login-style.css})}"></head>
 
-<div class="auth-panel">
+<body>
 
-    <div class="auth-box">
+    <section class="auth-layout">
 
-        <p class="label-caps text-accent">Registrati</p>
-        <h1 class="auth-title">Mira la volta celeste</h1>
+        <div class="auth-panel">
+            <div class="auth-box">
 
-        <form class="auth-form" th:action="@{/registrazione}" th:object="${registrazione}" method="post">
+                <p class="label-caps text-accent">Registrati</p>
+                <h1 class="auth-title">Mira la volta celeste</h1>
+
+                <form class="auth-form" th:action="@{/registrazione}" th:object="${registrazione}" method="post">
 
 
-            <label class="label-caps text-muted" for="username">
-                Username
-            </label>
+                    <label class="label-caps text-muted" for="username">
+                        Username
+                    </label>
 
-            <input class="form-input" id="username" type="text" th:field="*{username}" autocomplete="username"
-                placeholder="Melinoe" required>
+                    <input class="form-input" id="username" type="text" th:field="*{username}" autocomplete="username"
+                        placeholder="Melinoe" required>
 
-            <label class="label-caps text-muted" for="email">
-                Email
-            </label>
+                    <label class="label-caps text-muted" for="email">
+                        Email
+                    </label>
 
-            <input class="form-input" id="email" type="email" th:field="*{email}" autocomplete="email"
-                placeholder="melinoe@somniazodiaca.it" required>
+                    <input class="form-input" id="email" type="email" th:field="*{email}" autocomplete="email"
+                        placeholder="melinoe@somniazodiaca.it" required>
 
-            <label class="label-caps text-muted" for="password">
-                Password
-            </label>
+                    <label class="label-caps text-muted" for="password">
+                        Password
+                    </label>
 
-            <input class="form-input" id="password" type="password" th:field="*{password}" autocomplete="new-password"
-                placeholder="••••••••" required>
+                    <input class="form-input" id="password" type="password" th:field="*{password}"
+                        autocomplete="new-password" placeholder="••••••••" required>
 
-            <button class="btn btn-primary btn-large space-top-sm" type="submit">
+                    <button class="btn btn-primary btn-large space-top-sm" type="submit">
 
-                Conciliati con il cosmo →
+                        Conciliati con il cosmo →
 
-            </button>
+                    </button>
 
-        </form>
+                </form>
 
-        <p class="auth-footer text-center text-sm text-muted">
-            Hai già un account?
-            <a th:href="@{/login}" class="text-accent font-medium">
-                Accedi
-            </a>
-        </p>
+                <p class="auth-footer text-center text-sm text-muted">
+                    Hai già un account?
+                    <a th:href="@{/login}" class="text-accent font-medium">
+                        Accedi
+                    </a>
+                </p>
+            </div>
+        </div>
 
-    </div>
+    </section>
 
-</div>
+</body>
