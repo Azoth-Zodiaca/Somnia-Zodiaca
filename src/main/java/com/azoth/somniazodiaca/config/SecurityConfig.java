@@ -64,7 +64,6 @@ public class SecurityConfig {
                 // Esempio: se una pagina è visibile solo agli admin, questa regola va scritta qui.
                 // Non basta nascondere un bottone nell'interfaccia: la vera protezione deve stare lato server.
                 .authorizeHttpRequests(authorize -> authorize
-                        // Public entry points and static resources.
                         .requestMatchers(
                                 "/",
                                 "/index",
@@ -78,7 +77,6 @@ public class SecurityConfig {
                                 "/favicon.ico"
                         ).permitAll() // a queste può accedere chiunque
 
-                        // Application pages that are protected and require a logged-in user.
                         .requestMatchers(
                                 "/dashboard",
                                 "/oracolo",

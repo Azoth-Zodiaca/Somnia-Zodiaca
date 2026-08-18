@@ -8,3 +8,7 @@
 // cookie
 // Authentication provider (DAO outdated per noi, che non usiamo i DAO (?)
 // authentication manager
+
+
+//UNA VOLTA FINITO LO SVILUPPO
+// rimuovere AdminInitializer nel package config, serve solo per non dover ricreare l'admin ad ogni wipe del db

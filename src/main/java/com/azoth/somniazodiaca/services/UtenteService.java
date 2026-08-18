@@ -43,16 +43,6 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     // .map(getConverter()::fromEToD);
     // }
 
-    // public UtenteDetail register(CreazioneUtenteDto dto) {
-    // Utente utente = Utente.builder()
-    // .username(dto.getUsername())
-    // .email(dto.getEmail())
-    // .password(dto.getPassword())
-    // .ruolo(dto.getRuolo())
-    // .qi(250)
-    // .ultimoAccesso(LocalDateTime.now())
-    // .build();
-
     // TemaNatale temaNatale = TemaNatale.builder()
     // .utente(utente)
     // .dataNascita(dto.getDataNascita())
@@ -75,7 +65,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     }
 
     @Transactional
-    public Utente registra(Registrazione registrazione) {
+    public Utente register(Registrazione registrazione) {
 
         if (getRepository().findByUsername(registrazione.username()).isPresent()) {
             throw new UsernameAlreadyExistsException("L username esiste già");
@@ -94,4 +84,5 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
 
         return getRepository().save(utente);
     }
+
 }
