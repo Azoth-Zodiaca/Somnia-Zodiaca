@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class OracoloController {
 
     @GetMapping("/oracolo")
+    public String redirectOracolo() {
+        return "redirect:/app/oracolo";
+    }
+
+    @GetMapping("/app/oracolo")
     public String oracolo() {
-        return "oracolo/oracolo";
+        return "app/oracolo";
     }
 }

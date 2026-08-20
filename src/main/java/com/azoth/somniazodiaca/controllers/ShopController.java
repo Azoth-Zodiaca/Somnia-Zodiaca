@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ShopController {
 
     @GetMapping("/shop")
+    public String redirectShop() {
+        return "redirect:/app/shop";
+    }
+
+    @GetMapping("/app/shop")
     public String shop() {
-        return "shop/shop";
+        return "app/shop";
     }
 }

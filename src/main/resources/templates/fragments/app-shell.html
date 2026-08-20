@@ -26,7 +26,7 @@
   <nav th:fragment="sidebar(active)" class="sidebar" id="sidebar">
     <a href="/app/dashboard" class="brand">
       <span class="brand-dot"></span>
-      Quicksilver
+      Somnia Zodiaca
     </a>
 
     <div class="sidebar-nav">
@@ -84,10 +84,6 @@
       Buongiorno, <strong th:text="${nomeUtente} ?: 'Luna'">Luna</strong> &#9789;
     </div>
     <div class="topbar-right">
-      <div class="search-box">
-        &#128269;
-        <span>Cerca sogni, simboli, utenti...</span>
-      </div>
       <div class="qi-pill">
         &#10022; <span th:text="${saldoQi} ?: '1.240'">1.240</span> QI
       </div>

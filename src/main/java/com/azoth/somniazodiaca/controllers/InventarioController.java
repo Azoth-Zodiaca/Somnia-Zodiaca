@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class InventarioController {
 
     @GetMapping("/inventario")
+    public String redirectInventario() {
+        return "redirect:/app/inventario";
+    }
+
+    @GetMapping("/app/inventario")
     public String inventario() {
-        return "inventario/inventario";
+        return "app/inventario";
     }
 }

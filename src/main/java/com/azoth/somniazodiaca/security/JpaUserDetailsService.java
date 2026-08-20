@@ -70,7 +70,7 @@ public class JpaUserDetailsService implements UserDetailsService {
     @Override
     @Transactional(readOnly = true)
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
-        Utente utente = utenteRepository.findByUsername(username)
+        Utente utente = utenteRepository.findByUsernameOrEmail(username)
                 .orElseThrow(() -> new UsernameNotFoundException("Credenziali non valide"));
 
         return User.withUsername(utente.getUsername())

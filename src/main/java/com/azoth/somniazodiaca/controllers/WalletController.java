@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class WalletController {
 
     @GetMapping("/wallet")
+    public String redirectWallet() {
+        return "redirect:/app/wallet";
+    }
+
+    @GetMapping("/app/wallet")
     public String wallet() {
-        return "wallet/wallet";
+        return "app/wallet";
     }
 }

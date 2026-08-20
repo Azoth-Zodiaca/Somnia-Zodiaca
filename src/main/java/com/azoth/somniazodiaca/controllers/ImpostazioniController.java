@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ImpostazioniController {
 
     @GetMapping("/impostazioni")
+    public String redirectImpostazioni() {
+        return "redirect:/app/impostazioni";
+    }
+
+    @GetMapping("/app/impostazioni")
     public String impostazioni() {
-        return "impostazioni/impostazioni";
+        return "app/impostazioni";
     }
 }

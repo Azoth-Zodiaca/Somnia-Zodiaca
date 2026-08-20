@@ -69,6 +69,10 @@ public class SecurityConfig {
                                 "/index",
                                 "/login",
                                 "/register",
+                                "/premium",
+                                "/enciclopedia",
+                                "/legal/**",
+                                "/onboarding",
                                 "/home",
                                 "/accesso-negato",
                                 "/error",
@@ -78,19 +82,20 @@ public class SecurityConfig {
                                 "/favicon.ico"
                         ).permitAll() // a queste può accedere chiunque
 
-                        // .requestMatchers(
-                        //         "/dashboard",
-                        //         "/oracolo",
-                        //         "/oracolo/diario",
-                        //         "/social",
-                        //         "/shop",
-                        //         "/inventario",
-                        //         "/tema-natale",
-                        //         "/profilo",
-                        //         "/wallet",
-                        //         "/impostazioni",
-                        //         "/progressi"
-                        // ).authenticated() // a queste puoi accedere solo se autenticato
+
+                        .requestMatchers(
+                                "/dashboard",
+                                "/oracolo",
+                                "/oracolo/diario",
+                                "/social",
+                                "/shop",
+                                "/inventario",
+                                "/tema-natale",
+                                "/profilo",
+                                "/wallet",
+                                "/impostazioni",
+                                "/progressi"
+                        ).authenticated() // a queste puoi accedere solo se autenticato
 
                         // Everything else must be authenticated as well.
                         .anyRequest().authenticated()
@@ -106,7 +111,7 @@ public class SecurityConfig {
                         // Dopo un login corretto, l'utente viene portato alla home.
                         // Il secondo parametro true significa: vai lì sempre, anche se l'utente aveva provato
                         // prima ad aprire una pagina diversa.
-                        .defaultSuccessUrl("/dashboard", true) //TODO: pagina di default dopo un login corretto
+                        .defaultSuccessUrl("/app/dashboard", true)
                         // Se username o password sono sbagliati, torniamo alla login con un parametro error.
                         // La pagina può usare quel parametro per mostrare un messaggio all'utente.
                         .failureUrl("/login?error")

@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class SocialController {
 
     @GetMapping("/social")
+    public String redirectSocial() {
+        return "redirect:/app/social";
+    }
+
+    @GetMapping("/app/social")
     public String social() {
-        return "social/social";
+        return "app/social";
     }
 }

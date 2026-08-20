@@ -24,22 +24,23 @@ public class AuthController {
         return "auth/login";
     }
 
-    @GetMapping("/accesso-negato")
-    public String accessDenied() {
-        return "error/access-denied";
+    // @GetMapping("/accesso-negato")
+    // public String accessDenied() {
+    //     return "error/access-denied";
+    // }
+
+    @GetMapping("/register")
+    public String register() {
+        return "auth/register";
     }
 
-    @GetMapping("/registrazione")
-    public String paginaRegistrazione(Model model) {
 
-        model.addAttribute(
-                "registrazione",
-                new Registrazione("", "", ""));
-
-        return "auth/registrazione";
+    @GetMapping("/onboarding")
+    public String onboarding() {
+        return "onboarding";
     }
 
-    @PostMapping("/registrazione") // utile in sede di registrazione
+    @PostMapping("/register") // utile in sede di registrazione
     public String register(@ModelAttribute("registrazione") Registrazione dto, Model model) {
         try {
             utenteService.register(dto);

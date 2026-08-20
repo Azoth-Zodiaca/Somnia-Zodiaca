@@ -19,19 +19,12 @@ public class TemaNataleController {
     }
 
     @GetMapping("/tema-natale")
-    public String temaNatale(Model model, Authentication auth) {
+    public String redirectTemaNatale() {
+        return "redirect:/app/tema-natale";
+    }
 
-        String username = auth.getName(); 
-        // username dell’utente loggato, serve per fare una query
-        // è marginale ai fini della performance, anzi è pratica usuale in progetti con la security
-
-        Utente u = utenteRepository.findByUsername(username)
-                .orElseThrow(); // impossibile fallire se loggato
-
-        model.addAttribute("input", TemaNataleDto.builder()
-                .utenteId(u.getId())
-                .build());
-
-        return "tema-natale/tema-natale";
+    @GetMapping("/app/tema-natale")
+    public String temaNatale() {
+        return "app/tema-natale";
     }
 }

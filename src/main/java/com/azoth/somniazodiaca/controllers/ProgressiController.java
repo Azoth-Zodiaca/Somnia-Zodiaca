@@ -7,7 +7,12 @@ import org.springframework.web.bind.annotation.GetMapping;
 public class ProgressiController {
 
     @GetMapping("/progressi")
+    public String redirectProgressi() {
+        return "redirect:/app/progressi";
+    }
+
+    @GetMapping("/app/progressi")
     public String progressi() {
-        return "progressi/progressi";
+        return "app/progressi";
     }
 }
