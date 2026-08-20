@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Oracolo - Quicksilver</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='oracolo')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Oracolo')}"></div>
+
+      <main class="app-content oracolo-page">
+
+        <div class="flex-between mt-10" style="margin-bottom:16px;">
+          <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Nuovo sogno</span>
+          <a href="/app/oracolo/diario" class="link" style="color:var(--accent-purple);font-size:13px;">Diario &rarr;</a>
+        </div>
+        <h2 class="serif mt-10" style="font-weight:500;margin-bottom:20px;">Racconta il tuo sogno</h2>
+
+        <!-- Form principale dell'oracolo -->
+        <div class="card oracolo-box">
+          <form th:action="@{/app/oracolo/interpreta}" method="post" action="#">
+            <textarea id="dream-text" name="testoSogno" maxlength="4000"
+              placeholder="Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena..."></textarea>
+            <div class="oracolo-meta">
+              <span id="dream-counter" class="text-muted" style="font-size:12px;">0 / 4000</span>
+            </div>
+
+            <!-- Umore provato durante il sogno -->
+            <div class="oracolo-options">
+              <div>
+                <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Umore</span>
+                <div class="chip-row mt-10">
+                  <button type="button" class="chip selected" data-group="umore">&#128522; Sereno</button>
+                  <button type="button" class="chip" data-group="umore">&#128533; Ansioso</button>
+                  <button type="button" class="chip" data-group="umore">&#128532; Confuso</button>
+                  <button type="button" class="chip" data-group="umore">&#9889; Intenso</button>
+                </div>
+              </div>
+
+              <!-- Stile di interpretazione -->
+              <div>
+                <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Stile</span>
+                <div class="chip-row mt-10">
+                  <button type="button" class="chip" data-group="stile">Junghiano</button>
+                  <button type="button" class="chip selected" data-group="stile">Astrologico</button>
+                  <button type="button" class="chip" data-group="stile">Simbolico</button>
+                </div>
+              </div>
+
+              <div class="field-checkbox">
+                <input type="checkbox" id="usa-tema" name="usaTemaNatale" checked>
+                <label for="usa-tema" style="margin:0;text-transform:none;">Usa il mio tema natale per personalizzare</label>
+              </div>
+            </div>
+
+            <div class="oracolo-footer">
+              <span>&#8505; Le interpretazioni restano 48 ore &middot; Salvarle costa 20 QI</span>
+              <div class="flex gap-8">
+                <button type="button" class="btn btn-ghost btn-sm">Svuota</button>
+                <button type="submit" class="btn btn-primary btn-sm">&#10022; Interpreta il sogno</button>
+              </div>
+            </div>
+          </form>
+        </div>
+
+        <!-- Risultato dell'interpretazione: mostralo solo dopo l'invio
+             (in Spring: th:if="${interpretazione != null}") -->
+        <div class="card mt-20" th:if="${interpretazione}" style="display:none;" id="risultato-oracolo">
+          <div class="card-title"><span>&#10022; Interpretazione</span></div>
+          <p class="text-muted" th:text="${interpretazione}">Il testo generato dall'AI apparirà qui...</p>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+</html>

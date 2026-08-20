@@ -1,0 +1,102 @@
+<!--
+  FRAMMENTO: "guscio" dell'app riservata (sidebar + topbar).
+  Contiene DUE frammenti separati che si usano insieme in ogni pagina di /app:
+
+  1) sidebar(active)  -> menu laterale sinistro. "active" è il nome della voce
+     di menu da evidenziare, es: 'dashboard', 'tema-natale', 'oracolo', 'social',
+     'shop', 'inventario', 'wallet', 'progressi', 'impostazioni'.
+
+  2) topbar(pageTitle) -> barra in alto con saluto, ricerca, saldo QI, notifiche.
+
+  ESEMPIO DI UTILIZZO in una pagina app/dashboard.html:
+
+     <div th:replace="~{fragments/app-shell :: sidebar(active='dashboard')}"></div>
+     ...
+     <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Dashboard')}"></div>
+
+  I valori come nome utente, segno zodiacale e saldo QI qui sotto sono scritti
+  come testo statico di esempio (es. "lunadark", "1.240"). Quando colleghi
+  Thymeleaf al controller Spring, basta sostituirli con th:text, per esempio:
+     <span th:text="${utente.username}">lunadark</span>
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+
+  <!-- ============ SIDEBAR ============ -->
+  <nav th:fragment="sidebar(active)" class="sidebar" id="sidebar">
+    <a href="/app/dashboard" class="brand">
+      <span class="brand-dot"></span>
+      Quicksilver
+    </a>
+
+    <div class="sidebar-nav">
+      <a href="/app/dashboard" th:classappend="${active == 'dashboard'} ? 'active' : ''">
+        <span class="icon">&#9673;</span> Dashboard
+      </a>
+      <a href="/app/tema-natale" th:classappend="${active == 'tema-natale'} ? 'active' : ''">
+        <span class="icon">&#9737;</span> Tema Natale
+      </a>
+      <a href="/app/oracolo" th:classappend="${active == 'oracolo'} ? 'active' : ''">
+        <span class="icon">&#9789;</span> Oracolo
+      </a>
+      <a href="/app/social" th:classappend="${active == 'social'} ? 'active' : ''">
+        <span class="icon">&#9752;</span> Social
+      </a>
+      <a href="/app/shop" th:classappend="${active == 'shop'} ? 'active' : ''">
+        <span class="icon">&#9679;</span> Shop
+      </a>
+      <a href="/app/inventario" th:classappend="${active == 'inventario'} ? 'active' : ''">
+        <span class="icon">&#9635;</span> Inventario
+      </a>
+      <a href="/app/wallet" th:classappend="${active == 'wallet'} ? 'active' : ''">
+        <span class="icon">&#10022;</span> Wallet
+      </a>
+      <a href="/app/progressi" th:classappend="${active == 'progressi'} ? 'active' : ''">
+        <span class="icon">&#127942;</span> Obiettivi &amp; Badge
+      </a>
+
+      <div class="section-gap"></div>
+      <a href="/app/impostazioni" th:classappend="${active == 'impostazioni'} ? 'active' : ''">
+        <span class="icon">&#9881;</span> Impostazioni
+      </a>
+    </div>
+
+    <!-- Box promozionale premium: mostralo solo se l'utente NON è premium
+         (in Spring: th:if="${!utente.premium}") -->
+    <div class="sidebar-promo">
+      <span class="badge badge-premium">Premium</span>
+      <p>Custode del Cielo<br>+500 QI mensili, letture illimitate, cosmetici esclusivi.</p>
+      <a href="/premium">Scopri di più &rarr;</a>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="avatar">L</div>
+      <div>
+        <div class="username">@lunadark</div>
+        <div class="sign">&#9814; Leone</div>
+      </div>
+    </div>
+  </nav>
+
+  <!-- ============ TOPBAR ============ -->
+  <header th:fragment="topbar(pageTitle)" class="topbar">
+    <div class="greeting">
+      Buongiorno, <strong th:text="${nomeUtente} ?: 'Luna'">Luna</strong> &#9789;
+    </div>
+    <div class="topbar-right">
+      <div class="search-box">
+        &#128269;
+        <span>Cerca sogni, simboli, utenti...</span>
+      </div>
+      <div class="qi-pill">
+        &#10022; <span th:text="${saldoQi} ?: '1.240'">1.240</span> QI
+      </div>
+      <button class="icon-btn" title="Notifiche">
+        &#128276;
+        <span class="dot"></span>
+      </button>
+    </div>
+  </header>
+
+</body>
+</html>

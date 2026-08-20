@@ -1,0 +1,26 @@
+<!--
+  FRAMMENTO: navbar dell'area pubblica del sito.
+  Si include in ogni pagina pubblica così:
+  <div th:replace="~{fragments/public-nav :: navbar}"></div>
+-->
+<html xmlns:th="http://www.thymeleaf.org">
+<body>
+  <header th:fragment="navbar" class="container public-navbar">
+    <a href="/" class="brand">
+      <span class="brand-dot"></span>
+      Quicksilver
+    </a>
+    <nav>
+      <a href="/">Home</a>
+      <a href="/oracolo-info">Oracolo</a>
+      <a href="/enciclopedia">Enciclopedia</a>
+      <a href="/social-info">Community</a>
+      <a href="/premium">Premium</a>
+    </nav>
+    <div class="nav-actions">
+      <a href="/login" class="btn btn-outline btn-sm">Accedi</a>
+      <a href="/register" class="btn btn-primary btn-sm">Iscriviti</a>
+    </div>
+  </header>
+</body>
+</html>

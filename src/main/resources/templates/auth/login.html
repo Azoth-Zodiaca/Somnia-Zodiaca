@@ -1,46 +1,57 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{fragments/layout :: head('Accesso', @{/css/login-style.css})}"></head>
-
+<head>
+  <meta charset="UTF-8">
+  <title>Accedi - Quicksilver</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+</head>
 <body>
+  <div class="auth-page">
 
-  <section class="auth-layout">
-
-    <div class="auth-panel">
-
-      <div class="auth-box">
-
-        <p class="label-caps text-accent">Accedi</p>
-        <h1 class="auth-title">Il tuo cielo ti attende</h1>
-
-        <p class="alert error" th:if="${param.error}">
-          Username o password non validi.
-        </p>
-        <p class="alert success" th:if="${param.logout}">
-          Disconnessione effettuata.
-        </p>
-
-        <form class="auth-form" th:action="@{/login}" method="post">
-
-          <label class="label-caps text-muted" for="username">Email o username</label>
-          <input class="form-input" id="username" name="username" type="text" autocomplete="username" required autofocus placeholder="Melinoe">
-
-          <label class="label-caps text-muted" for="password">Password</label>
-          <input class="form-input" type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••">
-
-          <button class="btn btn-primary btn-large space-top-sm" type="submit" >Entra nel cielo →</button>
-
-        </form>
-
-        <p class="auth-footer text-center text-sm text-muted">Non hai un account? <a th:href= "@{/registrazione}"
-            class="text-accent font-medium">Creane uno</a></p>
-
+    <div class="auth-side">
+      <a href="/" class="brand"><span class="brand-dot"></span> Quicksilver</a>
+      <div class="quote">
+        "Le stelle<br><span class="italic">inclinano</span>,<br>non obbligano."
+        <p class="quote-sub">Citazione del giorno</p>
       </div>
-
+      <span class="text-muted" style="font-size:12px;">&copy; 2026 Quicksilver</span>
     </div>
 
-  </section>
-</body>
+    <!-- Form di login. In Spring Security tipicamente:
+         th:action="@{/login}" method="post", con eventuale
+         th:if="${param.error}" per mostrare un messaggio di errore. -->
+    <div class="auth-form-panel">
+      <h2>Bentornato</h2>
+      <p class="text-muted" style="margin-top:-14px;margin-bottom:20px;font-size:13px;">Il tuo cielo ti aspetta.</p>
 
+      <form th:action="@{/login}" method="post" action="#">
+        <div class="field">
+          <label for="email">Email</label>
+          <input type="email" id="email" name="email" placeholder="tua@email.it" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="********" required>
+          <span class="field-hint"><a href="/password-dimenticata">Password dimenticata?</a></span>
+        </div>
+        <div class="field field-checkbox">
+          <input type="checkbox" id="ricordami" name="ricordami">
+          <label for="ricordami" style="margin:0;text-transform:none;">Ricordami</label>
+        </div>
+
+        <button type="submit" class="btn btn-primary btn-block">Accedi</button>
+      </form>
+
+      <div class="divider">oppure</div>
+      <div class="social-login">
+        <button class="btn btn-ghost">Google</button>
+        <button class="btn btn-ghost">Apple</button>
+      </div>
+
+      <div class="auth-switch">Non hai un account? <a href="/register" style="color:var(--accent-purple);font-weight:600;">Registrati</a></div>
+    </div>
+  </div>
+
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
 </html>

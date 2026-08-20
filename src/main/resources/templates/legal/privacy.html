@@ -1,0 +1,19 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Privacy - Quicksilver</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+</head>
+<body>
+  <div th:replace="~{fragments/public-nav :: navbar}"></div>
+  <section class="container" style="max-width:760px;padding:60px 24px;">
+    <h1 class="serif" style="font-weight:500;margin-bottom:20px;">Informativa sulla Privacy</h1>
+    <!-- Contenuto legale segnaposto: da sostituire con il testo reale,
+         eventualmente caricato da un file o da un CMS. -->
+    <p class="text-muted mt-10">Qui va inserito il testo completo dell'informativa privacy: quali dati raccogliamo
+      (email, data di nascita, sogni inseriti, ecc.), come li usiamo e come l'utente può richiederne la cancellazione.</p>
+  </section>
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+</html>

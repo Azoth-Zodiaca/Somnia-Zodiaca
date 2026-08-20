@@ -68,7 +68,8 @@ public class SecurityConfig {
                                 "/",
                                 "/index",
                                 "/login",
-                                "/registrazione",
+                                "/register",
+                                "/home",
                                 "/accesso-negato",
                                 "/error",
                                 "/css/**",
@@ -77,19 +78,19 @@ public class SecurityConfig {
                                 "/favicon.ico"
                         ).permitAll() // a queste può accedere chiunque
 
-                        .requestMatchers(
-                                "/dashboard",
-                                "/oracolo",
-                                "/oracolo/diario",
-                                "/social",
-                                "/shop",
-                                "/inventario",
-                                "/tema-natale",
-                                "/profilo",
-                                "/wallet",
-                                "/impostazioni",
-                                "/progressi"
-                        ).authenticated() // a queste puoi accedere solo se autenticato
+                        // .requestMatchers(
+                        //         "/dashboard",
+                        //         "/oracolo",
+                        //         "/oracolo/diario",
+                        //         "/social",
+                        //         "/shop",
+                        //         "/inventario",
+                        //         "/tema-natale",
+                        //         "/profilo",
+                        //         "/wallet",
+                        //         "/impostazioni",
+                        //         "/progressi"
+                        // ).authenticated() // a queste puoi accedere solo se autenticato
 
                         // Everything else must be authenticated as well.
                         .anyRequest().authenticated()

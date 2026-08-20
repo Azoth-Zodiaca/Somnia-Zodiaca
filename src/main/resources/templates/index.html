@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Quicksilver - Il tuo cielo, i tuoi sogni interpretati</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+</head>
+<body>
+
+  <!-- Navbar pubblica riutilizzabile -->
+  <div th:replace="~{fragments/public-nav :: navbar}"></div>
+
+  <!-- HERO: prima sezione visibile, con animazione del sistema solare -->
+  <section class="container hero">
+    <div>
+      <h1>Il tuo <span class="highlight">cielo</span>.<br>I tuoi <span class="highlight">sogni</span>.<br>Interpretati.</h1>
+      <p>Tema natale personalizzato, oracolo AI per i tuoi sogni notturni e una community di astrofili dove condividere le tue letture.</p>
+      <div class="hero-actions">
+        <a href="/register" class="btn btn-primary">Crea il tuo tema natale</a>
+        <a href="#come-funziona" class="btn btn-outline">Scopri come funziona</a>
+      </div>
+    </div>
+
+    <!-- Ruota zodiacale animata: in produzione qui va un componente
+         SVG/Canvas con animazione del "sistema solare". Per ora è un
+         cerchio segnaposto animato via CSS/JS. -->
+    <div class="zodiac-wheel" id="hero-wheel"></div>
+  </section>
+
+  <!-- Sezione "12 storie, un cielo solo": elenco dei 12 segni -->
+  <section class="container" id="come-funziona">
+    <div class="section-title">
+      <span class="eyebrow">Zodiaco</span>
+      <h2>Dodici storie, un cielo solo</h2>
+    </div>
+    <div class="zodiac-grid">
+      <!-- In Spring: th:each="segno : ${segniZodiacali}" e th:text per nome/date -->
+      <div class="zodiac-item"><div class="icon">&#9800;</div>Ariete<span class="dates">21 mar</span></div>
+      <div class="zodiac-item"><div class="icon">&#9801;</div>Toro<span class="dates">20 apr</span></div>
+      <div class="zodiac-item"><div class="icon">&#9802;</div>Gemelli<span class="dates">21 mag</span></div>
+      <div class="zodiac-item"><div class="icon">&#9803;</div>Cancro<span class="dates">21 giu</span></div>
+      <div class="zodiac-item"><div class="icon">&#9804;</div>Leone<span class="dates">23 lug</span></div>
+      <div class="zodiac-item"><div class="icon">&#9805;</div>Vergine<span class="dates">23 ago</span></div>
+      <div class="zodiac-item"><div class="icon">&#9806;</div>Bilancia<span class="dates">23 set</span></div>
+      <div class="zodiac-item"><div class="icon">&#9807;</div>Scorpione<span class="dates">23 ott</span></div>
+      <div class="zodiac-item"><div class="icon">&#9808;</div>Sagittario<span class="dates">22 nov</span></div>
+      <div class="zodiac-item"><div class="icon">&#9809;</div>Capricorno<span class="dates">22 dic</span></div>
+      <div class="zodiac-item"><div class="icon">&#9810;</div>Acquario<span class="dates">20 gen</span></div>
+      <div class="zodiac-item"><div class="icon">&#9811;</div>Pesci<span class="dates">19 feb</span></div>
+    </div>
+  </section>
+
+  <!-- Sezione economia virtuale QI -->
+  <section class="container">
+    <div class="card featured-item" style="max-width:820px;margin:0 auto 60px;">
+      <div>
+        <span class="badge badge-leggendaria">Economia QI</span>
+        <h3 class="mt-10">Guadagna, spendi, colleziona.</h3>
+        <p class="text-muted mt-10">I QI sono la valuta del cielo di Quicksilver. Li guadagni interpretando sogni,
+          condividendo contenuti, completando obiettivi. Li spendi in cosmetici per personalizzare il tuo avatar e le tue letture.</p>
+      </div>
+      <div class="icon-box">&#10022;</div>
+    </div>
+  </section>
+
+  <!-- Footer pubblico riutilizzato in tutte le pagine pubbliche -->
+  <footer class="container public-footer">
+    <div>
+      <div class="brand"><span class="brand-dot"></span> Quicksilver</div>
+      <p class="mt-10">Astrologia moderna, oracolo onirico, community.</p>
+    </div>
+    <div class="footer-columns">
+      <div>
+        <h4>Prodotto</h4>
+        <ul>
+          <li><a href="/premium">Premium</a></li>
+          <li><a href="/#come-funziona">Come funziona</a></li>
+          <li><a href="/register">Registrati</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Zodiaco</h4>
+        <ul>
+          <li><a href="/enciclopedia">Segni</a></li>
+          <li><a href="/enciclopedia">Elementi</a></li>
+          <li><a href="/enciclopedia">Pianeti</a></li>
+        </ul>
+      </div>
+      <div>
+        <h4>Legali</h4>
+        <ul>
+          <li><a href="/legal/privacy">Privacy</a></li>
+          <li><a href="/legal/termini">Termini</a></li>
+        </ul>
+      </div>
+    </div>
+  </footer>
+
+  <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
+</body>
+</html>

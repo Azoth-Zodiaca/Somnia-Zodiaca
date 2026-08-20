@@ -1,0 +1,138 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Dashboard - Quicksilver</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='dashboard')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Dashboard')}"></div>
+
+      <main class="app-content">
+
+        <!-- Statistiche rapide: in Spring, th:each su una lista di
+             oggetti "statistica" con etichetta/valore/variazione -->
+        <div class="stats-grid">
+          <div class="card stat-card">
+            <div class="stat-label">QI</div>
+            <div class="stat-value">&#10022; 1.240</div>
+            <div class="stat-delta">+120 sett.</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Sogni</div>
+            <div class="stat-value">&#9789; 14</div>
+            <div class="stat-delta">+12 sett.</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Like</div>
+            <div class="stat-value">&#9825; 87</div>
+            <div class="stat-delta">+8 sett.</div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Streak</div>
+            <div class="stat-value">&#128293; 6 gg</div>
+            <div class="stat-delta">+25 QI domani</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- COLONNA PRINCIPALE -->
+          <div class="dashboard-col">
+
+            <!-- Mini oracolo: form rapido per interpretare un sogno -->
+            <div class="card oracolo-mini">
+              <div class="card-title">
+                <span>&#9789; Oracolo &mdash; Hai sognato stanotte?</span>
+              </div>
+              <form th:action="@{/app/oracolo/interpreta}" method="post" action="#">
+                <textarea name="testoSogno" placeholder="Racconta il tuo sogno... l'oracolo ascolta."></textarea>
+                <div class="oracolo-actions">
+                  <button type="submit" class="btn btn-primary btn-sm">&#10022; Interpreta con AI</button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Sogni in scadenza: in Spring th:each="sogno : ${sogniInScadenza}" -->
+            <div class="card">
+              <div class="card-title">
+                <span>&#9210; Sogni in scadenza</span>
+                <a href="/app/oracolo/storico" class="link">Vedi tutti &rarr;</a>
+              </div>
+              <div class="dream-item">
+                <div class="flex-between">
+                  <span class="dream-title">04:11:29 &mdash; "Volavo sul mare"</span>
+                </div>
+                <p>Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena illuminava tutto. Non avevo paura, solo un senso di libertà...</p>
+                <div class="dream-actions">
+                  <button class="btn btn-ghost btn-sm">Salva &minus;20 QI</button>
+                  <button class="btn btn-primary btn-sm">Pubblica</button>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- COLONNA LATERALE -->
+          <div class="dashboard-col">
+
+            <!-- Progressione livello utente -->
+            <div class="card">
+              <div class="card-title"><span>Progressione</span></div>
+              <div style="font-weight:700;font-size:16px;">Livello 7 &middot; Sognatore</div>
+              <div class="progress-bar mt-10"><div class="progress-bar-fill" style="width:72%;"></div></div>
+              <p class="text-muted mt-10" style="font-size:12px;">720/1000 XP &middot; Prossimo: Interprete</p>
+            </div>
+
+            <!-- Obiettivi giornalieri -->
+            <div class="card">
+              <div class="card-title"><span>Obiettivi di oggi</span></div>
+              <div class="goal-list">
+                <div class="goal-item done">
+                  <div class="goal-left">&#10003; <span class="goal-name">Accedi</span></div>
+                  <span class="goal-reward">+10 QI</span>
+                </div>
+                <div class="goal-item">
+                  <div class="goal-left">&#9633; <span class="goal-name">Interpreta 1 sogno</span></div>
+                  <span class="goal-reward">+25 QI</span>
+                </div>
+                <div class="goal-item">
+                  <div class="goal-left">&#9633; <span class="goal-name">Metti 3 like (1/3)</span></div>
+                  <span class="goal-reward">+5 QI</span>
+                </div>
+              </div>
+            </div>
+
+            <!-- Avatar rapido -->
+            <div class="card text-center">
+              <span class="text-muted" style="font-size:11px;text-transform:uppercase;">Il tuo avatar</span>
+              <div class="avatar" style="width:70px;height:70px;font-size:26px;margin:14px auto;">L</div>
+              <div style="font-weight:600;">@lunadark</div>
+              <a href="/app/profilo" class="btn btn-outline btn-sm mt-20">Personalizza</a>
+            </div>
+
+            <!-- Novità nello shop -->
+            <div class="card">
+              <div class="card-title"><span>Nuovi nello shop</span><a href="/app/shop" class="link">Apr &rarr;</a></div>
+              <div class="shop-preview-item"><span>&#10024; Aura Cosmica</span><span class="price">340 QI</span></div>
+              <div class="shop-preview-item"><span>&#128081; Corona di Saturno</span><span class="price">500 QI</span></div>
+            </div>
+
+            <!-- Attività recente -->
+            <div class="card">
+              <div class="card-title"><span>Attività</span><a href="/app/wallet" class="link">Storico &rarr;</a></div>
+              <div class="activity-item"><span>Cornice d'Oro</span><span style="color:var(--accent-red);">-120</span></div>
+              <div class="activity-item"><span>Obiettivo giornaliero</span><span style="color:var(--accent-green);">+25</span></div>
+              <div class="activity-item"><span>Login giornaliero</span><span style="color:var(--accent-green);">+10</span></div>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+</html>

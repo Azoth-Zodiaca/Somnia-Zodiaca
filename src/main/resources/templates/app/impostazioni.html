@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Impostazioni - Quicksilver</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='impostazioni')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Impostazioni')}"></div>
+
+      <main class="app-content">
+        <h2 class="serif" style="font-weight:500;margin-bottom:20px;">Impostazioni</h2>
+
+        <div class="settings-layout">
+
+          <!-- Menu laterale interno: mostra/nasconde le sezioni a destra
+               tramite main.js -> initSettingsMenu() -->
+          <nav class="settings-menu">
+            <a href="#" class="active" data-target="sezione-account">Account</a>
+            <a href="#" data-target="sezione-lingua">Lingua</a>
+            <a href="#" data-target="sezione-notifiche">Notifiche</a>
+            <a href="#" data-target="sezione-privacy">Privacy</a>
+            <a href="#" data-target="sezione-sicurezza">Sicurezza</a>
+            <a href="#" data-target="sezione-premium">Premium</a>
+            <a href="#" data-target="sezione-danger">Zona pericolo</a>
+          </nav>
+
+          <div>
+            <!-- Sezione Account -->
+            <div id="sezione-account" class="card settings-section">
+              <h3>Account</h3>
+              <form th:action="@{/app/impostazioni/account}" method="post" action="#">
+                <div class="field">
+                  <label for="username">Username</label>
+                  <input type="text" id="username" name="username" value="@lunadark">
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" value="luna@quicksilver.app">
+                </div>
+                <div class="field">
+                  <label for="nome-visibile">Nome visibile</label>
+                  <input type="text" id="nome-visibile" name="nomeVisibile" value="Luna">
+                </div>
+                <div class="field">
+                  <label for="bio">Bio</label>
+                  <textarea id="bio" name="bio" rows="2">Cerco significati nel buio.</textarea>
+                </div>
+                <button type="submit" class="btn btn-primary">Salva</button>
+              </form>
+            </div>
+
+            <!-- Sezione Lingua -->
+            <div id="sezione-lingua" class="card settings-section" style="display:none;">
+              <h3>Lingua &amp; Localizzazione</h3>
+              <div class="settings-row">
+                <div class="field">
+                  <label for="lingua">Lingua</label>
+                  <select id="lingua" name="lingua"><option selected>Italiano</option><option>English</option></select>
+                </div>
+                <div class="field">
+                  <label for="fuso">Fuso orario</label>
+                  <select id="fuso" name="fusoOrario"><option selected>Europe/Rome</option></select>
+                </div>
+              </div>
+            </div>
+
+            <div id="sezione-notifiche" class="card settings-section" style="display:none;">
+              <h3>Notifiche</h3>
+              <p class="text-muted">Preferenze sulle notifiche push/email (nuovi like, badge sbloccati, promemoria giornaliero).</p>
+            </div>
+
+            <div id="sezione-privacy" class="card settings-section" style="display:none;">
+              <h3>Privacy</h3>
+              <p class="text-muted">Visibilità del profilo, chi può vedere i tuoi sogni pubblicati, dati condivisi con la community.</p>
+            </div>
+
+            <div id="sezione-sicurezza" class="card settings-section" style="display:none;">
+              <h3>Sicurezza</h3>
+              <p class="text-muted">Cambio password, autenticazione a due fattori, sessioni attive.</p>
+            </div>
+
+            <!-- Sezione Premium: stato abbonamento -->
+            <div id="sezione-premium" class="card settings-section" style="border-color:var(--accent-gold);display:none;">
+              <h3 style="color:var(--accent-gold);">Premium</h3>
+              <p class="text-muted">Sei attualmente su Premium &middot; rinnovo il 12 agosto 2026.</p>
+              <a href="/premium" class="btn btn-outline">Gestisci abbonamento</a>
+            </div>
+
+            <!-- Zona pericolo -->
+            <div id="sezione-danger" class="card settings-section danger-zone" style="display:none;">
+              <h3>Zona pericolo</h3>
+              <p>Eliminando l'account rimuoverai permanentemente sogni, post, inventario e QI.</p>
+              <button class="btn" style="background:var(--accent-red);color:#fff;">Elimina account</button>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+</html>

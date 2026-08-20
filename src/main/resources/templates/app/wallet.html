@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Wallet - Quicksilver</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+</head>
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='wallet')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Wallet QI')}"></div>
+
+      <main class="app-content">
+        <h2 class="serif" style="font-weight:500;margin-bottom:20px;">Wallet QI</h2>
+
+        <!-- Saldo attuale -->
+        <div class="card wallet-balance">
+          <div class="label">Saldo attuale</div>
+          <div class="amount">&#10022; 1.240</div>
+          <div class="sub">QI &middot; Quicksilver Ingots</div>
+          <div class="wallet-actions">
+            <button class="btn btn-primary">+ Ricarica</button>
+            <button class="btn btn-outline">Vedi storico</button>
+          </div>
+        </div>
+
+        <!-- Pacchetti di ricarica: in Spring th:each="pacchetto : ${pacchettiRicarica}" -->
+        <div class="recharge-grid">
+          <div class="card recharge-card">
+            <div class="amount">&#10022; 500</div>
+            <div class="text-muted" style="font-size:11px;">STELLA</div>
+            <button class="btn btn-primary btn-block mt-20">&euro; 4,99</button>
+          </div>
+          <div class="card recharge-card">
+            <div class="amount">&#10022; 1.200</div>
+            <div class="bonus">+100 bonus</div>
+            <div class="text-muted" style="font-size:11px;margin-bottom:12px;">NEBULOSA</div>
+            <button class="btn btn-primary btn-block">&euro; 9,99</button>
+          </div>
+          <div class="card recharge-card">
+            <span class="best-value">Miglior valore</span>
+            <div class="amount">&#10022; 3.000</div>
+            <div class="bonus">+500 bonus</div>
+            <div class="text-muted" style="font-size:11px;margin-bottom:12px;">COSTELLAZIONE</div>
+            <button class="btn btn-gold btn-block">&euro; 19,99</button>
+          </div>
+          <div class="card recharge-card">
+            <div class="amount">&#10022; 7.500</div>
+            <div class="bonus">+1500 bonus</div>
+            <div class="text-muted" style="font-size:11px;margin-bottom:12px;">GALASSIA</div>
+            <button class="btn btn-primary btn-block">&euro; 39,99</button>
+          </div>
+        </div>
+
+        <!-- Ricompensa giornaliera: 7 giorni, oggi evidenziato -->
+        <div class="card">
+          <div class="card-title"><span>Ricompensa giornaliera</span></div>
+          <div class="daily-rewards">
+            <div class="daily-reward">+10</div>
+            <div class="daily-reward">+15</div>
+            <div class="daily-reward">+20</div>
+            <div class="daily-reward">+25</div>
+            <div class="daily-reward">+30</div>
+            <div class="daily-reward today">+40</div>
+            <div class="daily-reward locked">&#127873;</div>
+          </div>
+          <button class="btn btn-gold btn-block">Riscuoti oggi</button>
+        </div>
+
+        <!-- Badge ottenuti (anteprima; elenco completo in Obiettivi & Badge) -->
+        <div class="card mt-20">
+          <div class="card-title"><span>&#127942; Badge</span><span class="text-muted" style="font-size:12px;">3/8 sbloccati</span></div>
+          <div class="badge-grid">
+            <div class="badge-slot unlocked"><div class="badge-icon">&#127769;</div><div class="badge-name">Primo Sogno</div></div>
+            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Diario Pieno</div></div>
+            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Stella Nascente</div></div>
+            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Oracolo</div></div>
+            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Collezionista</div></div>
+            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Costanza</div></div>
+            <div class="badge-slot unlocked"><div class="badge-icon">&#128172;</div><div class="badge-name">Ambasciatore</div></div>
+            <div class="badge-slot unlocked"><div class="badge-icon">&#128081;</div><div class="badge-name">Premium</div></div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+</html>

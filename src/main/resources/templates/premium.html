@@ -1,0 +1,58 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head>
+  <meta charset="UTF-8">
+  <title>Premium - Quicksilver</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
+</head>
+<body>
+
+  <div th:replace="~{fragments/public-nav :: navbar}"></div>
+
+  <section class="container pricing-hero">
+    <span class="eyebrow">Premium</span>
+    <h1>Diventa <span class="highlight">Custode del Cielo</span></h1>
+    <p>Letture illimitate, +500 QI ogni mese, cosmetici esclusivi e nessuna scadenza sui tuoi sogni salvati.</p>
+  </section>
+
+  <section class="container">
+    <!-- Due piani: Free e Premium -->
+    <div class="pricing-plans">
+      <div class="card plan-card">
+        <span class="text-muted">FREE</span>
+        <div class="plan-price">&euro;0<small>per sempre</small></div>
+        <button class="btn btn-outline btn-block mt-20" disabled>Piano attuale</button>
+      </div>
+      <div class="card plan-card featured">
+        <span class="text-muted">PREMIUM</span>
+        <div class="plan-price">&euro;6,99<small>al mese &middot; disdici quando vuoi</small></div>
+        <a href="/checkout-premium" class="btn btn-gold btn-block mt-20">Attiva Premium</a>
+      </div>
+    </div>
+
+    <!-- Tabella comparativa dei vantaggi -->
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Funzionalità</th>
+          <th>Free</th>
+          <th>Premium</th>
+        </tr>
+      </thead>
+      <tbody>
+        <!-- In Spring: th:each su una lista di "vantaggi" con nome/free/premium -->
+        <tr><td>Tema natale interattivo</td><td class="yes">&#10003;</td><td class="yes">&#10003;</td></tr>
+        <tr><td>Oracolo dei sogni</td><td>3/settimana</td><td class="yes">Illimitato</td></tr>
+        <tr><td>Salvataggio sogni</td><td>20 QI</td><td class="yes">Gratis</td></tr>
+        <tr><td>Rigenerazioni letture</td><td>10 QI</td><td class="yes">Illimitate</td></tr>
+        <tr><td>QI mensili in regalo</td><td class="no">&#10005;</td><td class="yes">+500 QI/mese</td></tr>
+        <tr><td>Cosmetici esclusivi</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
+        <tr><td>Badge Premium</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
+        <tr><td>Priorità community</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
+      </tbody>
+    </table>
+  </section>
+
+  <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
+</body>
+</html>
