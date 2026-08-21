@@ -76,4 +76,16 @@ public class SecurityModelAdvice {
                 .map(UtenteDetail::getQi)
                 .orElse(0);
     }
+
+    // aggiunta metodo per nome utente
+    @ModelAttribute("username")
+    public String username(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "";
+        }
+
+        return utenteService.findByUsername(authentication.getName())
+                .map(UtenteDetail::getUsername)
+                .orElse("");
+    }
 }

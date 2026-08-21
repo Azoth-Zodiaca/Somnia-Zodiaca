@@ -37,8 +37,6 @@ public class ImpostazioniController {
 
         model.addAttribute("username", utente.getUsername());
         model.addAttribute("email", utente.getEmail());
-        // Non esiste ancora un campo dedicato nel modello dati.
-        model.addAttribute("nomeVisibile", utente.getUsername());
 
         return "app/impostazioni";
     }

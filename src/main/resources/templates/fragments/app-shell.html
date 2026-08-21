@@ -73,8 +73,10 @@
     <div class="sidebar-user">
       <div class="avatar">L</div>
       <div>
-        <div class="username">@lunadark</div>
-        <div class="sign">&#9814; Leone</div>
+        <a th:href="@{/app/profilo}">
+          <div class="username">@lunadark</div>
+          <div class="sign">&#9814; Leone</div>
+        </a>
       </div>
     </div>
   </nav>
@@ -82,12 +84,13 @@
   <!-- ============ TOPBAR ============ -->
   <header th:fragment="topbar(pageTitle)" class="topbar">
     <div class="greeting">
-      Buongiorno, <strong th:text="${nomeUtente} ?: 'Luna'">Luna</strong> &#9789;
+      <strong id="saluto-orario">Buongiorno</strong>,
+      <strong th:text="${username}">username</strong> &#9789;
     </div>
     <div class="topbar-right">
       <a href="/app/wallet" class="qi-pill" title="Apri il wallet">
         &#10022;
-        <span th:text="${saldoQi} ?: '0'"></span>
+        <span th:text="${saldoQi}">0</span>
         QI
       </a>
       <button class="icon-btn" title="Notifiche">

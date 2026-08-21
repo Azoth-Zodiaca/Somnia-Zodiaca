@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <title>Profilo - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
 </head>
+
 <body>
   <div class="app-layout">
     <div th:replace="~{fragments/app-shell :: sidebar(active='profilo')}"></div>
@@ -22,12 +24,13 @@
         </div>
 
         <div class="profile-header-info">
-          <h2 th:text="${utente.usernameVisibile} ?: '@lunadark'">@lunadark</h2>
-          <span class="badge badge-premium">Premium</span>
+          <h2><span th:text="${username}">@username</span></h2>
+          <span class="badge badge-premium" th:text="${ruolo}">ruolo</span>
         </div>
-        <p class="profile-meta">&#9804; Leone &middot; Asc. &#9807; Scorpione &middot; Membro dal 11 Italiano &middot; ultimo accesso oggi</p>
+        <p class="profile-meta"></p> <span th:text="${segnoZodiacale}"></span> &middot; Asc. <span th:text="${ascendente}"></span> &middot; Membro dal <span th:text="${dataRegistrazione}"></span> &middot;
+          ultimo accesso <span th:text="${ultimoAccesso}"></span></p>
         <div class="profile-quickstats">
-          <span>&#10022; 1.240 QI</span>
+          <span>&#10022; <span th:text="${saldoQI}">0</span></span>
           <span>Liv. 7 Sognatore</span>
           <span>&#9825; 87 Like</span>
           <span>&#9789; 14 Sogni</span>
@@ -65,7 +68,8 @@
 
           <!-- Cosmetici posseduti, anteprima -->
           <div class="card mt-20">
-            <div class="card-title"><span>Cosmetici &middot; 2/8</span><span class="text-muted">Collezione 25%</span></div>
+            <div class="card-title"><span>Cosmetici &middot; 2/8</span><span class="text-muted">Collezione 25%</span>
+            </div>
             <div class="cosmetics-strip">
               <div class="cosmetic-slot">?</div>
               <div class="cosmetic-slot">?</div>
@@ -110,4 +114,5 @@
 
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
+
 </html>

@@ -18,6 +18,36 @@ document.addEventListener("DOMContentLoaded", function () {
   initDeleteAccountConfirmation();
 });
 
+// controllo della forza della password nella pagina di registrazione
+document.addEventListener('DOMContentLoaded', () => {
+  const password = document.getElementById('password');
+  const strengthMessage = document.getElementById('password-strength');
+
+  if (!password || !strengthMessage) {
+    return;
+  }
+
+  password.addEventListener('input', () => {
+    const value = password.value;
+    let strength = 0;
+
+    if (value.length >= 8) strength++;
+    if (/[a-z]/.test(value) && /[A-Z]/.test(value)) strength++;
+    if (/\d/.test(value)) strength++;
+    if (/[^A-Za-z0-9]/.test(value)) strength++;
+
+    const messages = [
+      'Inserisci una password',
+      'Molto debole',
+      'Debole',
+      'Media',
+      'Forte'
+    ];
+
+    strengthMessage.textContent = messages[strength];
+  });
+});
+
 /* ---------------------------------------------------------
    1) Apertura/chiusura della sidebar su schermi piccoli.
    Serve un bottone con id="sidebar-toggle" (non presente
@@ -32,6 +62,25 @@ function initSidebarToggle() {
     sidebar.classList.toggle("open");
   });
 }
+
+// Saluto in base all'orario (Buongiorno / Buon pomeriggio / Buona sera) nella topbar
+document.addEventListener('DOMContentLoaded', () => {
+  const elementoSaluto = document.getElementById('saluto-orario');
+
+  if (!elementoSaluto) {
+    return;
+  }
+
+  const ora = new Date().getHours();
+
+  if (ora >= 5 && ora < 12) {
+    elementoSaluto.textContent = 'Buongiorno';
+  } else if (ora >= 12 && ora < 18) {
+    elementoSaluto.textContent = 'Buon Pomeriggio';
+  } else {
+    elementoSaluto.textContent = 'Buonasera';
+  }
+});
 
 /* ---------------------------------------------------------
    2) Tab generiche (es. Riepilogo / Carta / Pianeti / Case

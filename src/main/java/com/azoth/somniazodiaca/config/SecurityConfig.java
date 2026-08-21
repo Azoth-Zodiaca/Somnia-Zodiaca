@@ -5,7 +5,6 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.http.HttpMethod;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
@@ -18,8 +17,6 @@ import org.springframework.security.web.SecurityFilterChain;
 
 import com.azoth.somniazodiaca.security.JpaUserDetailsService;
 
-
-
 /**
  * Configurazione centrale della sicurezza dell'applicazione.
  *
@@ -31,150 +28,159 @@ import com.azoth.somniazodiaca.security.JpaUserDetailsService;
  * - come confrontare le password salvate nel sistema.
  */
 
-
-//Abilita la sicurezza a livello di metodo, consentendo di utilizzare 
+// Abilita la sicurezza a livello di metodo, consentendo di utilizzare
 // Abilita la sicurezza anche a livello di metodo.
-// Questo significa che in altre classi potrai usare annotazioni come @PreAuthorize
-// per bloccare o permettere l'esecuzione di un metodo in base al ruolo dell'utente.
+// Questo significa che in altre classi potrai usare annotazioni come
+// @PreAuthorize
+// per bloccare o permettere l'esecuzione di un metodo in base al ruolo
+// dell'utente.
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
 
-    /**
-     * Costruisce la catena principale di regole della sicurezza HTTP.
-     *
-     * Questo è il metodo più importante della classe. Qui decidiamo:
-     * - quali indirizzi web sono aperti a tutti;
-     * - quali indirizzi richiedono un utente loggato;
-     * - quali ruoli possono eseguire certe operazioni;
-     * - cosa succede quando l'utente fa login, logout o sbaglia permessi.
-     */
-    @Bean
-    public SecurityFilterChain securityFilterChain(
-            HttpSecurity http,
-            AuthenticationProvider authenticationProvider
-    ) throws Exception {
-        // Colleghiamo il provider personalizzato alla sicurezza web.
-        // Questo serve per dire a Spring: "quando qualcuno fa login, usa la nostra logica".
-        // La nostra logica recupera l'utente dal database e confronta la password nel modo giusto.
-        http
-                .authenticationProvider(authenticationProvider)
+        /**
+         * Costruisce la catena principale di regole della sicurezza HTTP.
+         *
+         * Questo è il metodo più importante della classe. Qui decidiamo:
+         * - quali indirizzi web sono aperti a tutti;
+         * - quali indirizzi richiedono un utente loggato;
+         * - quali ruoli possono eseguire certe operazioni;
+         * - cosa succede quando l'utente fa login, logout o sbaglia permessi.
+         */
+        @Bean
+        public SecurityFilterChain securityFilterChain(
+                        HttpSecurity http,
+                        AuthenticationProvider authenticationProvider) throws Exception {
+                // Colleghiamo il provider personalizzato alla sicurezza web.
+                // Questo serve per dire a Spring: "quando qualcuno fa login, usa la nostra
+                // logica".
+                // La nostra logica recupera l'utente dal database e confronta la password nel
+                // modo giusto.
+                http
+                                .authenticationProvider(authenticationProvider)
 
-                // Le regole più specifiche devono stare prima di anyRequest().
-                // Esempio: se una pagina è visibile solo agli admin, questa regola va scritta qui.
-                // Non basta nascondere un bottone nell'interfaccia: la vera protezione deve stare lato server.
-                .authorizeHttpRequests(authorize -> authorize
-                        .requestMatchers(
-                                "/",
-                                "/index",
-                                "/login",
-                                "/register",
-                                "/premium",
-                                "/enciclopedia",
-                                "/legal/**",
-                                "/onboarding",
-                                "/home",
-                                "/accesso-negato",
-                                "/error",
-                                "/css/**",
-                                "/js/**",
-                                "/fonts/**",
-                                "/favicon.ico"
-                        ).permitAll() // a queste può accedere chiunque
+                                // Le regole più specifiche devono stare prima di anyRequest().
+                                // Esempio: se una pagina è visibile solo agli admin, questa regola va scritta
+                                // qui.
+                                // Non basta nascondere un bottone nell'interfaccia: la vera protezione deve
+                                // stare lato server.
+                                // ...existing code...
 
+                                .authorizeHttpRequests(authorize -> authorize
+                                                // Pagine accessibili a tutti
+                                                .requestMatchers(
+                                                                "/",
+                                                                "/index",
+                                                                "/enciclopedia",
+                                                                "/onboarding",
+                                                                "/premium",
+                                                                "/legal/**",
 
-                        .requestMatchers(
-                                "/dashboard",
-                                "/oracolo",
-                                "/oracolo/diario",
-                                "/social",
-                                "/shop",
-                                "/inventario",
-                                "/tema-natale",
-                                "/profilo",
-                                "/wallet",
-                                "/impostazioni",
-                                "/progressi"
-                        ).authenticated() // a queste puoi accedere solo se autenticato
+                                                                // Pagine necessarie per autenticazione e gestione
+                                                                // errori
+                                                                "/login",
+                                                                "/register",
+                                                                "/accesso-negato",
+                                                                "/error",
 
-                        // Everything else must be authenticated as well.
-                        .anyRequest().authenticated()
-                )
+                                                                // Risorse statiche
+                                                                "/css/**",
+                                                                "/js/**",
+                                                                "/fonts/**",
+                                                                "/favicon.ico")
+                                                .permitAll()
 
-                // Login classico con pagina HTML e sessione lato server.
-                // Il browser invia username e password una sola volta,
-                // poi Spring crea una sessione e non chiede più di reinserire le credenziali a ogni pagina.
-                .formLogin(form -> form
-                        // Qui diciamo a Spring di usare la nostra pagina di login personalizzata.
-                        // Se non la indicassimo, Spring userebbe una schermata di login predefinita.
-                        .loginPage("/login")
-                        // Dopo un login corretto, l'utente viene portato alla home.
-                        // Il secondo parametro true significa: vai lì sempre, anche se l'utente aveva provato
-                        // prima ad aprire una pagina diversa.
-                        .defaultSuccessUrl("/app/dashboard", true)
-                        // Se username o password sono sbagliati, torniamo alla login con un parametro error.
-                        // La pagina può usare quel parametro per mostrare un messaggio all'utente.
-                        .failureUrl("/login?error")
-                        .permitAll()
-                )
+                                                // Tutte le pagine e gli endpoint sotto /app richiedono autenticazione
+                                                .requestMatchers("/app/**").authenticated()
 
-                // Logout significa chiudere la sessione dell'utente.
-                // Qui diciamo a Spring di pulire tutto ciò che identifica l'utente loggato.
-                .logout(logout -> logout
-                        // Endpoint che riceve la richiesta di logout.
-                        // Quando il browser chiama /logout, Spring esegue questa sequenza di pulizia.
-                        .logoutUrl("/logout")
-                        // Dopo il logout, l'utente torna alla login con un parametro logout.
-                        // La pagina può usare questo parametro per mostrare un messaggio tipo "sei uscito correttamente".
-                        .logoutSuccessUrl("/login?logout")
-                        // Distrugge la sessione lato server.
-                        // Questo è importante perché la vecchia sessione non deve restare valida.
-                        .invalidateHttpSession(true)
-                        // Rimuove l'informazione di autenticazione associata all'utente.
-                        // In pratica Spring "dimentica" chi era loggato.
-                        .clearAuthentication(true)
-                        // Elimina il cookie di sessione dal browser.
-                        // Serve a evitare che il browser continui a usare una sessione vecchia.
-                        .deleteCookies("JSESSIONID")
-                        .permitAll()
-                )
+                                                // Qualsiasi altro endpoint richiede autenticazione
+                                                .anyRequest().authenticated())
 
-                // Se un utente è loggato ma prova ad aprire una pagina per cui non ha i permessi,
-                // non riceve una pagina generica di errore: viene mandato alla pagina "accesso negato".
-                .exceptionHandling(exceptions -> exceptions
-                        .accessDeniedPage("/accesso-negato")
-                )
+                                // ...existing code...
 
-                // Spring cambia l'identificatore della sessione dopo il login.
-                // Questo riduce un attacco chiamato session fixation, cioè il riuso di un ID di sessione noto.
-                .sessionManagement(session -> session
-                        .sessionFixation(fixation -> fixation.changeSessionId())
-                )
+                                // Login classico con pagina HTML e sessione lato server.
+                                // Il browser invia username e password una sola volta,
+                                // poi Spring crea una sessione e non chiede più di reinserire le credenziali a
+                                // ogni pagina.
+                                .formLogin(form -> form
+                                                // Qui diciamo a Spring di usare la nostra pagina di login
+                                                // personalizzata.
+                                                // Se non la indicassimo, Spring userebbe una schermata di login
+                                                // predefinita.
+                                                .loginPage("/login")
+                                                // Dopo un login corretto, l'utente viene portato alla home.
+                                                // Il secondo parametro true significa: vai lì sempre, anche se l'utente
+                                                // aveva provato
+                                                // prima ad aprire una pagina diversa.
+                                                .defaultSuccessUrl("/app/dashboard", true)
+                                                // Se username o password sono sbagliati, torniamo alla login con un
+                                                // parametro error.
+                                                // La pagina può usare quel parametro per mostrare un messaggio
+                                                // all'utente.
+                                                .failureUrl("/login?error")
+                                                .permitAll())
 
-                // CSRF resta attivo.
-                // Questo protegge i form: impedisce che un sito esterno faccia inviare richieste al posto dell'utente.
-                // È molto importante quando l'app usa sessioni e form HTML.
-                .csrf(Customizer.withDefaults())
+                                // Logout significa chiudere la sessione dell'utente.
+                                // Qui diciamo a Spring di pulire tutto ciò che identifica l'utente loggato.
+                                .logout(logout -> logout
+                                                // Endpoint che riceve la richiesta di logout.
+                                                // Quando il browser chiama /logout, Spring esegue questa sequenza di
+                                                // pulizia.
+                                                .logoutUrl("/logout")
+                                                // Dopo il logout, l'utente torna alla login con un parametro logout.
+                                                // La pagina può usare questo parametro per mostrare un messaggio tipo
+                                                // "sei uscito correttamente".
+                                                .logoutSuccessUrl("/login?logout")
+                                                // Distrugge la sessione lato server.
+                                                // Questo è importante perché la vecchia sessione non deve restare
+                                                // valida.
+                                                .invalidateHttpSession(true)
+                                                // Rimuove l'informazione di autenticazione associata all'utente.
+                                                // In pratica Spring "dimentica" chi era loggato.
+                                                .clearAuthentication(true)
+                                                // Elimina il cookie di sessione dal browser.
+                                                // Serve a evitare che il browser continui a usare una sessione vecchia.
+                                                .deleteCookies("JSESSIONID")
+                                                .permitAll())
 
-                // Content Security Policy: è una regola di sicurezza del browser.
-                // Dice da quali sorgenti il browser può caricare script, stili, immagini e altri contenuti.
-                .headers(headers -> headers
-                        .contentSecurityPolicy(csp -> csp.policyDirectives(
-                                // 'self' significa "solo da questo stesso sito".
-                                // In pratica, blocchiamo contenuti caricati da siti esterni non autorizzati.
-                                "default-src 'self'; " +
-                                "script-src 'self'; " +
-                                "style-src 'self'; " +
-                                "img-src 'self' data:; " +
-                                "object-src 'none'; " +
-                                "base-uri 'self'; " +
-                                "frame-ancestors 'none'; " +
-                                "form-action 'self'"
-                        ))
-                );
+                                // Se un utente è loggato ma prova ad aprire una pagina per cui non ha i
+                                // permessi,
+                                // non riceve una pagina generica di errore: viene mandato alla pagina "accesso
+                                // negato".
+                                .exceptionHandling(exceptions -> exceptions
+                                                .accessDeniedPage("/accesso-negato"))
 
-        return http.build();
-    }
+                                // Spring cambia l'identificatore della sessione dopo il login.
+                                // Questo riduce un attacco chiamato session fixation, cioè il riuso di un ID di
+                                // sessione noto.
+                                .sessionManagement(session -> session
+                                                .sessionFixation(fixation -> fixation.changeSessionId()))
+
+                                // CSRF resta attivo.
+                                // Questo protegge i form: impedisce che un sito esterno faccia inviare
+                                // richieste al posto dell'utente.
+                                // È molto importante quando l'app usa sessioni e form HTML.
+                                .csrf(Customizer.withDefaults())
+
+                                // Content Security Policy: è una regola di sicurezza del browser.
+                                // Dice da quali sorgenti il browser può caricare script, stili, immagini e
+                                // altri contenuti.
+                                .headers(headers -> headers
+                                                .contentSecurityPolicy(csp -> csp.policyDirectives(
+                                                                // 'self' significa "solo da questo stesso sito".
+                                                                // In pratica, blocchiamo contenuti caricati da siti
+                                                                // esterni non autorizzati.
+                                                                "default-src 'self'; " +
+                                                                                "script-src 'self'; " +
+                                                                                "style-src 'self'; " +
+                                                                                "img-src 'self' data:; " +
+                                                                                "object-src 'none'; " +
+                                                                                "base-uri 'self'; " +
+                                                                                "frame-ancestors 'none'; " +
+                                                                                "form-action 'self'")));
+
+                return http.build();
+        }
 
         /**
          * Crea il componente che controlla se username e password sono corretti.
@@ -185,43 +191,46 @@ public class SecurityConfig {
          * - confronta la password digitata con quella salvata;
          * - decide se il login può riuscire oppure no.
          */
-    @Bean
-    public AuthenticationProvider authenticationProvider(
-            JpaUserDetailsService userDetailsService,
-            PasswordEncoder passwordEncoder
-    ) {
+        @Bean
+        public AuthenticationProvider authenticationProvider(
+                        JpaUserDetailsService userDetailsService,
+                        PasswordEncoder passwordEncoder) {
                 // Creiamo il provider standard per login con username e password.
-                // Il costruttore riceve il servizio che sa come trovare gli utenti nel database.
-        DaoAuthenticationProvider provider = 
-        new DaoAuthenticationProvider(userDetailsService);
+                // Il costruttore riceve il servizio che sa come trovare gli utenti nel
+                // database.
+                DaoAuthenticationProvider provider = new DaoAuthenticationProvider(userDetailsService);
                 // Diciamo al provider come deve confrontare la password inserita dall'utente
                 // con quella salvata nel database.
-        provider.setPasswordEncoder(passwordEncoder);
-        return provider;
-    }
+                provider.setPasswordEncoder(passwordEncoder);
+                return provider;
+        }
 
         /**
          * Definisce come Spring deve salvare e verificare le password.
          *
          * Le password non vengono salvate in chiaro, ma come hash.
-         * Un hash è una trasformazione non reversibile: serve per verificare la password,
+         * Un hash è una trasformazione non reversibile: serve per verificare la
+         * password,
          * non per recuperarla in testo leggibile.
          *
-         * Qui usiamo BCrypt, che è un algoritmo adatto per le password perché è lento apposta.
+         * Qui usiamo BCrypt, che è un algoritmo adatto per le password perché è lento
+         * apposta.
          * Questo rende più difficile fare attacchi automatici a forza bruta.
          */
-    @Bean
-    public PasswordEncoder passwordEncoder() {
+        @Bean
+        public PasswordEncoder passwordEncoder() {
                 // DelegatingPasswordEncoder può gestire più algoritmi diversi.
                 // La mappa dice quali codificatori conosce l'app.
-        Map<String, PasswordEncoder> encoders = new HashMap<>();
-                // BCrypt con strength 12: più il numero sale, più il controllo della password costa tempo.
+                Map<String, PasswordEncoder> encoders = new HashMap<>();
+                // BCrypt con strength 12: più il numero sale, più il controllo della password
+                // costa tempo.
                 // 12 è un compromesso comune tra sicurezza e prestazioni.
-                //12 significa che l'algoritmo BCrypt esegue 2^12 (4096) iterazioni
+                // 12 significa che l'algoritmo BCrypt esegue 2^12 (4096) iterazioni
                 // di hashing, rendendo più difficile per un attaccante indovinare la password.
-        encoders.put("bcrypt", new BCryptPasswordEncoder(12));
+                encoders.put("bcrypt", new BCryptPasswordEncoder(12));
                 // DelegatingPasswordEncoder usa {bcrypt} come prefisso negli hash.
-                // Questo è utile se un domani si volesse cambiare algoritmo senza rompere gli hash già esistenti.
-        return new DelegatingPasswordEncoder("bcrypt", encoders);
-    }
+                // Questo è utile se un domani si volesse cambiare algoritmo senza rompere gli
+                // hash già esistenti.
+                return new DelegatingPasswordEncoder("bcrypt", encoders);
+        }
 }
