@@ -19,15 +19,22 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 // controllo della forza della password nella pagina di registrazione
-document.addEventListener('DOMContentLoaded', () => {
-  const password = document.getElementById('password');
-  const strengthMessage = document.getElementById('password-strength');
+document.addEventListener("DOMContentLoaded", function () {
+  const form = document.getElementById("register-form");
+  const password = document.getElementById("password");
+  const strengthMessage = document.getElementById("password-strength");
 
-  if (!password || !strengthMessage) {
-    return;
+  if (!password || !strengthMessage) return;
+
+  function passwordForte(value) {
+    return value.length >= 8 &&
+      /[a-z]/.test(value) &&
+      /[A-Z]/.test(value) &&
+      /\d/.test(value) &&
+      /[^A-Za-z0-9]/.test(value);
   }
 
-  password.addEventListener('input', () => {
+  password.addEventListener("input", function () {
     const value = password.value;
     let strength = 0;
 
@@ -36,16 +43,30 @@ document.addEventListener('DOMContentLoaded', () => {
     if (/\d/.test(value)) strength++;
     if (/[^A-Za-z0-9]/.test(value)) strength++;
 
-    const messages = [
-      'Inserisci una password',
-      'Molto debole',
-      'Debole',
-      'Media',
-      'Forte'
-    ];
+    strengthMessage.textContent = [
+      "Inserisci una password",
+      "Molto debole",
+      "Debole",
+      "Media",
+      "Forte"
+    ][strength];
 
-    strengthMessage.textContent = messages[strength];
+    strengthMessage.classList.toggle("password-strong", strength === 4);
   });
+
+  if (form) {
+    form.addEventListener("submit", function (event) {
+      if (!passwordForte(password.value)) {
+        event.preventDefault();
+        password.setCustomValidity(
+          "La password deve contenere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un simbolo."
+        );
+        password.reportValidity();
+      } else {
+        password.setCustomValidity("");
+      }
+    });
+  }
 });
 
 /* ---------------------------------------------------------

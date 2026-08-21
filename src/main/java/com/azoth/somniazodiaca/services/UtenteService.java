@@ -2,6 +2,7 @@ package com.azoth.somniazodiaca.services;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.regex.Pattern;
 
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -30,6 +31,9 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     private final SognoRepository sognoRepository;
     private final TemaNataleRepository temaNataleRepository;
     private final InventarioCosmeticoRepository inventarioCosmeticoRepository;
+
+    private static final Pattern PASSWORD_FORTE = Pattern.compile(
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$");
 
     public UtenteService(
             UtenteRepository repository,
@@ -170,6 +174,11 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
 
         if (getRepository().findByEmail(registrazione.email()).isPresent()) {
             throw new EmailAlreadyExistsException("L'email esiste già");
+        }
+
+        if (!PASSWORD_FORTE.matcher(registrazione.password()).matches()) {
+            throw new IllegalArgumentException(
+                    "La password deve essere forte.");
         }
 
         Utente utente = Utente.builder()
