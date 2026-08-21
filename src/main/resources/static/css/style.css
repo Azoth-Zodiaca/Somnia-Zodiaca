@@ -789,6 +789,16 @@ h1, h2, h3, h4 { font-weight: 600; letter-spacing: 0.2px; }
 .danger-zone { border-color: var(--accent-red); }
 .danger-zone h3 { color: var(--accent-red); }
 .danger-zone p { color: var(--text-muted); font-size: 13px; margin-bottom: 14px; }
+.btn-danger-outline {
+  background: transparent;
+  border: 1px solid var(--accent-red);
+  color: var(--accent-red);
+}
+
+.btn-danger-outline:hover {
+  background: var(--accent-red);
+  color: #fff;
+}
 
 /* Utility */
 .text-muted { color: var(--text-muted); }

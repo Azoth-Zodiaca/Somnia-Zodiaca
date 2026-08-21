@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <title>Wallet - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
 </head>
+
 <body>
   <div class="app-layout">
     <div th:replace="~{fragments/app-shell :: sidebar(active='wallet')}"></div>
@@ -18,39 +20,58 @@
         <!-- Saldo attuale -->
         <div class="card wallet-balance">
           <div class="label">Saldo attuale</div>
-          <div class="amount">&#10022; 1.240</div>
-          <div class="sub">QI &middot; Quicksilver Ingots</div>
-          <div class="wallet-actions">
-            <button class="btn btn-primary">+ Ricarica</button>
-            <button class="btn btn-outline">Vedi storico</button>
+          <div class="amount">
+            &#10022; <span th:text="${utente.qi}">0</span>
           </div>
+          <div class="sub">QI &middot; Quicksilver Ingots</div>
         </div>
 
         <!-- Pacchetti di ricarica: in Spring th:each="pacchetto : ${pacchettiRicarica}" -->
         <div class="recharge-grid">
           <div class="card recharge-card">
-            <div class="amount">&#10022; 500</div>
             <div class="text-muted" style="font-size:11px;">STELLA</div>
-            <button class="btn btn-primary btn-block mt-20">&euro; 4,99</button>
+            <div class="amount">&#10022; 100</div>
+            <div class="bonus">+0 bonus</div>
+            <form th:action="@{/app/wallet/ricarica}" method="post">
+              <input type="hidden" name="quantitaQi" value="100">
+              <button type="submit" class="btn btn-primary btn-block">
+                &euro; 0,99
+              </button>
+            </form>
           </div>
           <div class="card recharge-card">
-            <div class="amount">&#10022; 1.200</div>
+            <div class="text-muted" style="font-size:11px;">NEBULOSA</div>
+            <div class="amount">&#10022; 500</div>
             <div class="bonus">+100 bonus</div>
-            <div class="text-muted" style="font-size:11px;margin-bottom:12px;">NEBULOSA</div>
-            <button class="btn btn-primary btn-block">&euro; 9,99</button>
+            <form th:action="@{/app/wallet/ricarica}" method="post">
+              <input type="hidden" name="quantitaQi" value="500">
+              <button type="submit" class="btn btn-primary btn-block">
+                &euro; 3,99
+              </button>
+            </form>
+          </div>
+          <div class="card recharge-card">
+            <div class="text-muted" style="font-size:11px;">COSTELLAZIONE</div>
+            <div class="amount">&#10022; 2.000</div>
+            <div class="bonus">+500 bonus</div>
+            <form th:action="@{/app/wallet/ricarica}" method="post">
+              <input type="hidden" name="quantitaQi" value="2000">
+              <button type="submit" class="btn btn-primary btn-block">
+                &euro; 14,99
+              </button>
+            </form>
           </div>
           <div class="card recharge-card">
             <span class="best-value">Miglior valore</span>
-            <div class="amount">&#10022; 3.000</div>
-            <div class="bonus">+500 bonus</div>
-            <div class="text-muted" style="font-size:11px;margin-bottom:12px;">COSTELLAZIONE</div>
-            <button class="btn btn-gold btn-block">&euro; 19,99</button>
-          </div>
-          <div class="card recharge-card">
-            <div class="amount">&#10022; 7.500</div>
-            <div class="bonus">+1500 bonus</div>
-            <div class="text-muted" style="font-size:11px;margin-bottom:12px;">GALASSIA</div>
-            <button class="btn btn-primary btn-block">&euro; 39,99</button>
+            <div class="text-muted" style="font-size:11px;">GALASSIA</div>
+            <div class="amount">&#10022; 8.000</div>
+            <div class="bonus">+2000 bonus</div>
+            <form th:action="@{/app/wallet/ricarica}" method="post">
+              <input type="hidden" name="quantitaQi" value="8000">
+              <button type="submit" class="btn btn-gold btn-block">
+                &euro; 59,99
+              </button>
+            </form>
           </div>
         </div>
 
@@ -71,16 +92,41 @@
 
         <!-- Badge ottenuti (anteprima; elenco completo in Obiettivi & Badge) -->
         <div class="card mt-20">
-          <div class="card-title"><span>&#127942; Badge</span><span class="text-muted" style="font-size:12px;">3/8 sbloccati</span></div>
+          <div class="card-title"><span>&#127942; Badge</span><span class="text-muted" style="font-size:12px;">3/8
+              sbloccati</span></div>
           <div class="badge-grid">
-            <div class="badge-slot unlocked"><div class="badge-icon">&#127769;</div><div class="badge-name">Primo Sogno</div></div>
-            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Diario Pieno</div></div>
-            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Stella Nascente</div></div>
-            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Oracolo</div></div>
-            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Collezionista</div></div>
-            <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Costanza</div></div>
-            <div class="badge-slot unlocked"><div class="badge-icon">&#128172;</div><div class="badge-name">Ambasciatore</div></div>
-            <div class="badge-slot unlocked"><div class="badge-icon">&#128081;</div><div class="badge-name">Premium</div></div>
+            <div class="badge-slot unlocked">
+              <div class="badge-icon">&#127769;</div>
+              <div class="badge-name">Primo Sogno</div>
+            </div>
+            <div class="badge-slot">
+              <div class="badge-icon">?</div>
+              <div class="badge-name">Diario Pieno</div>
+            </div>
+            <div class="badge-slot">
+              <div class="badge-icon">?</div>
+              <div class="badge-name">Stella Nascente</div>
+            </div>
+            <div class="badge-slot">
+              <div class="badge-icon">?</div>
+              <div class="badge-name">Oracolo</div>
+            </div>
+            <div class="badge-slot">
+              <div class="badge-icon">?</div>
+              <div class="badge-name">Collezionista</div>
+            </div>
+            <div class="badge-slot">
+              <div class="badge-icon">?</div>
+              <div class="badge-name">Costanza</div>
+            </div>
+            <div class="badge-slot unlocked">
+              <div class="badge-icon">&#128172;</div>
+              <div class="badge-name">Ambasciatore</div>
+            </div>
+            <div class="badge-slot unlocked">
+              <div class="badge-icon">&#128081;</div>
+              <div class="badge-name">Premium</div>
+            </div>
           </div>
         </div>
       </main>
@@ -89,4 +135,5 @@
 
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
+
 </html>

@@ -15,6 +15,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initLikeButtons();
   initInventoryEquip();
   initSettingsMenu();
+  initDeleteAccountConfirmation();
 });
 
 /* ---------------------------------------------------------
@@ -188,19 +189,49 @@ function initInventoryEquip() {
 --------------------------------------------------------- */
 function initSettingsMenu() {
   var links = document.querySelectorAll(".settings-menu a");
+  var sections = document.querySelectorAll(".settings-section");
+
   if (links.length === 0) return;
+
+  var activeLink = document.querySelector(".settings-menu a.active");
+  var activeTargetId = activeLink
+    ? activeLink.getAttribute("data-target")
+    : null;
+
+  sections.forEach(function (section) {
+    section.style.display =
+      section.id === activeTargetId ? "block" : "none";
+  });
 
   links.forEach(function (link) {
     link.addEventListener("click", function (event) {
       event.preventDefault();
+
       var targetId = link.getAttribute("data-target");
 
-      links.forEach(function (l) { l.classList.remove("active"); });
+      links.forEach(function (item) {
+        item.classList.remove("active");
+      });
+
       link.classList.add("active");
 
-      document.querySelectorAll(".settings-section").forEach(function (section) {
-        section.style.display = (section.id === targetId) ? "block" : "none";
+      sections.forEach(function (section) {
+        section.style.display =
+          section.id === targetId ? "block" : "none";
       });
     });
+  });
+}
+
+
+// pop up per eliminazione account in impostazioni
+function initDeleteAccountConfirmation() {
+  var form = document.querySelector("form[action*='/account/elimina']");
+  if (!form) return;
+
+  form.addEventListener("submit", function (event) {
+    if (!window.confirm("Sei sicuro di voler eliminare definitivamente il tuo account?")) {
+      event.preventDefault();
+    }
   });
 }

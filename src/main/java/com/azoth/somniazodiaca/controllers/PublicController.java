@@ -14,7 +14,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 @Controller
 public class PublicController {
 
-    @GetMapping({"/", "/index", "/home"})
+    @GetMapping("/")
     public String home() {
         return "index"; // templates/index.html
     }

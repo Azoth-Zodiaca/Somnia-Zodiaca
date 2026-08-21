@@ -1,10 +1,23 @@
 package com.azoth.somniazodiaca.controllers;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+
+import com.azoth.somniazodiaca.dtos.UtenteDetail;
+import com.azoth.somniazodiaca.services.UtenteService;
 
 @Controller
 public class WalletController {
+
+    private final UtenteService utenteService;
+
+    public WalletController(UtenteService utenteService) {
+        this.utenteService = utenteService;
+    }
 
     @GetMapping("/wallet")
     public String redirectWallet() {
@@ -12,7 +25,18 @@ public class WalletController {
     }
 
     @GetMapping("/app/wallet")
-    public String wallet() {
+    public String wallet(Authentication authentication, Model model) {
+        UtenteDetail utente = utenteService.findByUsername(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        model.addAttribute("utente", utente);
         return "app/wallet";
+    }
+
+    @PostMapping("/app/wallet/ricarica")
+    public String ricarica(Authentication authentication,
+            @RequestParam int quantitaQi) {
+        utenteService.addQi(authentication.getName(), quantitaQi);
+        return "redirect:/app/wallet";
     }
 }
