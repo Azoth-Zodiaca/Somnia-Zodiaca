@@ -31,5 +31,7 @@ public class RichiestaInterpretazioneDto implements GenericDto {
     @NotBlank(message = "Il testo è obbligatorio")
     private String testo;
 
+    private LocalDateTime scadenzaCache;
+
     private LocalDateTime createdAt;
 }
