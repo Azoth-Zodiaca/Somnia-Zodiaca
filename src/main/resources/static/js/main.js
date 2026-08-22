@@ -149,10 +149,20 @@ function initChipSelectors() {
   chips.forEach(function (chip) {
     chip.addEventListener("click", function () {
       var groupName = chip.getAttribute("data-group");
-      document.querySelectorAll('.chip[data-group="' + groupName + '"]').forEach(function (c) {
-        c.classList.remove("selected");
-      });
+      var value = chip.getAttribute("data-value");
+
+      document
+        .querySelectorAll('.chip[data-group="' + groupName + '"]')
+        .forEach(function (currentChip) {
+          currentChip.classList.remove("selected");
+        });
+
       chip.classList.add("selected");
+
+      var hiddenInput = document.getElementById(groupName);
+      if (hiddenInput) {
+        hiddenInput.value = value;
+      }
     });
   });
 }
@@ -198,53 +208,56 @@ function initOracoloCounter() {
 }
 
 function initOracoloForm() {
-  const form = document.getElementById("oracolo-form");
-  const textarea = document.getElementById("dream-text");
-  const resultBox = document.getElementById("risultato-oracolo");
-  const resultText = document.getElementById("testo-interpretazione");
+  var form = document.getElementById("oracolo-form");
+  var textarea = document.getElementById("dream-text");
+  var resultBox = document.getElementById("risultato-oracolo");
+  var resultText = document.getElementById("testo-interpretazione");
 
   if (!form || !textarea || !resultBox || !resultText) return;
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    const dream = textarea.value.trim();
-    if (!dream) {
+    var submitButton = form.querySelector('button[type="submit"]');
+    var csrfToken = form.querySelector('input[name="_csrf"]').value;
+
+    var richiesta = {
+      testoSogno: textarea.value.trim(),
+      umore: document.getElementById("umore").value,
+      stile: document.getElementById("stile").value,
+      usaTemaNatale: document.getElementById("usa-tema").checked
+    };
+
+    if (!richiesta.testoSogno) {
       textarea.focus();
       return;
     }
 
-    const csrfToken = form.querySelector('input[name="_csrf"]')?.value;
-    const submitButton = form.querySelector('button[type="submit"]');
-
     submitButton.disabled = true;
-    submitButton.textContent = "Interpreto...";
     resultBox.hidden = false;
     resultText.textContent = "Sto interpretando il sogno...";
 
     try {
-      const response = await fetch("/test", {
+      var response = await fetch("/app/oracolo/interpreta", {
         method: "POST",
         headers: {
-          "Content-Type": "text/plain",
+          "Content-Type": "application/json",
           "X-CSRF-TOKEN": csrfToken
         },
-        body: dream
+        body: JSON.stringify(richiesta)
       });
 
       if (!response.ok) {
-        throw new Error(`Errore HTTP ${response.status}`);
+        throw new Error("Errore HTTP " + response.status);
       }
 
-      const interpretation = await response.text();
-      resultText.textContent = interpretation;
+      resultText.textContent = await response.text();
     } catch (error) {
-      resultText.textContent =
-        "Non è stato possibile interpretare il sogno. Riprova più tardi.";
       console.error(error);
+      resultText.textContent =
+        "Non è stato possibile interpretare il sogno.";
     } finally {
       submitButton.disabled = false;
-      submitButton.textContent = "✦ Interpreta il sogno";
     }
   });
 }

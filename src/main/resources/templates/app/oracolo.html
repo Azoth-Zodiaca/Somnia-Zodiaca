@@ -27,6 +27,8 @@
         <div class="card oracolo-box">
           <form id="oracolo-form" method="post">
             <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <input type="hidden" id="umore" value="Sereno">
+            <input type="hidden" id="stile" value="Astrologico">
             <textarea id="dream-text" name="testoSogno" maxlength="4000"
               placeholder="Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena..."></textarea>
             <div class="oracolo-meta">
@@ -38,10 +40,18 @@
               <div>
                 <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Umore</span>
                 <div class="chip-row mt-10">
-                  <button type="button" class="chip selected" data-group="umore">&#128522; Sereno</button>
-                  <button type="button" class="chip" data-group="umore">&#128533; Ansioso</button>
-                  <button type="button" class="chip" data-group="umore">&#128532; Confuso</button>
-                  <button type="button" class="chip" data-group="umore">&#9889; Intenso</button>
+                  <button type="button" class="chip selected" data-group="umore" data-value="Sereno">
+                    &#128522; Sereno
+                  </button>
+                  <button type="button" class="chip" data-group="umore" data-value="Ansioso">
+                    &#128533; Ansioso
+                  </button>
+                  <button type="button" class="chip" data-group="umore" data-value="Confuso">
+                    &#128532; Confuso
+                  </button>
+                  <button type="button" class="chip" data-group="umore" data-value="Intenso">
+                    &#9889; Intenso
+                  </button>
                 </div>
               </div>
 
@@ -49,9 +59,15 @@
               <div>
                 <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Stile</span>
                 <div class="chip-row mt-10">
-                  <button type="button" class="chip" data-group="stile">Junghiano</button>
-                  <button type="button" class="chip selected" data-group="stile">Astrologico</button>
-                  <button type="button" class="chip" data-group="stile">Simbolico</button>
+                  <button type="button" class="chip" data-group="stile" data-value="Junghiano">
+                    Junghiano
+                  </button>
+                  <button type="button" class="chip selected" data-group="stile" data-value="Astrologico">
+                    Astrologico
+                  </button>
+                  <button type="button" class="chip" data-group="stile" data-value="Simbolico">
+                    Simbolico
+                  </button>
                 </div>
               </div>
 
