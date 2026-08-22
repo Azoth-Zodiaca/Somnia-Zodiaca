@@ -1,5 +1,7 @@
 package com.azoth.somniazodiaca.controllers;
 
+import java.time.LocalDate;
+
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -30,6 +32,10 @@ public class WalletController {
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
         model.addAttribute("utente", utente);
+        model.addAttribute(
+                "ricompensaRiscossa",
+                LocalDate.now().equals(
+                        utente.getUltimaRicompensaGiornaliera()));
         return "app/wallet";
     }
 
@@ -37,6 +43,14 @@ public class WalletController {
     public String ricarica(Authentication authentication,
             @RequestParam int quantitaQi) {
         utenteService.addQi(authentication.getName(), quantitaQi);
+        return "redirect:/app/wallet";
+    }
+
+    @PostMapping("/app/wallet/ricompensa")
+    public String riscuotiRicompensa(Authentication authentication) {
+        utenteService.riscuotiRicompensaGiornaliera(
+                authentication.getName());
+
         return "redirect:/app/wallet";
     }
 }

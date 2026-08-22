@@ -1,5 +1,6 @@
 package com.azoth.somniazodiaca.dtos;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.azoth.somniazodiaca.enums.Ruolo;
@@ -36,6 +37,8 @@ public class UtenteDetail implements GenericDto {
 
     private LocalDateTime dataRegistrazione;
     private LocalDateTime ultimoAccesso;
+    private Integer giorniConsecutivi;
+    private LocalDate ultimaRicompensaGiornaliera;
     private TemaNataleDto temaNatale;
 }
 

@@ -1,5 +1,6 @@
 package com.azoth.somniazodiaca.entities;
 
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 import com.azoth.somniazodiaca.enums.Ruolo;
@@ -60,6 +61,13 @@ public class Utente extends BaseEntity {
 
     @Column(name = "ultimo_accesso")
     private LocalDateTime ultimoAccesso;
+
+    @Column(name = "giorni_consecutivi", nullable = false)
+    @Builder.Default
+    private Integer giorniConsecutivi = 0;
+
+    @Column(name = "ultima_ricompensa_giornaliera")
+    private LocalDate ultimaRicompensaGiornaliera;
 
     @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private TemaNatale temaNatale;

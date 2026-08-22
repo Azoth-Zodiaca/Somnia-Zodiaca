@@ -77,17 +77,44 @@
 
         <!-- Ricompensa giornaliera: 7 giorni, oggi evidenziato -->
         <div class="card">
-          <div class="card-title"><span>Ricompensa giornaliera</span></div>
-          <div class="daily-rewards">
-            <div class="daily-reward">+10</div>
-            <div class="daily-reward">+15</div>
-            <div class="daily-reward">+20</div>
-            <div class="daily-reward">+25</div>
-            <div class="daily-reward">+30</div>
-            <div class="daily-reward today">+40</div>
-            <div class="daily-reward locked">&#127873;</div>
+          <div class="card-title">
+            <span>Ricompensa giornaliera</span>
+            <span class="text-muted" th:text="${utente.giorniConsecutivi + ' giorni consecutivi'}">
+              0 giorni consecutivi
+            </span>
           </div>
-          <button class="btn btn-gold btn-block">Riscuoti oggi</button>
+          <div class="daily-rewards">
+            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 1 ? 'claimed' : 'available'}">
+              +10
+            </div>
+            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 2 ? 'claimed' : 'locked'}">
+              +15
+            </div>
+            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 3 ? 'claimed' : 'locked'}">
+              +20
+            </div>
+            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 4 ? 'claimed' : 'locked'}">
+              +25
+            </div>
+            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 5 ? 'claimed' : 'locked'}">
+              +30
+            </div>
+            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 6 ? 'claimed' : 'locked'}">
+              +40
+            </div>
+            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 7 ? 'claimed' : 'locked'}">
+              &#127873;
+            </div>
+          </div>
+          <form th:if="${!ricompensaRiscossa}" th:action="@{/app/wallet/ricompensa}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn btn-gold btn-block">
+              Riscuoti oggi
+            </button>
+          </form>
+          <div th:if="${ricompensaRiscossa}" class="text-muted text-center">
+            Ricompensa già riscossa oggi
+          </div>
         </div>
 
         <!-- Badge ottenuti (anteprima; elenco completo in Obiettivi & Badge) -->
