@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <title>Tema Natale - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
 </head>
+
 <body>
   <div class="app-layout">
     <div th:replace="~{fragments/app-shell :: sidebar(active='tema-natale')}"></div>
@@ -17,9 +19,55 @@
         <div class="natal-header">
           <div>
             <h2 class="serif" style="font-weight:500;">Il tuo cielo di nascita</h2>
-            <div class="subtitle" th:text="${temaNatale.dataOraLuogo} ?: '12 aprile 1998 - 04:35 - Napoli, IT'">12 aprile 1998 - 04:35 - Napoli, IT</div>
+            <div class="subtitle" th:if="${temaNatale != null}">
+              <span th:text="${temaNatale.dataNascita}"></span>
+              <span> - </span>
+              <span th:text="${temaNatale.oraNascita}"></span>
+              <span> - </span>
+              <span th:text="${temaNatale.luogoNascita}"></span>
+            </div>
+
+            <div class="subtitle" th:unless="${temaNatale != null}">
+              Dati di nascita non ancora disponibili
+            </div>
           </div>
-          <a href="/app/tema-natale/modifica" class="btn btn-outline btn-sm">Modifica dati</a>
+
+          <a th:if="${temaNatale != null}"
+           th:href="@{/app/tema-natale/modifica}" 
+           class="btn btn-outline btn-sm">
+            Modifica dati
+          </a>
+        </div>
+
+
+        <div th:if="${temaNatale != null}" class="card">
+          <div class="card-title">Dati di nascita</div>
+
+          <p>
+            <strong>Luogo:</strong>
+            <span th:text="${temaNatale.luogoNascita}">Napoli</span>
+          </p>
+
+          <p>
+            <strong>Latitudine:</strong>
+            <span th:text="${temaNatale.latitudine}">40.8518</span>
+          </p>
+
+          <p>
+            <strong>Longitudine:</strong>
+            <span th:text="${temaNatale.longitudine}">14.2681</span>
+          </p>
+
+          <p>
+            <strong>Fuso orario:</strong>
+            <span th:text="${temaNatale.timezone}">Europe/Rome</span>
+          </p>
+        </div>
+
+        <div th:if="${temaNatale == null}" class="card">
+          <p class="text-muted">
+            Non hai ancora completato i dati del tema natale.
+          </p>
         </div>
 
         <!-- Tab interne: Riepilogo / Carta / Pianeti / Case / Analisi AI -->
@@ -51,8 +99,10 @@
               <!-- Triade principale: Sole, Luna, Ascendente -->
               <div class="card">
                 <div class="card-title"><span>Triade principale</span></div>
-                <div class="triad-item"><span class="triad-name">Sole</span><span>&#9804; Leone &middot; X casa</span></div>
-                <div class="triad-item"><span class="triad-name">Luna</span><span>&#9810; Acquario &middot; VI casa</span></div>
+                <div class="triad-item"><span class="triad-name">Sole</span><span>&#9804; Leone &middot; X casa</span>
+                </div>
+                <div class="triad-item"><span class="triad-name">Luna</span><span>&#9810; Acquario &middot; VI
+                    casa</span></div>
                 <div class="triad-item"><span class="triad-name">Ascendente</span><span>&#9807; Scorpione</span></div>
               </div>
 
@@ -61,19 +111,27 @@
                 <div class="card-title"><span>Elementi</span></div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>&#128293; Fuoco</span><span>42%</span></div>
-                  <div class="progress-bar"><div class="progress-bar-fill" style="width:42%;background:var(--accent-orange);"></div></div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:42%;background:var(--accent-orange);"></div>
+                  </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>&#127793; Terra</span><span>22%</span></div>
-                  <div class="progress-bar"><div class="progress-bar-fill" style="width:22%;background:var(--accent-green);"></div></div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:22%;background:var(--accent-green);"></div>
+                  </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>&#128168; Aria</span><span>26%</span></div>
-                  <div class="progress-bar"><div class="progress-bar-fill" style="width:26%;background:var(--accent-blue);"></div></div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:26%;background:var(--accent-blue);"></div>
+                  </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>&#128167; Acqua</span><span>18%</span></div>
-                  <div class="progress-bar"><div class="progress-bar-fill" style="width:18%;background:var(--accent-purple);"></div></div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:18%;background:var(--accent-purple);"></div>
+                  </div>
                 </div>
               </div>
 
@@ -82,17 +140,24 @@
                 <div class="card-title"><span>Modalità</span></div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>Cardinale</span><span>38%</span></div>
-                  <div class="progress-bar"><div class="progress-bar-fill" style="width:38%;"></div></div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:38%;"></div>
+                  </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>Fisso</span><span>45%</span></div>
-                  <div class="progress-bar"><div class="progress-bar-fill" style="width:45%;"></div></div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:45%;"></div>
+                  </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>Mobile</span><span>17%</span></div>
-                  <div class="progress-bar"><div class="progress-bar-fill" style="width:17%;"></div></div>
+                  <div class="progress-bar">
+                    <div class="progress-bar-fill" style="width:17%;"></div>
+                  </div>
                 </div>
-                <p class="text-muted mt-10" style="font-size:12px;font-style:italic;">"Natura stabile e tenace, con slanci d'iniziativa."</p>
+                <p class="text-muted mt-10" style="font-size:12px;font-style:italic;">"Natura stabile e tenace, con
+                  slanci d'iniziativa."</p>
               </div>
 
               <!-- Pianeti dominanti -->
@@ -126,8 +191,12 @@
               <div class="ai-analysis-text">
                 <!-- Testo generato dall'AI: in Spring th:utext="${analisiAi.sintesi}"
                      (attenzione a sanificare l'HTML se proviene da un modello AI) -->
-                <p>Il tuo Sole in Leone in decima casa parla di vocazione visibile: sei costruito per essere visto, ma non superficialmente — c'è un'esigenza autentica di lasciare traccia. L'Ascendente in Scorpione aggiunge magnetismo silenzioso: entri nelle stanze senza fare rumore, ma vieni notata comunque.</p>
-                <p>La Luna in Acquario in sesta casa suggerisce una vita quotidiana anticonvenzionale, che rifiuta il ruolo di serva della routine. Ti nutre l'innovazione applicata alle piccole cose, non le rivoluzioni astratte.</p>
+                <p>Il tuo Sole in Leone in decima casa parla di vocazione visibile: sei costruito per essere visto, ma
+                  non superficialmente — c'è un'esigenza autentica di lasciare traccia. L'Ascendente in Scorpione
+                  aggiunge magnetismo silenzioso: entri nelle stanze senza fare rumore, ma vieni notata comunque.</p>
+                <p>La Luna in Acquario in sesta casa suggerisce una vita quotidiana anticonvenzionale, che rifiuta il
+                  ruolo di serva della routine. Ti nutre l'innovazione applicata alle piccole cose, non le rivoluzioni
+                  astratte.</p>
               </div>
             </div>
             <div class="flex gap-8 mt-20">
@@ -138,14 +207,23 @@
           </div>
         </div>
 
-        <div id="tab-carta" class="js-tab-panel" style="display:none;"><p class="text-muted">Vista dettagliata della carta astrale.</p></div>
-        <div id="tab-pianeti" class="js-tab-panel" style="display:none;"><p class="text-muted">Tabella con posizione di ogni pianeta, segno e casa.</p></div>
-        <div id="tab-case" class="js-tab-panel" style="display:none;"><p class="text-muted">Le 12 case astrologiche con relativo significato.</p></div>
-        <div id="tab-ai" class="js-tab-panel" style="display:none;"><p class="text-muted">Vista estesa dell'analisi AI, sezione per sezione.</p></div>
+        <div id="tab-carta" class="js-tab-panel" style="display:none;">
+          <p class="text-muted">Vista dettagliata della carta astrale.</p>
+        </div>
+        <div id="tab-pianeti" class="js-tab-panel" style="display:none;">
+          <p class="text-muted">Tabella con posizione di ogni pianeta, segno e casa.</p>
+        </div>
+        <div id="tab-case" class="js-tab-panel" style="display:none;">
+          <p class="text-muted">Le 12 case astrologiche con relativo significato.</p>
+        </div>
+        <div id="tab-ai" class="js-tab-panel" style="display:none;">
+          <p class="text-muted">Vista estesa dell'analisi AI, sezione per sezione.</p>
+        </div>
       </main>
     </div>
   </div>
 
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
+
 </html>
