@@ -5,15 +5,19 @@ import java.util.Map;
 
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.AuthenticationProvider;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
 import org.springframework.security.config.Customizer;
+import org.springframework.security.config.annotation.authentication.configuration.AuthenticationConfiguration;
 import org.springframework.security.config.annotation.method.configuration.EnableMethodSecurity;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.DelegatingPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
+import org.springframework.security.web.context.HttpSessionSecurityContextRepository;
+import org.springframework.security.web.context.SecurityContextRepository;
 
 import com.azoth.somniazodiaca.security.JpaUserDetailsService;
 
@@ -72,7 +76,6 @@ public class SecurityConfig {
                                                                 "/",
                                                                 "/index",
                                                                 "/enciclopedia",
-                                                                "/onboarding",
                                                                 "/premium",
                                                                 "/legal/**",
 
@@ -92,6 +95,11 @@ public class SecurityConfig {
 
                                                 // Tutte le pagine e gli endpoint sotto /app richiedono autenticazione
                                                 .requestMatchers("/app/**").authenticated()
+                                                        
+                                                .requestMatchers("/onboarding/**").authenticated()
+
+                                                // TO DO DA PROTEGGERE CON RATE LIMITING
+                                                .requestMatchers("/api/geocoding/**").permitAll()
 
                                                 // Qualsiasi altro endpoint richiede autenticazione
                                                 .anyRequest().authenticated())
@@ -232,5 +240,16 @@ public class SecurityConfig {
                 // Questo è utile se un domani si volesse cambiare algoritmo senza rompere gli
                 // hash già esistenti.
                 return new DelegatingPasswordEncoder("bcrypt", encoders);
+        }
+
+        @Bean
+        public AuthenticationManager authenticationManager(
+                        AuthenticationConfiguration configuration) throws Exception {
+                return configuration.getAuthenticationManager();
+        }
+
+        @Bean
+        public SecurityContextRepository securityContextRepository() {
+                return new HttpSessionSecurityContextRepository();
         }
 }

@@ -10,7 +10,7 @@
 <body>
 
   <div class="onboarding-page">
-    <a href="/" class="brand" style="margin-bottom:30px;display:inline-flex;"><span class="brand-dot"></span> Somnia
+    <a href="/" class="brand onboarding-brand"><span class="brand-dot"></span> Somnia
       Zodiaca</a>
 
     <!-- Indicatore dei 3 passaggi. Il passo attivo/completato riceve
@@ -22,15 +22,12 @@
       <div class="step-dot"></div>
     </div>
 
-    <!-- STEP 2 mostrato come esempio: data di nascita + conferma segno.
-         In un vero flusso multi-step, ogni passo sarebbe una pagina/form
-         separata (o sezioni mostrate/nascoste via JS), con i dati del passo
-         precedente salvati in sessione lato server. -->
+    <!-- STEP 2  data di nascita + conferma segno.-->
     <div class="card">
-      <h2 class="serif" style="font-weight:500;margin-bottom:6px;">Quando sei nato/a?</h2>
-      <p class="text-muted" style="margin-bottom:24px;">Ci serve per calcolare con precisione il tuo tema natale.</p>
+      <h2 class="serif onboarding-title">Quando sei nato/a?</h2>
+      <p class="text-muted onboarding-description">Ci serve per calcolare con precisione il tuo tema natale.</p>
 
-      <form th:action="@{/onboarding/dati-nascita}" method="post" action="#">
+      <form th:action="@{/onboarding/dati-nascita}" method="post">
         <div class="field">
           <label for="data-nascita">Data di nascita</label>
           <input type="date" id="data-nascita" name="dataNascita" required>
@@ -54,12 +51,15 @@
         <input type="hidden" id="latitudine" name="latitudine">
         <input type="hidden" id="longitudine" name="longitudine">
         <input type="hidden" id="timezone" name="timezone">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
         <!-- Segno zodiacale calcolato automaticamente lato server dalla data
              di nascita: qui mostrato come testo segnaposto -->
-        <div class="card" style="background:var(--bg-input);border:none;margin-top:10px;">
-          <span class="text-muted" style="font-size:12px;">SEGNO SOLARE RILEVATO</span>
-          <div style="font-size:18px;font-weight:600;margin-top:4px;">&#9804; Leone</div>
+        <div class="card onboarding-zodiac-card">
+          <span class="text-muted">SEGNO SOLARE RILEVATO</span>
+          <div id="segno-solare" class="onboarding-zodiac-value">
+            Inserisci la data di nascita
+          </div>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block mt-20">Calcola il mio tema natale</button>
@@ -70,7 +70,7 @@
   <!-- STEP 3: schermata di caricamento con animazione, mostrata dopo
        l'invio del form. In produzione sarebbe una pagina a parte
        (es. /onboarding/calcolo) raggiunta dopo il redirect del form. -->
-  <div class="onboarding-page onboarding-loading" style="display:none;" id="loading-step">
+  <div class="onboarding-page onboarding-loading" id="loading-step">
     <div class="spinner"></div>
     <h3 class="serif" style="font-weight:500;">Stiamo leggendo il tuo cielo...</h3>
     <p class="text-muted mt-10">Posizioniamo pianeti, case e aspetti astrali.</p>
