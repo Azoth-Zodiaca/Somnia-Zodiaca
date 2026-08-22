@@ -1,17 +1,24 @@
 package com.azoth.somniazodiaca.controllers;
 
+import java.util.List;
+
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
+import com.azoth.somniazodiaca.dtos.RichiestaInterpretazioneDto;
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.dtos.records.InterpretazioneRequest;
+import com.azoth.somniazodiaca.dtos.records.SalvaInterpretazioneRequest;
 import com.azoth.somniazodiaca.services.GeminiService;
+import com.azoth.somniazodiaca.services.InterpretazioneService;
+import com.azoth.somniazodiaca.services.OracoloService;
 import com.azoth.somniazodiaca.services.UtenteService;
 
 @Controller
@@ -19,13 +26,19 @@ public class OracoloController {
 
     private final GeminiService geminiService;
     private final UtenteService utenteService;
+    private final InterpretazioneService interpretazioneService;
+    private final OracoloService oracoloService;
 
     public OracoloController(
             GeminiService geminiService,
-            UtenteService utenteService) {
+            UtenteService utenteService,
+            InterpretazioneService interpretazioneService,
+            OracoloService oracoloService) {
 
         this.geminiService = geminiService;
         this.utenteService = utenteService;
+        this.interpretazioneService = interpretazioneService;
+        this.oracoloService = oracoloService;
     }
 
     @GetMapping("/oracolo")
@@ -34,7 +47,18 @@ public class OracoloController {
     }
 
     @GetMapping("/app/oracolo")
-    public String oracolo() {
+    public String oracolo(
+            Authentication authentication,
+            Model model) {
+
+        UtenteDetail utente = utenteService
+                .findByUsername(authentication.getName())
+                .orElseThrow();
+
+        List<RichiestaInterpretazioneDto> interpretazioni = interpretazioneService.findByUtenteId(utente.getId());
+
+        model.addAttribute("interpretazioni", interpretazioni);
+
         return "app/oracolo";
     }
 
@@ -74,6 +98,11 @@ public class OracoloController {
             aggiungiTemaNatale(prompt, utente.getTemaNatale());
         }
 
+        prompt.append("""
+
+                Limita la risposta a un massimo di 1000 caratteri.
+                """);
+
         return geminiService.askGemini(prompt.toString());
     }
 
@@ -100,5 +129,18 @@ public class OracoloController {
                 .append(temaNatale.getOraNascita())
                 .append("\nLuogo di nascita: ")
                 .append(temaNatale.getLuogoNascita());
+    }
+
+    @PostMapping(value = "/app/oracolo/salva", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+    @ResponseBody
+    public String salvaInterpretazione(
+            @RequestBody SalvaInterpretazioneRequest richiesta,
+            Authentication authentication) {
+
+        oracoloService.salvaInterpretazione(
+                authentication.getName(),
+                richiesta);
+
+        return "Interpretazione salvata";
     }
 }

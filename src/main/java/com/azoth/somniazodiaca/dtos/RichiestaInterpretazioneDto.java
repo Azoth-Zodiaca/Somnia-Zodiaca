@@ -20,6 +20,8 @@ public class RichiestaInterpretazioneDto implements GenericDto {
     private Long utenteId;
     private Long sognoId;
 
+    private String testoSogno;
+
     @NotNull(message = "La tipologia di interpretazione è obbligatoria")
     private InterpretazioneEnum interpretazioneEnum;
 
@@ -29,5 +31,5 @@ public class RichiestaInterpretazioneDto implements GenericDto {
     @NotBlank(message = "Il testo è obbligatorio")
     private String testo;
 
-    private LocalDateTime dataCreazione;
+    private LocalDateTime createdAt;
 }

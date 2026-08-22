@@ -28,10 +28,16 @@ public class InterpretazioneConverter implements GenericConverter<Interpretazion
     public RichiestaInterpretazioneDto fromEToD(Interpretazione e) {
         return RichiestaInterpretazioneDto.builder()
                 .id(e.getId())
-                .sognoId(e.getSogno() != null ? e.getSogno().getId() : null)
+                .sognoId(e.getSogno() != null
+                        ? e.getSogno().getId()
+                        : null)
+                .testoSogno(e.getSogno() != null
+                        ? e.getSogno().getTesto()
+                        : null)
                 .interpretazioneEnum(e.getInterpretazioneEnum())
                 .prompt(e.getPrompt())
                 .testo(e.getTesto())
+                .createdAt(e.getCreatedAt())
                 .build();
     }
 }

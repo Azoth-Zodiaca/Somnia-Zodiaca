@@ -15,92 +15,130 @@
       <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Oracolo')}"></div>
 
       <main class="app-content oracolo-page">
+        <div class="oracolo-layout">
 
-        <div class="flex-between mt-10" style="margin-bottom:16px;">
-          <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Nuovo sogno</span>
-          <a href="/app/oracolo/diario" class="link" style="color:var(--accent-purple);font-size:13px;">Diario
-            &rarr;</a>
-        </div>
-        <h2 class="serif mt-10" style="font-weight:500;margin-bottom:20px;">Racconta il tuo sogno</h2>
-
-        <!-- Form principale dell'oracolo -->
-        <div class="card oracolo-box">
-          <form id="oracolo-form" method="post">
-            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-            <input type="hidden" id="umore" value="Sereno">
-            <input type="hidden" id="stile" value="Astrologico">
-            <textarea id="dream-text" name="testoSogno" maxlength="4000"
-              placeholder="Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena..."></textarea>
-            <div class="oracolo-meta">
-              <span id="dream-counter" class="text-muted" style="font-size:12px;">0 / 4000</span>
+          <aside id="oracolo-history" class="oracolo-history">
+            <div class="history-header">
+              <span class="text-muted">Le tue interpretazioni</span>
+              <span id="history-count" class="history-count" th:text="${#lists.size(interpretazioni)}">
+                0
+              </span>
             </div>
 
-            <!-- Umore provato durante il sogno -->
-            <div class="oracolo-options">
-              <div>
-                <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Umore</span>
-                <div class="chip-row mt-10">
-                  <button type="button" class="chip selected" data-group="umore" data-value="Sereno">
-                    &#128522; Sereno
-                  </button>
-                  <button type="button" class="chip" data-group="umore" data-value="Ansioso">
-                    &#128533; Ansioso
-                  </button>
-                  <button type="button" class="chip" data-group="umore" data-value="Confuso">
-                    &#128532; Confuso
-                  </button>
-                  <button type="button" class="chip" data-group="umore" data-value="Intenso">
-                    &#9889; Intenso
-                  </button>
+            <div id="history-empty" th:if="${#lists.isEmpty(interpretazioni)}" class="history-empty text-muted">
+              Non hai ancora interpretazioni salvate.
+            </div>
+
+            <article class="history-item" th:each="interpretazione : ${interpretazioni}">
+              <div class="history-date" th:text="${interpretazione.createdAt != null
+                    ? #temporals.format(interpretazione.createdAt, 'dd/MM/yyyy HH:mm')
+                    : 'Data non disponibile'}">
+                22/08/2026 09:00
+              </div>
+
+              <div class="history-dream" th:text="${interpretazione.testoSogno}">
+                Testo del sogno
+              </div>
+
+              <button type="button" class="history-open" th:attr="data-interpretazione=${interpretazione.testo}">
+                Leggi
+              </button>
+            </article>
+          </aside>
+
+          <section class="oracolo-content">
+            <h2 class="serif">Racconta il tuo sogno</h2>
+
+            <!-- Form principale dell'oracolo -->
+            <div class="card oracolo-box">
+              <form id="oracolo-form" method="post">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <input type="hidden" id="umore" value="Sereno">
+                <input type="hidden" id="stile" value="Astrologico">
+                <textarea id="dream-text" name="testoSogno" maxlength="4000"
+                  placeholder="Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena..."></textarea>
+                <div class="oracolo-meta">
+                  <span id="dream-counter" class="text-muted" style="font-size:12px;">0 / 4000</span>
                 </div>
-              </div>
 
-              <!-- Stile di interpretazione -->
-              <div>
-                <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Stile</span>
-                <div class="chip-row mt-10">
-                  <button type="button" class="chip" data-group="stile" data-value="Junghiano">
-                    Junghiano
-                  </button>
-                  <button type="button" class="chip selected" data-group="stile" data-value="Astrologico">
-                    Astrologico
-                  </button>
-                  <button type="button" class="chip" data-group="stile" data-value="Simbolico">
-                    Simbolico
-                  </button>
+                <!-- Umore provato durante il sogno -->
+                <div class="oracolo-options">
+                  <div>
+                    <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Umore</span>
+                    <div class="chip-row mt-10">
+                      <button type="button" class="chip selected" data-group="umore" data-value="Sereno">
+                        &#128522; Sereno
+                      </button>
+                      <button type="button" class="chip" data-group="umore" data-value="Ansioso">
+                        &#128533; Ansioso
+                      </button>
+                      <button type="button" class="chip" data-group="umore" data-value="Confuso">
+                        &#128532; Confuso
+                      </button>
+                      <button type="button" class="chip" data-group="umore" data-value="Intenso">
+                        &#9889; Intenso
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Stile di interpretazione -->
+                  <div>
+                    <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Stile</span>
+                    <div class="chip-row mt-10">
+                      <button type="button" class="chip" data-group="stile" data-value="Junghiano">
+                        Junghiano
+                      </button>
+                      <button type="button" class="chip selected" data-group="stile" data-value="Astrologico">
+                        Astrologico
+                      </button>
+                      <button type="button" class="chip" data-group="stile" data-value="Simbolico">
+                        Simbolico
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="field-checkbox">
+                    <input type="checkbox" id="usa-tema" name="usaTemaNatale" checked>
+                    <label for="usa-tema" style="margin:0;text-transform:none;">Usa il mio tema natale per
+                      personalizzare</label>
+                  </div>
                 </div>
-              </div>
 
-              <div class="field-checkbox">
-                <input type="checkbox" id="usa-tema" name="usaTemaNatale" checked>
-                <label for="usa-tema" style="margin:0;text-transform:none;">Usa il mio tema natale per
-                  personalizzare</label>
-              </div>
+                <div class="oracolo-footer">
+                  <span>&#8505; Le interpretazioni restano 48 ore &middot; Salvarle costa 20 QI</span>
+                  <div class="flex gap-8">
+                    <button type="button" class="btn btn-ghost btn-sm">Svuota</button>
+                    <button type="submit" class="btn btn-primary btn-sm">&#10022; Interpreta il sogno</button>
+                  </div>
+                </div>
+              </form>
             </div>
 
-            <div class="oracolo-footer">
-              <span>&#8505; Le interpretazioni restano 48 ore &middot; Salvarle costa 20 QI</span>
-              <div class="flex gap-8">
-                <button type="button" class="btn btn-ghost btn-sm">Svuota</button>
-                <button type="submit" class="btn btn-primary btn-sm">&#10022; Interpreta il sogno</button>
+            <!-- Risultato dell'interpretazione: mostralo solo dopo l'invio
+               (in Spring: th:if="${interpretazione != null}") -->
+            <div class="card mt-20" id="risultato-oracolo" hidden>
+              <div class="card-title">
+                <span>&#10022; Interpretazione</span>
               </div>
-            </div>
-          </form>
-        </div>
 
-        <!-- Risultato dell'interpretazione: mostralo solo dopo l'invio
-             (in Spring: th:if="${interpretazione != null}") -->
-        <div class="card mt-20" id="risultato-oracolo" hidden>
-          <div class="card-title">
-            <span>&#10022; Interpretazione</span>
-          </div>
-          <p id="testo-interpretazione" class="text-muted"></p>
+              <p id="testo-interpretazione" class="text-muted"></p>
+
+              <button id="salva-interpretazione" type="button" class="btn btn-primary btn-sm" hidden>
+                Salva interpretazione - 20 QI
+              </button>
+
+              <p id="salvataggio-messaggio" class="text-muted"></p>
+            </div>
+          </section>
+
         </div>
       </main>
     </div>
   </div>
 
-  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+  <script th:src="@{/js/vendor/marked.min.js}"></script>
+  <script th:src="@{/js/vendor/purify.min.js}"></script>
+  <script th:src="@{/js/main.js}"></script>
 </body>
 
 </html>

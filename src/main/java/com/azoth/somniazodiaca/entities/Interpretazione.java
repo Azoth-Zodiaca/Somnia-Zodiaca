@@ -34,7 +34,7 @@ public class Interpretazione extends BaseEntity {
     private String testo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo", nullable = false, unique = true)
+    @Column(name = "tipo", nullable = false)
     private InterpretazioneEnum interpretazioneEnum;
 
     // @Column(name = "scadenza_cache", nullable = false)

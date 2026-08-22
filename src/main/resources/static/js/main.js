@@ -207,33 +207,114 @@ function initOracoloCounter() {
   });
 }
 
+function aggiungiInterpretazioneAllaLista(
+  testoSogno,
+  testoInterpretazione
+) {
+  var history = document.getElementById("oracolo-history");
+  var emptyMessage = document.getElementById("history-empty");
+  var count = document.getElementById("history-count");
+
+  if (!history) return;
+
+  if (emptyMessage) {
+    emptyMessage.remove();
+  }
+
+  var item = document.createElement("article");
+  item.className = "history-item";
+
+  var date = document.createElement("div");
+  date.className = "history-date";
+  date.textContent = "Adesso";
+
+  var dream = document.createElement("div");
+  dream.className = "history-dream";
+  dream.textContent = testoSogno;
+
+  var button = document.createElement("button");
+  button.type = "button";
+  button.className = "history-open";
+  button.textContent = "Leggi";
+
+  button.addEventListener("click", function () {
+    var resultBox = document.getElementById("risultato-oracolo");
+    var resultText = document.getElementById("testo-interpretazione");
+
+    resultBox.hidden = false;
+    resultText.innerHTML = DOMPurify.sanitize(
+      marked.parse(testoInterpretazione)
+    );
+  });
+
+  item.appendChild(date);
+  item.appendChild(dream);
+  item.appendChild(button);
+
+  var firstItem = history.querySelector(".history-item");
+
+  if (firstItem) {
+    history.insertBefore(item, firstItem);
+  } else {
+    history.appendChild(item);
+  }
+
+  if (count) {
+    count.textContent = parseInt(count.textContent, 10) + 1;
+  }
+}
+
 function initOracoloForm() {
   var form = document.getElementById("oracolo-form");
   var textarea = document.getElementById("dream-text");
   var resultBox = document.getElementById("risultato-oracolo");
   var resultText = document.getElementById("testo-interpretazione");
+  var saveButton = document.getElementById("salva-interpretazione");
+  var saveMessage = document.getElementById("salvataggio-messaggio");
 
   if (!form || !textarea || !resultBox || !resultText) return;
+
+  var generatedInterpretation = "";
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
 
-    var submitButton = form.querySelector('button[type="submit"]');
-    var csrfToken = form.querySelector('input[name="_csrf"]').value;
+    var dream = textarea.value.trim();
+
+    if (!dream) {
+      textarea.focus();
+      return;
+    }
+
+    var csrfInput = form.querySelector('input[name="_csrf"]');
+
+    if (!csrfInput) {
+      resultText.textContent = "Token di sicurezza non trovato.";
+      return;
+    }
 
     var richiesta = {
-      testoSogno: textarea.value.trim(),
+      testoSogno: dream,
       umore: document.getElementById("umore").value,
       stile: document.getElementById("stile").value,
       usaTemaNatale: document.getElementById("usa-tema").checked
     };
 
-    if (!richiesta.testoSogno) {
-      textarea.focus();
-      return;
-    }
+    var submitButton = form.querySelector('button[type="submit"]');
 
     submitButton.disabled = true;
+
+    if (saveButton) {
+      saveButton.hidden = true;
+      saveButton.style.display = "none";
+    }
+
+    if (saveMessage) {
+      saveMessage.textContent = "";
+    }
+
+    generatedInterpretation = "";
+
     resultBox.hidden = false;
     resultText.textContent = "Sto interpretando il sogno...";
 
@@ -242,16 +323,35 @@ function initOracoloForm() {
         method: "POST",
         headers: {
           "Content-Type": "application/json",
-          "X-CSRF-TOKEN": csrfToken
+          "X-CSRF-TOKEN": csrfInput.value
         },
         body: JSON.stringify(richiesta)
       });
 
+      var responseText = await response.text();
+
       if (!response.ok) {
-        throw new Error("Errore HTTP " + response.status);
+        throw new Error(
+          "Errore HTTP " + response.status + ": " + responseText
+        );
       }
 
-      resultText.textContent = await response.text();
+      generatedInterpretation = responseText;
+
+      if (typeof marked === "undefined" ||
+        typeof DOMPurify === "undefined") {
+        throw new Error("Librerie Markdown non caricate.");
+      }
+
+      resultText.innerHTML = DOMPurify.sanitize(
+        marked.parse(generatedInterpretation)
+      );
+
+      if (saveButton) {
+        saveButton.removeAttribute("hidden");
+        saveButton.style.display = "inline-block";
+        saveButton.disabled = false;
+      }
     } catch (error) {
       console.error(error);
       resultText.textContent =
@@ -260,6 +360,56 @@ function initOracoloForm() {
       submitButton.disabled = false;
     }
   });
+
+  if (saveButton) {
+    saveButton.addEventListener("click", async function () {
+      var csrfInput = form.querySelector('input[name="_csrf"]');
+
+      saveButton.disabled = true;
+      saveMessage.textContent = "Salvataggio in corso...";
+
+      var richiesta = {
+        testoSogno: textarea.value.trim(),
+        prompt: "Interpretazione " +
+          document.getElementById("stile").value +
+          " del sogno",
+        interpretazione: generatedInterpretation
+      };
+
+      try {
+        var response = await fetch("/app/oracolo/salva", {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json",
+            "X-CSRF-TOKEN": csrfInput.value
+          },
+          body: JSON.stringify(richiesta)
+        });
+
+        var message = await response.text();
+
+        if (!response.ok) {
+          throw new Error(
+            "Errore HTTP " + response.status + ": " + message
+          );
+        }
+
+        saveMessage.textContent = message;
+        saveButton.textContent = "Interpretazione salvata";
+        saveButton.disabled = true;
+
+        aggiungiInterpretazioneAllaLista(
+          textarea.value.trim(),
+          generatedInterpretation
+        );
+      } catch (error) {
+        console.error(error);
+        saveMessage.textContent =
+          "Salvataggio non riuscito: QI insufficienti o errore del server.";
+        saveButton.disabled = false;
+      }
+    });
+  }
 }
 
 /* ---------------------------------------------------------

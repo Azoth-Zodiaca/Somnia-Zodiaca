@@ -10,7 +10,8 @@ import com.azoth.somniazodiaca.entities.Interpretazione;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 
 @Service
-public class InterpretazioneService extends GenericService<Long, Interpretazione, RichiestaInterpretazioneDto, InterpretazioneConverter, InterpretazioneRepository> {
+public class InterpretazioneService extends
+        GenericService<Long, Interpretazione, RichiestaInterpretazioneDto, InterpretazioneConverter, InterpretazioneRepository> {
 
     public InterpretazioneService(InterpretazioneRepository repository, InterpretazioneConverter converter) {
         super(repository, converter);
@@ -18,5 +19,13 @@ public class InterpretazioneService extends GenericService<Long, Interpretazione
 
     public List<RichiestaInterpretazioneDto> findBySognoId(Long sognoId) {
         return getRepository().findBySognoId(sognoId).stream().map(getConverter()::fromEToD).toList();
+    }
+
+    public List<RichiestaInterpretazioneDto> findByUtenteId(Long utenteId) {
+        return getRepository()
+                .findBySogno_Utente_IdOrderByCreatedAtDesc(utenteId)
+                .stream()
+                .map(getConverter()::fromEToD)
+                .toList();
     }
 }
