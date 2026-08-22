@@ -1,14 +1,17 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <title>Crea il tuo tema natale - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
 </head>
+
 <body>
 
   <div class="onboarding-page">
-    <a href="/" class="brand" style="margin-bottom:30px;display:inline-flex;"><span class="brand-dot"></span> Somnia Zodiaca</a>
+    <a href="/" class="brand" style="margin-bottom:30px;display:inline-flex;"><span class="brand-dot"></span> Somnia
+      Zodiaca</a>
 
     <!-- Indicatore dei 3 passaggi. Il passo attivo/completato riceve
          classe "active"/"done": qui sono statici, in produzione andrebbero
@@ -34,13 +37,26 @@
         </div>
         <div class="field">
           <label for="ora-nascita">Ora di nascita (se la conosci)</label>
-          <input type="time" id="ora-nascita" name="oraNascita">
-          <span class="field-hint">Migliora la precisione dell'ascendente e delle case</span>
+          <input type="time" id="ora-nascita" name="oraNascita" required>
+          <span class="field-hint">
+            Per una fotografia dettagliata del tuo cielo, l'orario esatto è essenziale.
+          </span>
         </div>
         <div class="field">
           <label for="luogo-nascita">Luogo di nascita</label>
           <input type="text" id="luogo-nascita" name="luogoNascita" placeholder="Napoli, IT" required>
         </div>
+        <div class="field">
+          <label for="luogo-nascita">Luogo di nascita</label>
+          <input type="text" id="luogo-nascita" name="luogoNascita" placeholder="Napoli, IT" required>
+
+          <div id="risultati-localita"></div>
+        </div>
+
+        <input type="hidden" id="geoname-id" name="geonameId">
+        <input type="hidden" id="latitudine" name="latitudine">
+        <input type="hidden" id="longitudine" name="longitudine">
+        <input type="hidden" id="timezone" name="timezone">
 
         <!-- Segno zodiacale calcolato automaticamente lato server dalla data
              di nascita: qui mostrato come testo segnaposto -->
@@ -63,6 +79,8 @@
     <p class="text-muted mt-10">Posizioniamo pianeti, case e aspetti astrali.</p>
   </div>
 
-  <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
+  <script th:src="@{/js/main.js}"></script>
+  <script th:src="@{/js/onboarding.js}"></script>
 </body>
+
 </html>
