@@ -5,22 +5,28 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 
+import com.azoth.somniazodiaca.dtos.TemaNataleDto;
 import com.azoth.somniazodiaca.entities.Utente;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
+import com.azoth.somniazodiaca.services.AstroWayService;
 import com.azoth.somniazodiaca.services.TemaNataleService;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
 public class TemaNataleController {
 
     private final UtenteRepository utenteRepository;
     private final TemaNataleService temaNataleService;
+    private final AstroWayService astroWayService;
 
     public TemaNataleController(
             UtenteRepository utenteRepository,
-            TemaNataleService temaNataleService) {
+            TemaNataleService temaNataleService,
+            AstroWayService astroWayService) {
 
         this.utenteRepository = utenteRepository;
         this.temaNataleService = temaNataleService;
+        this.astroWayService = astroWayService;
     }
 
     @GetMapping("/tema-natale")
@@ -35,12 +41,30 @@ public class TemaNataleController {
 
         Utente utente = utenteRepository
                 .findByUsername(authentication.getName())
-                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Utente non trovato"));
 
-        temaNataleService.findByUtenteId(utente.getId())
-                .ifPresent(tema -> model.addAttribute("temaNatale", tema));
+        TemaNataleDto temaNatale = temaNataleService
+                .findByUtenteId(utente.getId())
+                .orElse(null);
+
+        model.addAttribute("temaNatale", temaNatale);
+
+        if (temaNatale != null
+                && temaNatale.getRispostaAstroWay() != null) {
+
+            JsonNode temaChart = astroWayService.parseChart(
+                    temaNatale.getRispostaAstroWay());
+
+            if (!temaChart.path("ok").asBoolean(false)) {
+                throw new IllegalStateException(
+                        "AstroWay ha restituito una risposta non valida");
+            }
+
+            model.addAttribute("temaChart", temaChart.path("data"));
+            
+        }
 
         return "app/tema-natale";
     }
-    
 }

@@ -9,6 +9,7 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.Lob;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Getter;
@@ -48,4 +49,12 @@ public class TemaNatale extends BaseEntity {
 
     @Column(name = "data_creazione", nullable = false)
     private LocalDateTime dataCreazione;
+
+    //AstroWay  Lob è Large Object
+    @Lob
+    @Column(name = "risposta_astroway", columnDefinition = "LONGTEXT")
+    private String rispostaAstroWay;
+
+    @Column(name = "geoname_id")
+    private Long geonameId;
 }

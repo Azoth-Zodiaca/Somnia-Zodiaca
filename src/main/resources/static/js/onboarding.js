@@ -50,7 +50,7 @@ document.addEventListener("DOMContentLoaded", () => {
             risultatiContainer.innerHTML = "";
             return;
         }
-
+        
         timer = setTimeout(() => {
             cercaLocalita(query);
         }, 750);
