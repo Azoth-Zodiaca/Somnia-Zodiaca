@@ -1,0 +1,132 @@
+erDiagram
+    UTENTI {
+        int id PK
+        string username UK
+        string email UK
+        string password_hash
+        string ruolo
+        int segno_zodiacale_id FK
+        int ascendente_id FK
+        int qi
+        datetime ultimo_accesso
+        int giorni_consecutivi
+        date ultima_ricompensa_giornaliera
+        datetime created_at
+        datetime updated_at
+    }
+
+    SEGNI_ZODIACALI {
+        int id PK
+        string nome UK
+        string modalita UK
+        string descrizione
+        int elemento_id FK
+        int pianeta_id FK
+        int metallo_id FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    ELEMENTI {
+        int id PK
+        string nome UK
+        string descrizione
+        datetime created_at
+        datetime updated_at
+    }
+
+    PIANETI {
+        int id PK
+        string nome UK
+        string descrizione
+        datetime created_at
+        datetime updated_at
+    }
+
+    METALLI {
+        int id PK
+        string nome UK
+        string descrizione
+        datetime created_at
+        datetime updated_at
+    }
+
+    TEMI_NATALI {
+        int id PK
+        int utente_id FK
+        date data_nascita
+        time ora_nascita
+        string luogo_nascita
+        decimal latitudine
+        decimal longitudine
+        string timezone
+        datetime data_creazione
+        datetime created_at
+        datetime updated_at
+    }
+
+    SOGNI {
+        int id PK
+        int utente_id FK
+        string testo
+        datetime created_at
+        datetime updated_at
+    }
+
+    INTERPRETAZIONI {
+        int id PK
+        int sogno_id FK
+        string prompt
+        string testo
+        string tipo
+        datetime scadenza_cache
+        datetime created_at
+        datetime updated_at
+    }
+
+    POST {
+        int id PK
+        int utente_id FK
+        int interpretazione_id FK
+        string testo_visibile
+        datetime data_pubblicazione
+        int numero_like
+        datetime created_at
+        datetime updated_at
+    }
+
+    COSMETICI {
+        int id PK
+        string nome
+        string descrizione
+        int prezzo_qi
+        datetime created_at
+        datetime updated_at
+    }
+
+    INVENTARI_COSMETICI {
+        int id PK
+        int utente_id FK
+        int cosmetico_id FK
+        boolean equipaggiato
+        datetime data_acquisto
+        datetime created_at
+        datetime updated_at
+    }
+
+    ELEMENTI ||--o{ SEGNI_ZODIACALI : contiene
+    PIANETI ||--o{ SEGNI_ZODIACALI : caratterizza
+    METALLI ||--o{ SEGNI_ZODIACALI : associato
+
+    SEGNI_ZODIACALI o|--o{ UTENTI : segno
+    SEGNI_ZODIACALI o|--o{ UTENTI : ascendente
+
+    UTENTI ||--o| TEMI_NATALI : possiede
+    UTENTI o|--o{ SOGNI : racconta
+    SOGNI o|--o{ INTERPRETAZIONI : contiene
+
+    UTENTI o|--o{ POST : pubblica
+    INTERPRETAZIONI o|--o{ POST : condivisa
+
+    UTENTI ||--o{ INVENTARI_COSMETICI : possiede
+    COSMETICI ||--o{ INVENTARI_COSMETICI : incluso

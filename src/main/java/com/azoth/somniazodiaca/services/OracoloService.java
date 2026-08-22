@@ -1,5 +1,7 @@
 package com.azoth.somniazodiaca.services;
 
+import java.time.LocalDateTime;
+
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -16,6 +18,7 @@ import com.azoth.somniazodiaca.repositories.UtenteRepository;
 public class OracoloService {
 
     private static final int COSTO_INTERPRETAZIONE = 20;
+    private static final long DURATA_INTERPRETAZIONE_ORE = 48;
 
     private final UtenteRepository utenteRepository;
     private final SognoRepository sognoRepository;
@@ -32,7 +35,7 @@ public class OracoloService {
     }
 
     @Transactional
-    public void salvaInterpretazione(
+    public Long salvaInterpretazione(
             String username,
             SalvaInterpretazioneRequest richiesta) {
 
@@ -43,8 +46,7 @@ public class OracoloService {
             throw new IllegalArgumentException("Dati incompleti");
         }
 
-        Utente utente = utenteRepository
-                .findByUsername(username)
+        Utente utente = utenteRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
         if (utente.getQi() < COSTO_INTERPRETAZIONE) {
@@ -63,11 +65,29 @@ public class OracoloService {
                 .prompt(richiesta.prompt())
                 .testo(richiesta.interpretazione())
                 .interpretazioneEnum(InterpretazioneEnum.JUNGIANA)
+                .scadenzaCache(LocalDateTime.now().plusHours(48))
                 .build();
 
-        interpretazioneRepository.save(interpretazione);
+        Interpretazione salvata = interpretazioneRepository.save(interpretazione);
 
         utente.setQi(utente.getQi() - COSTO_INTERPRETAZIONE);
         utenteRepository.save(utente);
+
+        return salvata.getId();
+    }
+
+    @Transactional
+    public void rendiPermanente(String username, Long interpretazioneId) {
+        Interpretazione interpretazione = interpretazioneRepository
+                .findById(interpretazioneId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Interpretazione non trovata"));
+
+        if (!interpretazione.getSogno().getUtente().getUsername().equals(username)) {
+            throw new IllegalArgumentException("Interpretazione non autorizzata");
+        }
+
+        interpretazione.setScadenzaCache(null);
+        interpretazioneRepository.save(interpretazione);
     }
 }

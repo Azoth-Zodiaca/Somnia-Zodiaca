@@ -1354,6 +1354,19 @@ h4 {
   line-height: 1.5;
 }
 
+.history-status {
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+.status-permanent {
+  color: #78d6a3;
+}
+
+.status-temporary {
+  color: #d8a85c;
+}
+
 #testo-interpretazione {
   line-height: 1.7;
 }

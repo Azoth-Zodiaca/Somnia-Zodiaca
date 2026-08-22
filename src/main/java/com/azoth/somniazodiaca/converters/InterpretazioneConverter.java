@@ -38,6 +38,7 @@ public class InterpretazioneConverter implements GenericConverter<Interpretazion
                 .prompt(e.getPrompt())
                 .testo(e.getTesto())
                 .createdAt(e.getCreatedAt())
+                .scadenzaCache(e.getScadenzaCache())
                 .build();
     }
 }

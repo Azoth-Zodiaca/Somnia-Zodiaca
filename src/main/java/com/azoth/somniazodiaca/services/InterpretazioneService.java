@@ -1,5 +1,6 @@
 package com.azoth.somniazodiaca.services;
 
+import java.time.LocalDateTime;
 import java.util.List;
 
 import org.springframework.stereotype.Service;
@@ -23,7 +24,7 @@ public class InterpretazioneService extends
 
     public List<RichiestaInterpretazioneDto> findByUtenteId(Long utenteId) {
         return getRepository()
-                .findBySogno_Utente_IdOrderByCreatedAtDesc(utenteId)
+                .findDisponibiliByUtenteId(utenteId, LocalDateTime.now())
                 .stream()
                 .map(getConverter()::fromEToD)
                 .toList();
