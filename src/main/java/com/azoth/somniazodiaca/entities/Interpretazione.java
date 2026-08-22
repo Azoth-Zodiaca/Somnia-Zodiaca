@@ -1,5 +1,7 @@
 package com.azoth.somniazodiaca.entities;
 
+import java.time.LocalDateTime;
+
 import com.azoth.somniazodiaca.enums.InterpretazioneEnum;
 
 import jakarta.persistence.Column;
@@ -37,8 +39,6 @@ public class Interpretazione extends BaseEntity {
     @Column(name = "tipo", nullable = false)
     private InterpretazioneEnum interpretazioneEnum;
 
-    // @Column(name = "scadenza_cache", nullable = false)
-    // @Builder.Default
-    // private LocalDateTime scadenzaCache = LocalDateTime.now().plusDays(1);
-    // //valutare se utilizzare ZonedDateTime
+    @Column(name = "scadenza_cache", nullable = true)
+    private LocalDateTime scadenzaCache;
 }

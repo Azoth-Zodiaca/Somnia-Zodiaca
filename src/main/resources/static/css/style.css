@@ -1354,6 +1354,19 @@ h4 {
   line-height: 1.5;
 }
 
+.history-status {
+  margin-top: 4px;
+  font-size: 11px;
+}
+
+.status-permanent {
+  color: #78d6a3;
+}
+
+.status-temporary {
+  color: #d8a85c;
+}
+
 #testo-interpretazione {
   line-height: 1.7;
 }
@@ -1736,7 +1749,11 @@ h4 {
 .badge-slot {
   text-align: center;
 }
-.daily-reward.today { background: var(--gradient-gold); color: #1a1205; }
+
+.daily-reward.today {
+  background: var(--gradient-gold);
+  color: #1a1205;
+}
 
 .daily-reward.claimed {
   background: rgba(34, 197, 94, 0.12);
@@ -2013,6 +2030,14 @@ h4 {
 
 .onboarding-loading {
   display: none;
+}
+
+.onboarding-loading-title {
+  font-weight: 500;
+}
+
+.onboarding-loading-description {
+  margin-top: 10px;
 }
 
 .featured-home {

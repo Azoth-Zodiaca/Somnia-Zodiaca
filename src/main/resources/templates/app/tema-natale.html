@@ -32,9 +32,7 @@
             </div>
           </div>
 
-          <a th:if="${temaNatale != null}"
-           th:href="@{/app/tema-natale/modifica}" 
-           class="btn btn-outline btn-sm">
+          <a th:if="${temaNatale != null}" th:href="@{/app/tema-natale/modifica}" class="btn btn-outline btn-sm">
             Modifica dati
           </a>
         </div>
@@ -68,6 +66,16 @@
           <p class="text-muted">
             Non hai ancora completato i dati del tema natale.
           </p>
+        </div>
+
+        <div class="card" th:if="${temaChart != null}">
+          <div class="card-title">Pianeti</div>
+
+          <div th:each="pianeta : ${temaChart.get('planets')}">
+            <span th:text="${pianeta.get('name').asText()}">Sun</span>
+            <span th:text="${pianeta.get('longitude').asDouble()}">228.77</span>
+            <span th:text="${pianeta.get('isRetrograde').asBoolean()}">false</span>
+          </div>
         </div>
 
         <!-- Tab interne: Riepilogo / Carta / Pianeti / Case / Analisi AI -->

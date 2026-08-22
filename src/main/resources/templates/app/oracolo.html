@@ -29,18 +29,31 @@
               Non hai ancora interpretazioni salvate.
             </div>
 
-            <article class="history-item" th:each="interpretazione : ${interpretazioni}">
+            <article class="history-item" th:each="interpretazione : ${interpretazioni}"
+              th:attr="data-interpretazione-id=${interpretazione.id}">
               <div class="history-date" th:text="${interpretazione.createdAt != null
                     ? #temporals.format(interpretazione.createdAt, 'dd/MM/yyyy HH:mm')
                     : 'Data non disponibile'}">
                 22/08/2026 09:00
               </div>
 
+              <div class="history-status">
+                <span th:if="${interpretazione.scadenzaCache == null}" class="status-permanent">
+                  Permanente
+                </span>
+
+                <span th:unless="${interpretazione.scadenzaCache == null}" class="status-temporary">
+                  Valida 48 ore
+                </span>
+              </div>
+
               <div class="history-dream" th:text="${interpretazione.testoSogno}">
                 Testo del sogno
               </div>
 
-              <button type="button" class="history-open" th:attr="data-interpretazione=${interpretazione.testo}">
+              <button type="button" class="history-open" th:attr="
+                  data-interpretazione=${interpretazione.testo},
+                  data-interpretazione-id=${interpretazione.id}">
                 Leggi
               </button>
             </article>

@@ -229,6 +229,7 @@ function initSvuotaOracolo() {
 
     if (resultBox) {
       resultBox.hidden = true;
+      resultBox.removeAttribute("data-interpretazione-id");
     }
 
     if (resultText) {
@@ -252,7 +253,8 @@ function initSvuotaOracolo() {
 
 function aggiungiInterpretazioneAllaLista(
   testoSogno,
-  testoInterpretazione
+  testoInterpretazione,
+  interpretazioneId
 ) {
   var history = document.getElementById("oracolo-history");
   var emptyMessage = document.getElementById("history-empty");
@@ -271,6 +273,17 @@ function aggiungiInterpretazioneAllaLista(
   date.className = "history-date";
   date.textContent = "Adesso";
 
+  item.dataset.interpretazioneId = interpretazioneId;
+
+  var status = document.createElement("div");
+  status.className = "history-status";
+
+  var statusText = document.createElement("span");
+  statusText.className = "status-temporary";
+  statusText.textContent = "Valida 48 ore";
+
+  status.appendChild(statusText);
+
   var dream = document.createElement("div");
   dream.className = "history-dream";
   dream.textContent = testoSogno;
@@ -283,13 +296,29 @@ function aggiungiInterpretazioneAllaLista(
   button.addEventListener("click", function () {
     var resultBox = document.getElementById("risultato-oracolo");
     var resultText = document.getElementById("testo-interpretazione");
+    var saveButton = document.getElementById("salva-interpretazione");
+    var saveMessage = document.getElementById("salvataggio-messaggio");
 
     resultBox.hidden = false;
+    resultBox.dataset.interpretazioneId = interpretazioneId;
+
     resultText.innerHTML = DOMPurify.sanitize(
       marked.parse(testoInterpretazione)
     );
+
+    if (saveButton) {
+      saveButton.hidden = false;
+      saveButton.style.display = "inline-block";
+      saveButton.disabled = false;
+      saveButton.textContent = "Rendi permanente";
+    }
+
+    if (saveMessage) {
+      saveMessage.textContent = "Questa interpretazione scade tra 48 ore.";
+    }
   });
 
+  item.appendChild(status);
   item.appendChild(date);
   item.appendChild(dream);
   item.appendChild(button);
@@ -318,6 +347,7 @@ function initOracoloForm() {
   if (!form || !textarea || !resultBox || !resultText) return;
 
   var generatedInterpretation = "";
+  var savedInterpretationId = null;
 
   form.addEventListener("submit", async function (event) {
     event.preventDefault();
@@ -390,6 +420,39 @@ function initOracoloForm() {
         marked.parse(generatedInterpretation)
       );
 
+      var saveResponse = await fetch("/app/oracolo/salva", {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json",
+          "X-CSRF-TOKEN": csrfInput.value
+        },
+        body: JSON.stringify({
+          testoSogno: dream,
+          prompt: "Interpretazione " +
+            document.getElementById("stile").value +
+            " del sogno",
+          interpretazione: generatedInterpretation
+        })
+      });
+
+      if (!saveResponse.ok) {
+        throw new Error(await saveResponse.text());
+      }
+
+      savedInterpretationId = Number(await saveResponse.text());
+
+      resultBox.dataset.interpretazioneId = savedInterpretationId;
+
+      aggiungiInterpretazioneAllaLista(
+        dream,
+        generatedInterpretation,
+        savedInterpretationId
+      );
+
+      if (saveMessage) {
+        saveMessage.textContent = "Salvata automaticamente per 48 ore.";
+      }
+
       if (saveButton) {
         saveButton.removeAttribute("hidden");
         saveButton.classList.remove("is-hidden");
@@ -408,47 +471,58 @@ function initOracoloForm() {
     saveButton.addEventListener("click", async function () {
       var csrfInput = form.querySelector('input[name="_csrf"]');
 
-      saveButton.disabled = true;
-      saveMessage.textContent = "Salvataggio in corso...";
+      var interpretationId = Number(
+        resultBox.dataset.interpretazioneId
+      );
 
-      var richiesta = {
-        testoSogno: textarea.value.trim(),
-        prompt: "Interpretazione " +
-          document.getElementById("stile").value +
-          " del sogno",
-        interpretazione: generatedInterpretation
-      };
+      if (!interpretationId) {
+        saveMessage.textContent = "Interpretazione non ancora salvata.";
+        return;
+      }
+
+      saveButton.disabled = true;
+      saveMessage.textContent = "Salvataggio permanente in corso...";
 
       try {
-        var response = await fetch("/app/oracolo/salva", {
+        var response = await fetch("/app/oracolo/rendi-permanente", {
           method: "POST",
           headers: {
             "Content-Type": "application/json",
             "X-CSRF-TOKEN": csrfInput.value
           },
-          body: JSON.stringify(richiesta)
+          body: JSON.stringify({
+            interpretazioneId: interpretationId
+          })
         });
 
         var message = await response.text();
 
         if (!response.ok) {
-          throw new Error(
-            "Errore HTTP " + response.status + ": " + message
-          );
+          throw new Error(message);
         }
 
         saveMessage.textContent = message;
         saveButton.textContent = "Interpretazione salvata";
         saveButton.disabled = true;
 
-        aggiungiInterpretazioneAllaLista(
-          textarea.value.trim(),
-          generatedInterpretation
+        var historyItem = document.querySelector(
+          '.history-item[data-interpretazione-id="' +
+          interpretationId +
+          '"]'
         );
+
+        if (historyItem) {
+          var statusText = historyItem.querySelector(".history-status span");
+
+          if (statusText) {
+            statusText.className = "status-permanent";
+            statusText.textContent = "Permanente";
+          }
+        }
+
       } catch (error) {
         console.error(error);
-        saveMessage.textContent =
-          "Salvataggio non riuscito: QI insufficienti o errore del server.";
+        saveMessage.textContent = "Salvataggio permanente non riuscito.";
         saveButton.disabled = false;
       }
     });
@@ -466,13 +540,34 @@ function initHistoryButtons() {
 
   historyButtons.forEach(function (button) {
     button.addEventListener("click", function () {
-      var interpretation = button.getAttribute("data-interpretazione");
+      var interpretation = button.getAttribute(
+        "data-interpretazione"
+      );
+      var interpretationId = button.getAttribute(
+        "data-interpretazione-id"
+      );
 
-      if (!interpretation) {
+      if (!interpretationId) {
         return;
       }
 
       resultBox.hidden = false;
+      resultBox.dataset.interpretazioneId = interpretationId;
+
+      var saveButton = document.getElementById("salva-interpretazione");
+      var saveMessage = document.getElementById("salvataggio-messaggio");
+
+      if (interpretationId && saveButton) {
+        saveButton.hidden = false;
+        saveButton.style.display = "inline-block";
+        saveButton.disabled = false;
+        saveButton.textContent = "Rendi permanente";
+      }
+
+      if (interpretationId && saveMessage) {
+        saveMessage.textContent =
+          "Questa interpretazione può essere resa permanente.";
+      }
       resultText.innerHTML = DOMPurify.sanitize(
         marked.parse(interpretation)
       );

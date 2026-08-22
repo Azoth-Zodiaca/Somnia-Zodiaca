@@ -57,7 +57,7 @@ public class GeocodingService {
                                                         .queryParam("maxRows", 5)
                                                         .queryParam("featureClass", "P")
                                                         .queryParam("username", geonamesUsername)
-                                                        .queryParam("style", "SHORT")
+                                                        .queryParam("style", "FULL")
                                                         .build())
                                         .retrieve()
                                         .onStatus(
