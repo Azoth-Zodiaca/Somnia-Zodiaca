@@ -34,8 +34,39 @@ async function cercaLocalita(query) {
 
         const risultati = await response.json();
 
-        console.log(risultati);
-        // Qui mostrerai i risultati e permetterai all'utente di sceglierne uno.
+        const risultatiContainer =
+            document.querySelector("#risultati-localita");
+
+        risultatiContainer.innerHTML = "";
+
+        risultati.forEach(localita => {
+            const button = document.createElement("button");
+
+            button.type = "button";
+            button.textContent =
+                `${localita.nome}, ${localita.codicePaese}`;
+
+            button.addEventListener("click", () => {
+                document.querySelector("#luogo-nascita").value =
+                    `${localita.nome}, ${localita.codicePaese}`;
+
+                document.querySelector("#geoname-id").value =
+                    localita.geonameId;
+
+                document.querySelector("#latitudine").value =
+                    localita.latitudine;
+
+                document.querySelector("#longitudine").value =
+                    localita.longitudine;
+
+                document.querySelector("#timezone").value =
+                    localita.timezoneId;
+
+                risultatiContainer.innerHTML = "";
+            });
+
+            risultatiContainer.appendChild(button);
+        });
     } catch (error) {
         console.error(error);
     }
