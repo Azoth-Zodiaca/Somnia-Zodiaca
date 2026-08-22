@@ -17,6 +17,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initInventoryEquip();
   initSettingsMenu();
   initDeleteAccountConfirmation();
+  initHistoryButtons();
 });
 
 // controllo della forza della password nella pagina di registrazione
@@ -410,6 +411,36 @@ function initOracoloForm() {
       }
     });
   }
+}
+
+function initHistoryButtons() {
+  var historyButtons = document.querySelectorAll(".history-open");
+  var resultBox = document.getElementById("risultato-oracolo");
+  var resultText = document.getElementById("testo-interpretazione");
+
+  if (!resultBox || !resultText || historyButtons.length === 0) {
+    return;
+  }
+
+  historyButtons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      var interpretation = button.getAttribute("data-interpretazione");
+
+      if (!interpretation) {
+        return;
+      }
+
+      resultBox.hidden = false;
+      resultText.innerHTML = DOMPurify.sanitize(
+        marked.parse(interpretation)
+      );
+
+      resultBox.scrollIntoView({
+        behavior: "smooth",
+        block: "start"
+      });
+    });
+  });
 }
 
 /* ---------------------------------------------------------
