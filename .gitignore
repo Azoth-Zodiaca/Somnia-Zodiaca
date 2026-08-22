@@ -32,10 +32,3 @@ build/
 
 ### VS Code ###
 .vscode/
-
-# Configurazione locale con username GeoNames esclude il file application-local.properties 
-# che contiene solo        geonames.username=TUO_USERNAME
-/src/main/resources/application-local.properties
-.vscode/
-!.vscode/
-!.vscode/launch.json
