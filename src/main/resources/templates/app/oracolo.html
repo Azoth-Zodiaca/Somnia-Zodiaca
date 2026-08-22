@@ -58,13 +58,13 @@
                 <textarea id="dream-text" name="testoSogno" maxlength="4000"
                   placeholder="Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena..."></textarea>
                 <div class="oracolo-meta">
-                  <span id="dream-counter" class="text-muted" style="font-size:12px;">0 / 4000</span>
+                  <span id="dream-counter" class="text-muted oracolo-counter">0 / 4000</span>
                 </div>
 
                 <!-- Umore provato durante il sogno -->
                 <div class="oracolo-options">
                   <div>
-                    <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Umore</span>
+                    <span class="text-muted oracolo-option-label">Umore</span>
                     <div class="chip-row mt-10">
                       <button type="button" class="chip selected" data-group="umore" data-value="Sereno">
                         &#128522; Sereno
@@ -83,7 +83,7 @@
 
                   <!-- Stile di interpretazione -->
                   <div>
-                    <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Stile</span>
+                    <span class="text-muted oracolo-option-label">Stile</span>
                     <div class="chip-row mt-10">
                       <button type="button" class="chip" data-group="stile" data-value="Junghiano">
                         Junghiano
@@ -99,7 +99,7 @@
 
                   <div class="field-checkbox">
                     <input type="checkbox" id="usa-tema" name="usaTemaNatale" checked>
-                    <label for="usa-tema" style="margin:0;text-transform:none;">Usa il mio tema natale per
+                    <label for="usa-tema" class="oracolo-theme-label">Usa il mio tema natale per
                       personalizzare</label>
                   </div>
                 </div>

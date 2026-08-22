@@ -15,7 +15,7 @@
       <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Impostazioni')}"></div>
 
       <main class="app-content">
-        <h2 class="serif" style="font-weight:500;margin-bottom:20px;">Impostazioni</h2>
+        <h2 class="serif settings-title">Impostazioni</h2>
 
         <div class="settings-layout">
 
@@ -47,19 +47,19 @@
               </form>
             </div>
 
-            <div id="sezione-notifiche" class="card settings-section" style="display:none;">
+            <div id="sezione-notifiche" class="card settings-section is-hidden">
               <h3>Notifiche</h3>
               <p class="text-muted">Preferenze sulle notifiche push/email (nuovi like, badge sbloccati, promemoria
                 giornaliero).</p>
             </div>
 
-            <div id="sezione-privacy" class="card settings-section" style="display:none;">
+            <div id="sezione-privacy" class="card settings-section is-hidden">
               <h3>Privacy</h3>
               <p class="text-muted">Visibilità del profilo, chi può vedere i tuoi sogni pubblicati, dati condivisi con
                 la community.</p>
             </div>
 
-            <div id="sezione-sicurezza" class="card settings-section" style="display:none;">
+            <div id="sezione-sicurezza" class="card settings-section is-hidden">
               <h3>Sicurezza</h3>
 
               <form th:action="@{/app/impostazioni/password}" method="post">
@@ -85,15 +85,14 @@
             </div>
 
             <!-- Sezione Premium: stato abbonamento -->
-            <div id="sezione-premium" class="card settings-section"
-              style="border-color:var(--accent-gold);display:none;">
-              <h3 style="color:var(--accent-gold);">Premium</h3>
+            <div id="sezione-premium" class="card settings-section premium-section is-hidden">
+              <h3>Premium</h3>
               <p class="text-muted">Sei attualmente su Premium &middot; rinnovo il 12 agosto 2026.</p>
               <a href="/premium" class="btn btn-outline">Gestisci abbonamento</a>
             </div>
 
             <!-- Zona pericolo -->
-            <div id="sezione-danger" class="card settings-section danger-zone" style="display:none;">
+            <div id="sezione-danger" class="card settings-section danger-zone is-hidden">
               <h3>Zona pericolo</h3>
               <p>Eliminando l'account rimuoverai permanentemente sogni, post, inventario e QI.</p>
               <form th:action="@{/app/impostazioni/account/elimina}" method="post">

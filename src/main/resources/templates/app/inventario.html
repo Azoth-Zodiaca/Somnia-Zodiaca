@@ -13,17 +13,16 @@
       <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Inventario')}"></div>
 
       <main class="app-content">
-        <h2 class="serif" style="font-weight:500;margin-bottom:20px;">Inventario</h2>
+        <h2 class="serif inventory-title">Inventario</h2>
 
         <div class="inventory-grid">
 
           <!-- Colonna sinistra: avatar e slot equipaggiati -->
           <div class="card text-center">
-            <span class="text-muted" style="font-size:11px;text-transform:uppercase;">Il tuo avatar</span>
-            <div class="avatar" style="width:90px;height:90px;font-size:32px;margin:16px auto;">L</div>
+            <span class="text-muted inventory-avatar-label">Il tuo avatar</span>
+            <div class="avatar inventory-avatar">L</div>
 
-            <div style="text-align:left;">
-              <div class="equip-slot">
+              <div class="inventory-slots">              <div class="equip-slot">
                 <div><span class="slot-label">Sfondo</span><br>Vuoto</div>
               </div>
               <div class="equip-slot">
@@ -43,13 +42,15 @@
 
           <!-- Colonna destra: cosmetici posseduti -->
           <div>
-            <div class="flex-between mt-10" style="margin-bottom:16px;">
-              <h3 style="font-weight:600;font-size:15px;">Tuoi cosmetici &middot; 2</h3>
-              <span class="text-muted" style="font-size:12px;">Ordina per: recente</span>
+            <div class="flex-between mt-10 inventory-header">
+              <h3 class="inventory-items-title">Tuoi cosmetici &middot; 2</h3>
+              <span class="text-muted inventory-sort">Ordina per: recente</span>
             </div>
 
-            <div class="progress-bar mt-10" style="margin-bottom:6px;"><div class="progress-bar-fill" style="width:25%;"></div></div>
-            <span class="text-muted" style="font-size:12px;">Collezione: 2 di 8</span>
+            <div class="progress-bar mt-10 inventory-progress">
+              <div class="progress-bar-fill inventory-progress-fill"></div>
+            </div>
+            <span class="text-muted inventory-collection">Collezione: 2 di 8</span>
 
             <!-- Griglia oggetti posseduti. In Spring:
                  th:each="oggetto : ${inventario}" -->

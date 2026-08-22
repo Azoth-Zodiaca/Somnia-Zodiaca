@@ -2043,3 +2043,134 @@ h4 {
   color: var(--accent-purple);
   font-weight: 600;
 }
+
+.onboarding-loading-title {
+  font-weight: 500;
+}
+
+.encyclopedia-section {
+  padding: 50px 24px;
+}
+
+.encyclopedia-title {
+  margin-top: 0;
+}
+
+.elements-grid {
+  grid-template-columns: repeat(4, 1fr);
+}
+
+.dashboard-level {
+  font-weight: 700;
+  font-size: 16px;
+}
+
+.dashboard-progress {
+  width: 72%;
+}
+
+.dashboard-xp {
+  font-size: 12px;
+}
+
+.dashboard-avatar-label {
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.dashboard-avatar {
+  width: 70px;
+  height: 70px;
+  font-size: 26px;
+  margin: 14px auto;
+}
+
+.dashboard-username {
+  font-weight: 600;
+}
+
+.activity-negative {
+  color: var(--accent-red);
+}
+
+.activity-positive {
+  color: var(--accent-green);
+}
+
+.settings-title {
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.settings-section.is-hidden {
+  display: none;
+}
+
+.premium-section {
+  border-color: var(--accent-gold);
+}
+
+.premium-section h3 {
+  color: var(--accent-gold);
+}
+
+.is-hidden {
+  display: none !important;
+}
+
+.inventory-title {
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.inventory-avatar-label {
+  font-size: 11px;
+  text-transform: uppercase;
+}
+
+.inventory-avatar {
+  width: 90px;
+  height: 90px;
+  font-size: 32px;
+  margin: 16px auto;
+}
+
+.inventory-slots {
+  text-align: left;
+}
+
+.inventory-header {
+  margin-bottom: 16px;
+}
+
+.inventory-items-title {
+  font-weight: 600;
+  font-size: 15px;
+}
+
+.inventory-sort,
+.inventory-collection {
+  font-size: 12px;
+}
+
+.inventory-progress {
+  margin-bottom: 6px;
+}
+
+.inventory-progress-fill {
+  width: 25%;
+}
+
+.oracolo-counter,
+.oracolo-option-label {
+  font-size: 12px;
+}
+
+.oracolo-option-label {
+  text-transform: uppercase;
+}
+
+.oracolo-theme-label {
+  margin: 0;
+  text-transform: none;
+}

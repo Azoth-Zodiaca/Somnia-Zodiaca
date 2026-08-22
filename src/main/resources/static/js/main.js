@@ -132,7 +132,7 @@ function initTabs() {
       // Nasconde tutti i pannelli del gruppo e mostra solo quello scelto
       var targetId = tab.getAttribute("data-target");
       group.querySelectorAll(".js-tab-panel").forEach(function (panel) {
-        panel.style.display = (panel.id === targetId) ? "block" : "none";
+        panel.classList.toggle("is-hidden", panel.id !== targetId);
       });
     });
   });
@@ -187,7 +187,7 @@ function initShopCategories() {
       document.querySelectorAll(".shop-item").forEach(function (item) {
         var itemCategory = item.getAttribute("data-category");
         var show = (category === "tutti" || category === itemCategory);
-        item.style.display = show ? "" : "none";
+        item.classList.toggle("is-hidden", !show);
       });
     });
   });
@@ -237,7 +237,7 @@ function initSvuotaOracolo() {
 
     if (saveButton) {
       saveButton.setAttribute("hidden", "");
-      saveButton.style.display = "none";
+      saveButton.classList.add("is-hidden");
       saveButton.disabled = false;
       saveButton.textContent = "Salva interpretazione - 20 QI";
     }
@@ -349,7 +349,7 @@ function initOracoloForm() {
 
     if (saveButton) {
       saveButton.hidden = true;
-      saveButton.style.display = "none";
+      saveButton.classList.add("is-hidden");
     }
 
     if (saveMessage) {
@@ -392,7 +392,7 @@ function initOracoloForm() {
 
       if (saveButton) {
         saveButton.removeAttribute("hidden");
-        saveButton.style.display = "inline-block";
+        saveButton.classList.remove("is-hidden");
         saveButton.disabled = false;
       }
     } catch (error) {
@@ -558,8 +558,7 @@ function initSettingsMenu() {
     : null;
 
   sections.forEach(function (section) {
-    section.style.display =
-      section.id === activeTargetId ? "block" : "none";
+    section.classList.toggle("is-hidden", section.id !== activeTargetId);
   });
 
   links.forEach(function (link) {
@@ -575,8 +574,7 @@ function initSettingsMenu() {
       link.classList.add("active");
 
       sections.forEach(function (section) {
-        section.style.display =
-          section.id === targetId ? "block" : "none";
+        section.classList.toggle("is-hidden", section.id !== targetId);
       });
     });
   });
