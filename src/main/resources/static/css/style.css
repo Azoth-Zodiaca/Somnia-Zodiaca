@@ -1979,18 +1979,18 @@ h4 {
   margin-top: 4px;
   padding: 8px 10px;
   border: 1px solid var(--border-color);
-  /* border: 1px solid #cccccc; */
   background: var(--bg-input);
   color: inherit;
   text-align: left;
   cursor: pointer;
+  transition: background-color 0.15s ease, border-color 0.15s ease;
 }
 
 .location-result:hover,
 .location-result:focus-visible {
-  background: var(--accent-orange);
-  color: white;
-  border-color: var(--accent-orange);
+  background: #302b59;
+  color: var(--text-primary);
+  border-color: #5b568f;
   outline: none;
 }
 
