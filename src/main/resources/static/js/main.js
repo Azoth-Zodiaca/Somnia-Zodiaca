@@ -18,6 +18,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initSettingsMenu();
   initDeleteAccountConfirmation();
   initHistoryButtons();
+  initSvuotaOracolo();
 });
 
 // controllo della forza della password nella pagina di registrazione
@@ -205,6 +206,47 @@ function initOracoloCounter() {
   var maxLength = 4000;
   textarea.addEventListener("input", function () {
     counter.textContent = textarea.value.length + " / " + maxLength;
+  });
+}
+
+function initSvuotaOracolo() {
+  var button = document.getElementById("svuota-oracolo");
+  var textarea = document.getElementById("dream-text");
+  var counter = document.getElementById("dream-counter");
+  var resultBox = document.getElementById("risultato-oracolo");
+  var resultText = document.getElementById("testo-interpretazione");
+  var saveButton = document.getElementById("salva-interpretazione");
+  var saveMessage = document.getElementById("salvataggio-messaggio");
+
+  if (!button || !textarea) return;
+
+  button.addEventListener("click", function () {
+    textarea.value = "";
+
+    if (counter) {
+      counter.textContent = "0 / 4000";
+    }
+
+    if (resultBox) {
+      resultBox.hidden = true;
+    }
+
+    if (resultText) {
+      resultText.innerHTML = "";
+    }
+
+    if (saveButton) {
+      saveButton.setAttribute("hidden", "");
+      saveButton.style.display = "none";
+      saveButton.disabled = false;
+      saveButton.textContent = "Salva interpretazione - 20 QI";
+    }
+
+    if (saveMessage) {
+      saveMessage.textContent = "";
+    }
+
+    textarea.focus();
   });
 }
 

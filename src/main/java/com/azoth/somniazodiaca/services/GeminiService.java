@@ -20,6 +20,7 @@ public class GeminiService {
     public String askGemini(String prompt) {
         GenerateContentResponse response = client.models.generateContent(
                 "gemini-3.6-flash",
+                // "gemini-3.7-flash",
                 prompt,
                 null);
 

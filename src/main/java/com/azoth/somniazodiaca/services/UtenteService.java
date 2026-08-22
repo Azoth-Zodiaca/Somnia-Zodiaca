@@ -1,5 +1,6 @@
 package com.azoth.somniazodiaca.services;
 
+import java.time.LocalDate;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -14,6 +15,7 @@ import com.azoth.somniazodiaca.entities.Utente;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.exceptions.EmailAlreadyExistsException;
 import com.azoth.somniazodiaca.exceptions.UsernameAlreadyExistsException;
+import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.InventarioCosmeticoRepository;
 import com.azoth.somniazodiaca.repositories.PostRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
@@ -31,6 +33,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     private final SognoRepository sognoRepository;
     private final TemaNataleRepository temaNataleRepository;
     private final InventarioCosmeticoRepository inventarioCosmeticoRepository;
+    private final InterpretazioneRepository interpretazioneRepository;
 
     private static final Pattern PASSWORD_FORTE = Pattern.compile(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$");
@@ -42,7 +45,8 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             PostRepository postRepository,
             SognoRepository sognoRepository,
             TemaNataleRepository temaNataleRepository,
-            InventarioCosmeticoRepository inventarioCosmeticoRepository) {
+            InventarioCosmeticoRepository inventarioCosmeticoRepository,
+            InterpretazioneRepository interpretazioneRepository) {
 
         super(repository, converter);
         this.passwordEncoder = passwordEncoder;
@@ -50,6 +54,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         this.sognoRepository = sognoRepository;
         this.temaNataleRepository = temaNataleRepository;
         this.inventarioCosmeticoRepository = inventarioCosmeticoRepository;
+        this.interpretazioneRepository = interpretazioneRepository;
     }
 
     public Optional<UtenteDetail> findByUsername(String username) {
@@ -74,25 +79,87 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     }
 
     @Transactional
-    public UtenteDetail updateAccount(String currentUsername, String username, String email, String nomeVisibile) {
-        Utente utente = getRepository().findByUsername(currentUsername)
+    public void registraAccesso(String username) {
+        Utente utente = getRepository()
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        LocalDate oggi = LocalDate.now();
+        LocalDate ultimoGiorno = utente.getUltimoAccesso() == null
+                ? null
+                : utente.getUltimoAccesso().toLocalDate();
+
+        if (oggi.equals(ultimoGiorno)) {
+            return;
+        }
+
+        if (ultimoGiorno != null && ultimoGiorno.plusDays(1).equals(oggi)) {
+            utente.setGiorniConsecutivi(utente.getGiorniConsecutivi() + 1);
+        } else {
+            utente.setGiorniConsecutivi(1);
+        }
+
+        utente.setUltimoAccesso(java.time.LocalDateTime.now());
+
+        getRepository().save(utente);
+    }
+
+    @Transactional
+    public int riscuotiRicompensaGiornaliera(String username) {
+        Utente utente = getRepository()
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        LocalDate oggi = LocalDate.now();
+
+        if (oggi.equals(utente.getUltimaRicompensaGiornaliera())) {
+            throw new IllegalStateException(
+                    "La ricompensa è già stata riscossa oggi");
+        }
+
+        int[] ricompense = { 10, 15, 20, 25, 30, 40, 50 };
+
+        int giorno = Math.max(1, utente.getGiorniConsecutivi());
+        int indice = Math.min(giorno, ricompense.length) - 1;
+        int quantitaQi = ricompense[indice];
+
+        utente.setQi(utente.getQi() + quantitaQi);
+        utente.setUltimaRicompensaGiornaliera(oggi);
+
+        getRepository().save(utente);
+
+        return quantitaQi;
+    }
+
+    @Transactional
+    public UtenteDetail updateAccount(
+            String currentUsername,
+            String username,
+            String email) {
+
+        Utente utente = getRepository()
+                .findByUsername(currentUsername)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
         getRepository().findByUsername(username)
                 .filter(altroUtente -> !altroUtente.getId().equals(utente.getId()))
                 .ifPresent(altroUtente -> {
-                    throw new UsernameAlreadyExistsException("L username esiste già");
+                    throw new UsernameAlreadyExistsException(
+                            "Lo username esiste già");
                 });
 
         getRepository().findByEmail(email)
                 .filter(altroUtente -> !altroUtente.getId().equals(utente.getId()))
                 .ifPresent(altroUtente -> {
-                    throw new EmailAlreadyExistsException("L'email esiste già");
+                    throw new EmailAlreadyExistsException(
+                            "L'email esiste già");
                 });
 
         utente.setUsername(username);
         utente.setEmail(email);
-        return getConverter().fromEToD(getRepository().save(utente));
+
+        return getConverter().fromEToD(
+                getRepository().save(utente));
     }
 
     @Transactional
@@ -125,37 +192,22 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
 
     @Transactional
     public void deleteAccount(String username) {
-        Utente utente = getRepository().findByUsername(username)
+        Utente utente = getRepository()
+                .findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
         temaNataleRepository.deleteByUtente(utente);
         inventarioCosmeticoRepository.deleteByUtente(utente);
         postRepository.deleteByUtente(utente);
+
+        // Prima eliminiamo le interpretazioni collegate ai sogni.
+        interpretazioneRepository.deleteBySogno_Utente(utente);
+
+        // Solo dopo possiamo eliminare i sogni.
         sognoRepository.deleteByUtente(utente);
 
         getRepository().delete(utente);
     }
-
-    // public Optional<UtenteDetail> authenticate(String usernameOrEmail, String
-    // password) {
-    // return getRepository()
-    // .findByUsernameOrEmail(usernameOrEmail)
-    // .filter(u -> u.getPassword() != null && u.getPassword().equals(password))
-    // .map(getConverter()::fromEToD);
-    // }
-
-    // TemaNatale temaNatale = TemaNatale.builder()
-    // .utente(utente)
-    // .dataNascita(dto.getDataNascita())
-    // .oraNascita(dto.getOraNascita())
-    // .luogoNascita(dto.getLuogoNascita())
-    // .dataCreazione(LocalDateTime.now())
-    // .build();
-
-    // utente.setTemaNatale(temaNatale);
-    // getRepository().save(utente);
-    // return getConverter().fromEToD(utente);
-    // }
 
     public List<UtenteDetail> getAllUsers() {
         return getAll();
