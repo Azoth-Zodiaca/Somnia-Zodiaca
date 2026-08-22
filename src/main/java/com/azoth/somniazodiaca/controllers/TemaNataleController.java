@@ -10,6 +10,7 @@ import com.azoth.somniazodiaca.entities.Utente;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.azoth.somniazodiaca.services.AstroWayService;
 import com.azoth.somniazodiaca.services.TemaNataleService;
+import com.azoth.somniazodiaca.services.TemaNataleViewService;
 import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
@@ -18,15 +19,18 @@ public class TemaNataleController {
     private final UtenteRepository utenteRepository;
     private final TemaNataleService temaNataleService;
     private final AstroWayService astroWayService;
+    private final TemaNataleViewService temaNataleViewService;
 
     public TemaNataleController(
             UtenteRepository utenteRepository,
             TemaNataleService temaNataleService,
-            AstroWayService astroWayService) {
+            AstroWayService astroWayService,
+            TemaNataleViewService temaNataleViewService) {
 
         this.utenteRepository = utenteRepository;
         this.temaNataleService = temaNataleService;
         this.astroWayService = astroWayService;
+        this.temaNataleViewService = temaNataleViewService;
     }
 
     @GetMapping("/tema-natale")
@@ -61,8 +65,12 @@ public class TemaNataleController {
                         "AstroWay ha restituito una risposta non valida");
             }
 
-            model.addAttribute("temaChart", temaChart.path("data"));
-            
+            JsonNode datiTema = temaChart.path("data");
+
+            model.addAttribute("temaChart", datiTema);
+            model.addAttribute(
+                    "pianeti",
+                    temaNataleViewService.estraiPianeti(datiTema));
         }
 
         return "app/tema-natale";

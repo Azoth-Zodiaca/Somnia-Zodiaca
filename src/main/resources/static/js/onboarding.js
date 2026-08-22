@@ -98,7 +98,7 @@ async function cercaLocalita(query) {
             button.type = "button";
             button.className = "location-result";
             button.textContent =
-                `${localita.nome}, ${localita.stato ?? ""} ${localita.codicePaese}`;
+                `${localita.nome}, ${localita.codicePaese}`;
 
             button.addEventListener("click", () => {
                 selezionaLocalita(localita);
