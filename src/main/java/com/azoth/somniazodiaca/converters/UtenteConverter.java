@@ -49,6 +49,9 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .ruolo(e.getRuolo())
                 .qi(e.getQi())
                 .ultimoAccesso(e.getUltimoAccesso())
+                .giorniConsecutivi(e.getGiorniConsecutivi())
+                .ultimaRicompensaGiornaliera(
+                        e.getUltimaRicompensaGiornaliera())
                 .build();
 
         if (e.getSegnoZodiacale() != null) {

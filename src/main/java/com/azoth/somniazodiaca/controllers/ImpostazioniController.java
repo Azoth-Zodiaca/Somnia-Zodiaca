@@ -45,12 +45,21 @@ public class ImpostazioniController {
     public String aggiornaAccount(
             Authentication authentication,
             @RequestParam String username,
-            @RequestParam String email,
-            @RequestParam String nomeVisibile) {
-        UtenteDetail utente = utenteService.updateAccount(authentication.getName(), username, email, nomeVisibile);
+            @RequestParam String email) {
+
+        UtenteDetail utente = utenteService.updateAccount(
+                authentication.getName(),
+                username,
+                email);
+
         Authentication nuovaAuthentication = new UsernamePasswordAuthenticationToken(
-                utente.getUsername(), authentication.getCredentials(), authentication.getAuthorities());
-        SecurityContextHolder.getContext().setAuthentication(nuovaAuthentication);
+                utente.getUsername(),
+                authentication.getCredentials(),
+                authentication.getAuthorities());
+
+        SecurityContextHolder.getContext()
+                .setAuthentication(nuovaAuthentication);
+
         return "redirect:/app/impostazioni";
     }
 
