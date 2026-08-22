@@ -12,6 +12,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initChipSelectors();
   initShopCategories();
   initOracoloCounter();
+  initOracoloForm();
   initLikeButtons();
   initInventoryEquip();
   initSettingsMenu();
@@ -193,6 +194,58 @@ function initOracoloCounter() {
   var maxLength = 4000;
   textarea.addEventListener("input", function () {
     counter.textContent = textarea.value.length + " / " + maxLength;
+  });
+}
+
+function initOracoloForm() {
+  const form = document.getElementById("oracolo-form");
+  const textarea = document.getElementById("dream-text");
+  const resultBox = document.getElementById("risultato-oracolo");
+  const resultText = document.getElementById("testo-interpretazione");
+
+  if (!form || !textarea || !resultBox || !resultText) return;
+
+  form.addEventListener("submit", async function (event) {
+    event.preventDefault();
+
+    const dream = textarea.value.trim();
+    if (!dream) {
+      textarea.focus();
+      return;
+    }
+
+    const csrfToken = form.querySelector('input[name="_csrf"]')?.value;
+    const submitButton = form.querySelector('button[type="submit"]');
+
+    submitButton.disabled = true;
+    submitButton.textContent = "Interpreto...";
+    resultBox.hidden = false;
+    resultText.textContent = "Sto interpretando il sogno...";
+
+    try {
+      const response = await fetch("/test", {
+        method: "POST",
+        headers: {
+          "Content-Type": "text/plain",
+          "X-CSRF-TOKEN": csrfToken
+        },
+        body: dream
+      });
+
+      if (!response.ok) {
+        throw new Error(`Errore HTTP ${response.status}`);
+      }
+
+      const interpretation = await response.text();
+      resultText.textContent = interpretation;
+    } catch (error) {
+      resultText.textContent =
+        "Non è stato possibile interpretare il sogno. Riprova più tardi.";
+      console.error(error);
+    } finally {
+      submitButton.disabled = false;
+      submitButton.textContent = "✦ Interpreta il sogno";
+    }
   });
 }
 
