@@ -19,13 +19,35 @@
         <!-- Banner + avatar. In produzione il colore/immagine del banner
              e l'immagine avatar arriverebbero da th:style o th:src -->
         <div class="profile-banner" th:classappend="${' ' + profiloColoreClasse}">
-          <button class="btn btn-ghost btn-sm profile-edit-button">&#9998; Modifica</button>
-          <div class="profile-avatar-lg" th:classappend="${' ' + profiloColoreClasse}" th:text="${username != null and !username.isEmpty()
-       ? #strings.toUpperCase(#strings.substring(username, 0, 1))
-       : '?'}">
-            L
+          <img th:if="${bannerPath != null}" class="profile-banner-image" th:src="@{${bannerPath}}"
+            alt="Immagine banner">
+          <button type="button" class="btn btn-ghost btn-sm profile-edit-button" id="mostra-upload-profilo">
+            &#9998; Modifica
+          </button>
+          <div class="profile-avatar-lg" th:classappend="${' ' + profiloColoreClasse}">
+            <img th:if="${avatarPath != null}" th:src="@{${avatarPath}}" alt="Immagine profilo">
+            <span th:unless="${avatarPath != null}" th:text="${username != null and !username.isEmpty()
+          ? #strings.toUpperCase(#strings.substring(username, 0, 1))
+          : '?'}">
+              L
+            </span>
           </div>
         </div>
+        <form id="upload-profilo-form" class="profile-upload-form is-hidden" method="post" enctype="multipart/form-data"
+          th:action="@{/app/profilo/immagini}">
+
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+          <label for="avatar">Immagine profilo</label>
+          <input id="avatar" type="file" name="avatar" accept="image/png,image/jpeg,image/webp">
+
+          <label for="banner">Immagine banner</label>
+          <input id="banner" type="file" name="banner" accept="image/png,image/jpeg,image/webp">
+
+          <button type="submit" class="btn btn-primary btn-sm">
+            Salva immagini
+          </button>
+        </form>
 
         <div class="profile-header-info">
           <h2><span th:text="${'@' + username}">@username</span></h2>

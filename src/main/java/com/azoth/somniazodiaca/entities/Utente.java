@@ -72,6 +72,12 @@ public class Utente extends BaseEntity {
     @Column(name = "profilo_colore", nullable = false, length = 7)
     private String profiloColore;
 
+    @Column(name = "avatar_path", length = 255)
+    private String avatarPath;
+
+    @Column(name = "banner_path", length = 255)
+    private String bannerPath;
+
     @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private TemaNatale temaNatale;
 }

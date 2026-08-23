@@ -6,6 +6,7 @@ import java.time.LocalTime;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.core.annotation.Order;
 
 import com.azoth.somniazodiaca.entities.SegnoZodiacale;
 import com.azoth.somniazodiaca.entities.TemaNatale;
@@ -19,6 +20,7 @@ import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 
 @Configuration
+@Order(2)
 public class AdminInitializer {
 
     @Bean

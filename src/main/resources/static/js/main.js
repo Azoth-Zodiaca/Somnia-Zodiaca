@@ -21,6 +21,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initSvuotaOracolo();
   aggiornaScadenze();
   setInterval(aggiornaScadenze, 60000);
+  initUploadProfilo();
 });
 
 // controllo della forza della password nella pagina di registrazione
@@ -73,6 +74,21 @@ document.addEventListener("DOMContentLoaded", function () {
     });
   }
 });
+
+
+// profilo
+function initUploadProfilo() {
+  var editButton = document.getElementById("mostra-upload-profilo");
+  var uploadForm = document.getElementById("upload-profilo-form");
+
+  if (!editButton || !uploadForm) {
+    return;
+  }
+
+  editButton.addEventListener("click", function () {
+    uploadForm.classList.toggle("is-hidden");
+  });
+}
 
 /* ---------------------------------------------------------
    1) Apertura/chiusura della sidebar su schermi piccoli.

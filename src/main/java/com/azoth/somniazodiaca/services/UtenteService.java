@@ -1,14 +1,22 @@
 package com.azoth.somniazodiaca.services;
 
+import java.io.IOException;
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
 import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
+import java.util.Set;
+import java.util.UUID;
 import java.util.regex.Pattern;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.web.multipart.MultipartFile;
 
 import com.azoth.somniazodiaca.converters.UtenteConverter;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
@@ -42,6 +50,16 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
 
     private static final Pattern PASSWORD_FORTE = Pattern.compile(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$");
+
+    private static final long DIMENSIONE_MASSIMA_IMMAGINE = 5 * 1024 * 1024;
+
+    private static final Set<String> TIPI_IMMAGINE_CONSENTITI = Set.of(
+            "image/jpeg",
+            "image/png",
+            "image/webp");
+
+    @Value("${app.upload-dir}")
+    private String uploadDir;
 
     public UtenteService(
             UtenteRepository repository,
@@ -254,6 +272,73 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         RANDOM.nextBytes(colore);
 
         return "#" + HEX_FORMAT.formatHex(colore).toUpperCase();
+    }
+
+    @Transactional
+    public void aggiornaImmagini(
+            String username,
+            MultipartFile avatar,
+            MultipartFile banner) {
+
+        Utente utente = getRepository()
+                .findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Utente non trovato"));
+
+        if (avatar != null && !avatar.isEmpty()) {
+            validaImmagine(avatar);
+            utente.setAvatarPath(salvaImmagine(avatar, "avatar"));
+        }
+
+        if (banner != null && !banner.isEmpty()) {
+            validaImmagine(banner);
+            utente.setBannerPath(salvaImmagine(banner, "banner"));
+        }
+
+        getRepository().save(utente);
+    }
+
+    private void validaImmagine(MultipartFile file) {
+        if (file.getSize() > DIMENSIONE_MASSIMA_IMMAGINE) {
+            throw new IllegalArgumentException(
+                    "L'immagine non può superare i 5 MB");
+        }
+
+        if (!TIPI_IMMAGINE_CONSENTITI.contains(file.getContentType())) {
+            throw new IllegalArgumentException(
+                    "Formato immagine non supportato");
+        }
+    }
+
+    private String salvaImmagine(
+            MultipartFile file,
+            String prefisso) {
+
+        try {
+            Path directory = Paths.get(uploadDir);
+            Files.createDirectories(directory);
+
+            String estensione = switch (file.getContentType()) {
+                case "image/jpeg" -> ".jpg";
+                case "image/png" -> ".png";
+                case "image/webp" -> ".webp";
+                default -> throw new IllegalArgumentException(
+                        "Formato immagine non supportato");
+            };
+
+            String nomeFile = prefisso + "-"
+                    + UUID.randomUUID()
+                    + estensione;
+
+            Path destinazione = directory.resolve(nomeFile);
+            file.transferTo(destinazione);
+
+            return "/uploads/profiles/" + nomeFile;
+
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "Impossibile salvare l'immagine", e);
+        }
     }
 
 }
