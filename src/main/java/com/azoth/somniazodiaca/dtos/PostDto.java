@@ -36,4 +36,6 @@ public class PostDto implements GenericDto {
     private String testoInterpretazione;
 
     private boolean likedByCurrentUser;
+
+    private boolean seguitoDaCurrentUser;
 }
