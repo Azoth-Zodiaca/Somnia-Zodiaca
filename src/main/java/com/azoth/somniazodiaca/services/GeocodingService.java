@@ -56,6 +56,7 @@ public class GeocodingService {
                                                         .queryParam("q", normalizedQuery)
                                                         .queryParam("maxRows", 5)
                                                         .queryParam("featureClass", "P")
+                                                        .queryParam("lang", "it")
                                                         .queryParam("username", geonamesUsername)
                                                         .queryParam("style", "FULL")
                                                         .build())

@@ -2342,3 +2342,29 @@ h4 {
 .wallet-badge-count {
   font-size: 12px;
 }
+
+.natal-planets-card {
+  max-width: 620px;
+  margin-bottom: 20px;
+}
+
+.natal-planets-card .triad-item {
+  gap: 20px;
+}
+
+.natal-planets-card .triad-item>span:last-child {
+  text-align: right;
+}
+
+.natal-data-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.4fr);
+  gap: 18px;
+  align-items: start;
+}
+
+@media (max-width: 760px) {
+  .natal-data-layout {
+    grid-template-columns: 1fr;
+  }
+}

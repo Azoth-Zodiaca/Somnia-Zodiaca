@@ -37,54 +37,64 @@
           </a>
         </div>
 
-
-        <div th:if="${temaNatale != null}" class="card">
-          <div class="card-title">Dati di nascita</div>
-
-          <p>
-            <strong>Luogo:</strong>
-            <span th:text="${temaNatale.luogoNascita}">Napoli</span>
-          </p>
-
-          <p>
-            <strong>Latitudine:</strong>
-            <span th:text="${temaNatale.latitudine}">40.8518</span>
-          </p>
-
-          <p>
-            <strong>Longitudine:</strong>
-            <span th:text="${temaNatale.longitudine}">14.2681</span>
-          </p>
-
-          <p>
-            <strong>Fuso orario:</strong>
-            <span th:text="${temaNatale.timezone}">Europe/Rome</span>
-          </p>
-        </div>
-
         <div th:if="${temaNatale == null}" class="card">
           <p class="text-muted">
             Non hai ancora completato i dati del tema natale.
           </p>
         </div>
 
-        <div class="card" th:if="${temaChart != null}">
-          <div class="card-title">Pianeti</div>
+        <div class="natal-data-layout">
 
-          <div th:each="pianeta : ${temaChart.get('planets')}">
-            <span th:text="${pianeta.get('name').asText()}">Sun</span>
-            <span th:text="${pianeta.get('longitude').asDouble()}">228.77</span>
-            <span th:text="${pianeta.get('isRetrograde').asBoolean()}">false</span>
+          <div class="card natal-birth-card" th:if="${temaNatale != null}">
+            <div class="card-title">Dati di nascita</div>
+
+            <p>
+              <strong>Luogo:</strong>
+              <span th:text="${temaNatale.luogoNascita}">Napoli</span>
+            </p>
+
+            <p>
+              <strong>Latitudine:</strong>
+              <span th:text="${temaNatale.latitudine}">40.8518</span>
+            </p>
+
+            <p>
+              <strong>Longitudine:</strong>
+              <span th:text="${temaNatale.longitudine}">14.2681</span>
+            </p>
+
+            <p>
+              <strong>Fuso orario:</strong>
+              <span th:text="${temaNatale.timezone}">Europe/Rome</span>
+            </p>
           </div>
+
+          <div class="card natal-planets-card" th:if="${pianeti != null}">
+            <div class="card-title">Pianeti</div>
+
+            <div class="triad-item" th:each="pianeta : ${pianeti}">
+              <span th:text="${pianeta.nome}">Sole</span>
+              <span>
+                <span th:text="${pianeta.segno}"></span>
+                (<span th:text="${pianeta.casa}"></span>)
+                ·
+                <span th:text="${#numbers.formatDecimal(pianeta.longitudine, 1, 2)}"></span>
+                °
+                <span th:if="${pianeta.retrogrado}"> · Retrogrado</span>
+              </span>
+            </div>
+
+          </div>
+
         </div>
 
-        <!-- Tab interne: Riepilogo / Carta / Pianeti / Case / Analisi AI -->
+
+        <!-- Tab interne: Riepilogo / Carta / Pianeti / Case -->
         <div class="tab-row" data-tab-group="natale-tabs">
           <a href="#" class="js-tab active" data-target="tab-riepilogo">Riepilogo</a>
           <a href="#" class="js-tab" data-target="tab-carta">Carta</a>
           <a href="#" class="js-tab" data-target="tab-pianeti">Pianeti</a>
           <a href="#" class="js-tab" data-target="tab-case">Case</a>
-          <a href="#" class="js-tab" data-target="tab-ai">Analisi AI</a>
         </div>
 
         <div id="tab-riepilogo" class="js-tab-panel">
@@ -211,6 +221,10 @@
               <button class="btn btn-ghost btn-sm">Copia</button>
               <button class="btn btn-ghost btn-sm">&#8681; PDF</button>
               <button class="btn btn-ghost btn-sm">&#8599; Condividi</button>
+          <div class="card mt-20" th:if="${interpretazione != null}">
+            <div class="card-title">Interpretazione del tema</div>
+            <div class="ai-analysis-text" th:text="${interpretazione}">
+              Interpretazione non ancora disponibile.
             </div>
           </div>
         </div>
@@ -223,9 +237,6 @@
         </div>
         <div id="tab-case" class="js-tab-panel is-hidden">
           <p class="text-muted">Le 12 case astrologiche con relativo significato.</p>
-        </div>
-        <div id="tab-ai" class="js-tab-panel is-hidden">
-          <p class="text-muted">Vista estesa dell'analisi AI, sezione per sezione.</p>
         </div>
       </main>
     </div>
