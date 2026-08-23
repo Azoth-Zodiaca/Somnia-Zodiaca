@@ -149,8 +149,12 @@ function initTabs() {
 
       // Nasconde tutti i pannelli del gruppo e mostra solo quello scelto
       var targetId = tab.getAttribute("data-target");
-      group.querySelectorAll(".js-tab-panel").forEach(function (panel) {
-        panel.classList.toggle("is-hidden", panel.id !== targetId);
+      var panelIds = Array.from(group.querySelectorAll(".js-tab"))
+        .map(function (currentTab) { return currentTab.getAttribute("data-target"); });
+      document.querySelectorAll(".js-tab-panel").forEach(function (panel) {
+        if (panelIds.indexOf(panel.id) !== -1) {
+          panel.classList.toggle("is-hidden", panel.id !== targetId);
+        }
       });
     });
   });
@@ -680,23 +684,10 @@ function initHistoryButtons() {
 --------------------------------------------------------- */
 function initLikeButtons() {
   var likeButtons = document.querySelectorAll(".like-btn");
-  if (likeButtons.length === 0) return;
 
   likeButtons.forEach(function (btn) {
     btn.addEventListener("click", function () {
-      var countEl = btn.querySelector(".like-count");
-      var liked = btn.getAttribute("data-liked") === "true";
-      var count = parseInt(countEl.textContent, 10) || 0;
-
-      if (liked) {
-        btn.setAttribute("data-liked", "false");
-        btn.classList.remove("liked");
-        countEl.textContent = count - 1;
-      } else {
-        btn.setAttribute("data-liked", "true");
-        btn.classList.add("liked");
-        countEl.textContent = count + 1;
-      }
+      btn.disabled = true;
     });
   });
 }

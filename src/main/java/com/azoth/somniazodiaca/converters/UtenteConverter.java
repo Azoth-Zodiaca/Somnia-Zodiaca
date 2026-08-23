@@ -53,12 +53,14 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .email(e.getEmail())
                 .ruolo(e.getRuolo())
                 .qi(e.getQi())
+                .dataRegistrazione(e.getCreatedAt())
                 .ultimoAccesso(e.getUltimoAccesso())
                 .giorniConsecutivi(e.getGiorniConsecutivi())
                 .ultimaRicompensaGiornaliera(e.getUltimaRicompensaGiornaliera())
                 .profiloColore(e.getProfiloColore())
                 .avatarPath(e.getAvatarPath())
                 .bannerPath(e.getBannerPath())
+                .dataRegistrazione(e.getCreatedAt())
                 .build();
 
         if (e.getSegnoZodiacale() != null) {

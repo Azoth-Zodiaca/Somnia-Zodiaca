@@ -2,10 +2,7 @@ package com.azoth.somniazodiaca.config;
 
 import java.util.Map;
 
-import org.springframework.boot.CommandLineRunner;
-import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.core.annotation.Order;
 
 import com.azoth.somniazodiaca.entities.Elemento;
 import com.azoth.somniazodiaca.entities.Metallo;
@@ -22,20 +19,28 @@ import com.azoth.somniazodiaca.repositories.PianetaRepository;
 import com.azoth.somniazodiaca.repositories.SegnoZodiacaleRepository;
 
 @Configuration
-@Order(1)
 public class ZodiacoInitializer {
 
-        @Bean
-        public CommandLineRunner initZodiaco(
+        private final ElementoRepository elementoRepository;
+        private final PianetaRepository pianetaRepository;
+        private final MetalloRepository metalloRepository;
+        private final SegnoZodiacaleRepository segnoRepository;
+
+        public ZodiacoInitializer(
                         ElementoRepository elementoRepository,
                         PianetaRepository pianetaRepository,
                         MetalloRepository metalloRepository,
                         SegnoZodiacaleRepository segnoRepository) {
+                this.elementoRepository = elementoRepository;
+                this.pianetaRepository = pianetaRepository;
+                this.metalloRepository = metalloRepository;
+                this.segnoRepository = segnoRepository;
+        }
 
-                return args -> {
-                        Map<ElementoEnum, Elemento> elementi = creaElementi(elementoRepository);
-                        Map<PianetaEnum, Pianeta> pianeti = creaPianeti(pianetaRepository);
-                        Map<MetalloEnum, Metallo> metalli = creaMetalli(metalloRepository);
+        public void inizializza() {
+                Map<ElementoEnum, Elemento> elementi = creaElementi(elementoRepository);
+                Map<PianetaEnum, Pianeta> pianeti = creaPianeti(pianetaRepository);
+                Map<MetalloEnum, Metallo> metalli = creaMetalli(metalloRepository);
 
                         creaSegno(
                                         segnoRepository,
@@ -133,8 +138,7 @@ public class ZodiacoInitializer {
                                         pianeti.get(PianetaEnum.NETTUNO),
                                         metalli.get(MetalloEnum.STAGNO));
 
-                        System.out.println("Elementi, pianeti, metalli e segni zodiacali verificati.");
-                };
+                System.out.println("Elementi, pianeti, metalli e segni zodiacali verificati.");
         }
 
         private Map<ElementoEnum, Elemento> creaElementi(

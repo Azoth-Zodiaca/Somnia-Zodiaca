@@ -1,10 +1,12 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head>
   <meta charset="UTF-8">
   <title>Social - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
 </head>
+
 <body>
   <div class="app-layout">
     <div th:replace="~{fragments/app-shell :: sidebar(active='social')}"></div>
@@ -14,6 +16,44 @@
 
       <main class="app-content">
         <h2 class="serif social-title">Community</h2>
+
+        <section class="card social-create-post">
+          <h3>Condividi un'interpretazione</h3>
+
+          <form method="post" th:action="@{/app/social/post}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <label for="interpretazioneId">
+              Interpretazione
+            </label>
+
+            <select id="interpretazioneId" name="interpretazioneId" required>
+              <option value="">Seleziona un'interpretazione</option>
+
+              <option th:each="interpretazione : ${mieInterpretazioni}" th:value="${interpretazione.id}"
+                th:text="${interpretazione.testoSogno}">
+                Testo del sogno
+              </option>
+            </select>
+
+            <label for="testoVisibile">
+              Testo del post
+            </label>
+
+            <textarea id="testoVisibile" name="testoVisibile" maxlength="1000" required
+              placeholder="Scrivi un pensiero sul tuo sogno...">
+            </textarea>
+
+            <button type="submit" class="btn btn-primary btn-sm">
+              Pubblica
+            </button>
+          </form>
+        </section>
+
+
+
+
+
 
         <!-- Tab del feed -->
         <div class="social-tabs" data-tab-group="social-tabs">
@@ -31,96 +71,81 @@
           <button title="Acqua">&#128167;</button>
         </div>
 
-        <!-- Feed dei post. In Spring: th:each="post : ${feed}" -->
+        <!-- Feed dei post -->
         <div id="feed-popolari" class="js-tab-panel">
+          <div th:if="${#lists.isEmpty(feed)}" class="card text-muted">
+            Non ci sono ancora post da mostrare.
+          </div>
 
-          <div class="card post-card">
+          <article th:each="post : ${feed}" class="card post-card">
             <div class="post-header">
               <div class="post-user">
-                <div class="avatar social-avatar">S</div>
-<div class="avatar social-avatar">M</div>
-<div class="avatar social-avatar">E</div>
+                <div class="avatar social-avatar"
+                  th:classappend="${post.profiloColore != null ? ' ' + post.profiloColore : ''}">
+                  <img th:if="${post.avatarPath != null}" th:src="@{${post.avatarPath}}" alt="Avatar">
+                  <span th:unless="${post.avatarPath != null}"
+                    th:text="${post.username != null and !post.username.isEmpty() ? #strings.toUpperCase(#strings.substring(post.username, 0, 1)) : '?'}">U</span>
+                </div>
                 <div>
-                  <div class="name">@sofia</div>
-                  <div class="meta">&#9811; Pesci &middot; Asc. &#9807; &middot; 2h</div>
+                  <div class="name">
+                    <span th:text="${'@' + post.username}">@utente</span>
+                    <span th:if="${post.premium}" class="badge badge-premium social-premium-badge">Premium</span>
+                  </div>
+                  <div class="meta">
+                    <span th:if="${post.segnoZodiacale != null}" th:text="${post.segnoZodiacale}">Segno</span>
+                    <span th:if="${post.ascendente != null}" th:text="${' · Asc. ' + post.ascendente}">Ascendente</span>
+                    <span th:if="${post.dataPubblicazione != null}"
+                      th:text="${' · ' + #temporals.format(post.dataPubblicazione, 'dd/MM/yyyy HH:mm')}">Data</span>
+                  </div>
                 </div>
               </div>
               <button class="btn btn-ghost btn-sm">&#8942;</button>
             </div>
-            <div class="post-body">Non riesco a smettere di pensarci.</div>
-            <div class="dream-quote">&#9668; Il sogno<br>Ero in una stanza piena di specchi. Ogni riflesso mostrava una versione diversa di me, alcune vecchie, alcune future. Una mi ha sorriso.</div>
-            <div class="interpretation-box">
-              <span class="label">Interpretazione &middot; AI</span>
-              Gli specchi rappresentano l'incontro con l'ombra e con il futuro possibile. Con la tua Luna in Pesci in dodicesima casa, questa immagine parla di una riconciliazione interiore in atto — le versioni di te che hai lasciato indietro chiedono attenzione.
-              <div class="tag-row"><span class="tag">Specchi</span><span class="tag">Porta</span></div>
+            <div class="post-body" th:text="${post.testoVisibile}">Testo del post</div>
+            <div th:if="${post.testoSogno != null}" class="dream-quote">&#9668; Il sogno<br><span
+                th:text="${post.testoSogno}">Testo del sogno</span></div>
+            <div th:if="${post.testoInterpretazione != null}" class="interpretation-box">
+              <span class="label">Oracolo</span>
+              <span th:text="${post.testoInterpretazione}">Testo dell'interpretazione</span>
               <a href="#" class="social-read-more">Leggi tutto &rsaquo;</a>
             </div>
             <div class="post-footer">
-              <button class="like-btn flex gap-8 social-like-button" data-liked="false">
-              <span>&#128172; 0</span>
-              <span>&#8599;</span>
-            </div>
-          </div>
+              <form method="post" th:action="@{'/app/social/post/' + ${post.id} + '/like'}">
 
-          <div class="card post-card">
-            <div class="post-header">
-              <div class="post-user">
-                <div class="avatar social-avatar">M</div>
-                <div>
-                  <div class="name">@marco_ari <span class="badge badge-premium social-premium-badge">Premium</span></div>
-                  <div class="meta">&#9800; Ariete &middot; Asc. &#9807; &middot; 5h</div>
-                </div>
-              </div>
-              <button class="btn btn-ghost btn-sm">&#8942;</button>
-            </div>
-            <div class="post-body">Notte strana.</div>
-            <div class="dream-quote">&#9668; Il sogno<br>Camminavo su un ponte che si costruiva mentre avanzavo. Dietro di me svaniva.</div>
-            <div class="interpretation-box">
-              <span class="label">Interpretazione &middot; AI</span>
-              Il ponte auto-costruito è un simbolo potente di fiducia nel processo. Marte in Ariete nella tua prima casa spinge azione, ma il sogno ti ricorda: guarda avanti, non indietro.
-              <div class="tag-row"><span class="tag">Ponte</span><span class="tag">Cammino</span></div>
-              <a href="#" class="social-read-more">Leggi tutto &rsaquo;</a>
-            </div>
-            <div class="post-footer">
-              <button class="like-btn flex gap-8 social-like-button" data-liked="false">
-              <span>&#128172; 0</span>
-              <span>&#8599;</span>
-            </div>
-          </div>
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-          <div class="card post-card">
-            <div class="post-header">
-              <div class="post-user">
-                <div class="avatar social-avatar">E</div>
-                <div>
-                  <div class="name">@ely_acq</div>
-                  <div class="meta">&#9810; Acquario &middot; Asc. &#9807; &middot; 1g</div>
-                </div>
-              </div>
-              <button class="btn btn-ghost btn-sm">&#8942;</button>
+                <button type="submit" class="like-btn flex gap-8 social-like-button"
+                  th:classappend="${post.likedByCurrentUser ? 'liked' : ''}"
+                  th:attr="aria-pressed=${post.likedByCurrentUser}">
+
+                  <span>
+                    <span th:text="${post.likedByCurrentUser ? '♥' : '♡'}">♡</span>
+                    <span th:text="${post.numeroLike != null ? post.numeroLike : 0}">
+                      0
+                    </span>
+                  </span>
+
+                  <span>&#8599;</span>
+                </button>
+              </form>
             </div>
-            <div class="dream-quote">&#9668; Il sogno<br>Un'orchestra suonava senza direttore e nessuno era stonato.</div>
-            <div class="interpretation-box">
-              <span class="label">Interpretazione &middot; AI</span>
-              Uno dei sogni più belli di questa settimana. Urano in Toro trigona il tuo Sole in Acquario: sincronicità collettiva, cooperazione senza gerarchia.
-              <div class="tag-row"><span class="tag">Musica</span><span class="tag">Collettivo</span></div>
-              <a href="#" class="social-read-more">Leggi tutto &rsaquo;</a>
-            </div>
-            <div class="post-footer">
-              <button class="like-btn flex gap-8 social-like-button" data-liked="false">
-              <span>&#128172; 0</span>
-              <span>&#8599;</span>
-            </div>
-          </div>
+          </article>
         </div>
 
-        <div id="feed-recenti" class="js-tab-panel is-hidden"><p class="text-muted">Post ordinati per data di pubblicazione.</p></div>
-        <div id="feed-mio-segno" class="js-tab-panel is-hidden"><p class="text-muted">Post pubblicati da utenti con lo stesso segno solare.</p></div>
-        <div id="feed-seguiti" class="js-tab-panel is-hidden"><p class="text-muted">Post degli utenti che segui.</p></div>
+        <div id="feed-recenti" class="js-tab-panel is-hidden">
+          <p class="text-muted">Post ordinati per data di pubblicazione.</p>
+        </div>
+        <div id="feed-mio-segno" class="js-tab-panel is-hidden">
+          <p class="text-muted">Post pubblicati da utenti con lo stesso segno solare.</p>
+        </div>
+        <div id="feed-seguiti" class="js-tab-panel is-hidden">
+          <p class="text-muted">Post degli utenti che segui.</p>
+        </div>
       </main>
     </div>
   </div>
 
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
+
 </html>
