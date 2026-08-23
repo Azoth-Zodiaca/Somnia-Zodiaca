@@ -13,8 +13,8 @@
       <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Shop')}"></div>
 
       <main class="app-content">
-        <span class="text-muted" style="font-size:12px;text-transform:uppercase;">Shop</span>
-        <h2 class="serif" style="font-weight:500;margin-bottom:20px;">Cosmetici alchemici</h2>
+        <span class="text-muted shop-label">Shop</span>
+        <h2 class="serif shop-title">Cosmetici alchemici</h2>
 
         <!-- Filtri per categoria: nel progetto finale saranno solo 2-3.
              data-category deve coincidere con l'attributo data-category
@@ -34,7 +34,9 @@
           <div>
             <span class="badge badge-leggendaria">In evidenza &middot; Nuovo</span>
             <h3 class="mt-10">Corona di Saturno</h3>
-            <p class="text-muted mt-10" style="max-width:400px;">Anelli orbitali di Saturno che ruotano lentamente sopra il tuo capo. Rarità leggendaria.</p>
+            <p class="text-muted featured-description">
+              Anelli orbitali di Saturno che ruotano lentamente sopra il tuo capo. Rarità leggendaria.
+            </p>
             <div class="price-tag">&#10022; 500</div>
             <button class="btn btn-gold">Acquista</button>
           </div>
@@ -45,7 +47,7 @@
              con th:attr="data-category=${articolo.categoria}" -->
         <div class="shop-grid mt-20">
           <div class="card shop-item" data-category="aure">
-            <span class="badge badge-epica" style="position:relative;">Epica</span>
+            <span class="badge badge-epica shop-badge">Epica</span>
             <div class="icon-box mt-10">&#10024;</div>
             <div class="item-name">Aura Cosmica</div>
             <div class="item-category">Aure</div>

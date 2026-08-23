@@ -18,7 +18,7 @@
 
         <div class="natal-header">
           <div>
-            <h2 class="serif" style="font-weight:500;">Il tuo cielo di nascita</h2>
+            <h2 class="serif natal-title">Il tuo cielo di nascita</h2>
             <div class="subtitle" th:if="${temaNatale != null}">
               <span th:text="${temaNatale.dataNascita}"></span>
               <span> - </span>
@@ -95,7 +95,7 @@
                  carta astrale reale (es. SVG generato lato server o JS). -->
             <div class="card">
               <div class="natal-wheel">Grafico carta astrale</div>
-              <div class="flex" style="justify-content:center;gap:8px;margin-top:16px;">
+              <div class="flex natal-actions">
                 <button class="btn btn-ghost btn-sm">&#128269;+</button>
                 <button class="btn btn-ghost btn-sm">&#128269;-</button>
                 <button class="btn btn-ghost btn-sm">&#8635; Reset</button>
@@ -120,25 +120,25 @@
                 <div class="element-bar-row">
                   <div class="element-label"><span>&#128293; Fuoco</span><span>42%</span></div>
                   <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width:42%;background:var(--accent-orange);"></div>
+                    <div class="progress-bar-fill element-fire"></div>
                   </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>&#127793; Terra</span><span>22%</span></div>
                   <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width:22%;background:var(--accent-green);"></div>
+                    <div class="progress-bar-fill element-earth"></div>
                   </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>&#128168; Aria</span><span>26%</span></div>
                   <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width:26%;background:var(--accent-blue);"></div>
+                    <div class="progress-bar-fill element-air"></div>
                   </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>&#128167; Acqua</span><span>18%</span></div>
                   <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width:18%;background:var(--accent-purple);"></div>
+                    <div class="progress-bar-fill element-water"></div>
                   </div>
                 </div>
               </div>
@@ -149,22 +149,22 @@
                 <div class="element-bar-row">
                   <div class="element-label"><span>Cardinale</span><span>38%</span></div>
                   <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width:38%;"></div>
+                    <div class="progress-bar-fill mode-cardinal"></div>
                   </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>Fisso</span><span>45%</span></div>
                   <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width:45%;"></div>
+                    <div class="progress-bar-fill mode-fixed"></div>
                   </div>
                 </div>
                 <div class="element-bar-row">
                   <div class="element-label"><span>Mobile</span><span>17%</span></div>
                   <div class="progress-bar">
-                    <div class="progress-bar-fill" style="width:17%;"></div>
+                    <div class="progress-bar-fill mode-mutable"></div>
                   </div>
                 </div>
-                <p class="text-muted mt-10" style="font-size:12px;font-style:italic;">"Natura stabile e tenace, con
+                <p class="text-muted mt-10 natal-mode-description">"Natura stabile e tenace, con
                   slanci d'iniziativa."</p>
               </div>
 
@@ -183,7 +183,7 @@
             <div class="card-title">
               <span>&#10022; Analisi AI</span>
               <div class="flex gap-8">
-                <span class="text-muted" style="font-size:12px;">Ultima: 3 gg fa</span>
+                <span class="text-muted natal-analysis-date">Ultima: 3 gg fa</span>
                 <button class="btn btn-ghost btn-sm">Rigenera -30 QI</button>
               </div>
             </div>

@@ -13,12 +13,17 @@
       <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Obiettivi e Badge')}"></div>
 
       <main class="app-content">
-        <h2 class="serif" style="font-weight:500;margin-bottom:20px;">Obiettivi &amp; Badge</h2>
+        <h2 class="serif progressi-title">Obiettivi &amp; Badge</h2>
 
         <!-- Progressione livello -->
         <div class="card">
-          <div class="card-title"><span>Livello 7 &middot; Sognatore</span><span class="text-muted" style="font-size:12px;">720/1000 XP</span></div>
-          <div class="progress-bar"><div class="progress-bar-fill" style="width:72%;"></div></div>
+          <div class="card-title">
+            <span>Livello 7 &middot; Sognatore</span>
+            <span class="text-muted progressi-xp">720/1000 XP</span>
+          </div>
+          <div class="progress-bar">
+            <div class="progress-bar-fill progressi-progress"></div>
+          </div>  
         </div>
 
         <!-- Obiettivi giornalieri e settimanali -->
@@ -42,7 +47,10 @@
 
         <!-- Elenco completo dei badge -->
         <div class="card mt-20">
-          <div class="card-title"><span>&#127942; Tutti i badge</span><span class="text-muted" style="font-size:12px;">3/8 sbloccati</span></div>
+          <div class="card-title">
+            <span>&#127942; Tutti i badge</span>
+            <span class="text-muted progressi-badge-count">3/8 sbloccati</span>
+          </div>
           <div class="badge-grid">
             <div class="badge-slot unlocked"><div class="badge-icon">&#127769;</div><div class="badge-name">Primo Sogno</div></div>
             <div class="badge-slot"><div class="badge-icon">?</div><div class="badge-name">Diario Pieno</div><div class="badge-progress">12/25 sogni</div></div>

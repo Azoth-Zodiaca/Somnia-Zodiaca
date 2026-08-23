@@ -2199,3 +2199,146 @@ h4 {
   margin: 0;
   text-transform: none;
 }
+
+.profile-edit-button {
+  position: absolute;
+  top: 12px;
+  right: 12px;
+}
+
+.profile-bio {
+  font-style: italic;
+}
+
+.profile-wallet-amount {
+  font-weight: 700;
+  font-size: 18px;
+}
+
+.profile-premium-promo {
+  max-width: 280px;
+}
+
+.progressi-title {
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.progressi-xp,
+.progressi-badge-count {
+  font-size: 12px;
+}
+
+.progressi-progress {
+  width: 72%;
+}
+
+.shop-label {
+  font-size: 12px;
+  text-transform: uppercase;
+}
+
+.shop-title {
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.featured-description {
+  max-width: 400px;
+}
+
+.shop-badge {
+  position: relative;
+}
+
+.social-title {
+  font-weight: 500;
+  margin-bottom: 16px;
+}
+
+.social-avatar {
+  width: 32px;
+  height: 32px;
+  font-size: 13px;
+}
+
+.social-read-more {
+  font-size: 12px;
+  color: var(--accent-purple);
+  display: inline-block;
+  margin-top: 8px;
+}
+
+.social-like-button {
+  align-items: center;
+}
+
+.social-premium-badge {
+  font-size: 9px;
+  padding: 2px 6px;
+}
+
+.natal-title {
+  font-weight: 500;
+}
+
+.natal-actions {
+  justify-content: center;
+  gap: 8px;
+  margin-top: 16px;
+}
+
+.element-fire {
+  width: 42%;
+  background: var(--accent-orange);
+}
+
+.element-earth {
+  width: 22%;
+  background: var(--accent-green);
+}
+
+.element-air {
+  width: 26%;
+  background: var(--accent-blue);
+}
+
+.element-water {
+  width: 18%;
+  background: var(--accent-purple);
+}
+
+.mode-cardinal {
+  width: 38%;
+}
+
+.mode-fixed {
+  width: 45%;
+}
+
+.mode-mutable {
+  width: 17%;
+}
+
+.natal-mode-description,
+.natal-analysis-date {
+  font-size: 12px;
+}
+
+.natal-mode-description {
+  font-style: italic;
+}
+
+.wallet-title {
+  font-weight: 500;
+  margin-bottom: 20px;
+}
+
+.wallet-package-label,
+.wallet-badge-count {
+  font-size: 11px;
+}
+
+.wallet-badge-count {
+  font-size: 12px;
+}
