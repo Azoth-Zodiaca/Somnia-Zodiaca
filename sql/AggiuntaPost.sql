@@ -189,7 +189,7 @@ SELECT
     'giulia_leone',
     'giulia.leone@demo.it',
     @password_demo,
-    'BASE',
+    'PREMIUM',
     480,
     4,
     '#EC4899',

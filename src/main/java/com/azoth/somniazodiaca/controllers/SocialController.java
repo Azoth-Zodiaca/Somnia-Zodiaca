@@ -61,6 +61,14 @@ public class SocialController {
                 "feedMioSegno",
                 postService.findFeedMioSegno(authentication.getName()));
 
+        model.addAttribute(
+                "feedSeguiti",
+                postService.findFeedSeguiti(authentication.getName()));
+
+        model.addAttribute(
+                "currentUsername",
+                authentication.getName());
+
         return "app/social";
     }
 
@@ -84,6 +92,26 @@ public class SocialController {
             @PathVariable Long postId) {
 
         postService.toggleLike(authentication.getName(), postId);
+
+        return "redirect:/app/social";
+    }
+
+    @PostMapping("/app/social/utente/{username}/follow")
+    public String segui(
+            Authentication authentication,
+            @PathVariable String username) {
+
+        postService.segui(authentication.getName(), username);
+
+        return "redirect:/app/social";
+    }
+
+    @PostMapping("/app/social/utente/{username}/unfollow")
+    public String smettiDiSeguire(
+            Authentication authentication,
+            @PathVariable String username) {
+
+        postService.smettiDiSeguire(authentication.getName(), username);
 
         return "redirect:/app/social";
     }

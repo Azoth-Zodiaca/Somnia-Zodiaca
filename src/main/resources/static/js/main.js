@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
   aggiornaScadenze();
   setInterval(aggiornaScadenze, 60000);
   initUploadProfilo();
+  initInterpretationExpanders();
 });
 
 // controllo della forza della password nella pagina di registrazione
@@ -687,6 +688,36 @@ function initLikeButtons() {
   likeButtons.forEach(function (btn) {
     btn.addEventListener("click", function () {
       btn.disabled = true;
+    });
+  });
+}
+
+function initInterpretationExpanders() {
+  var buttons = document.querySelectorAll(
+    ".js-expand-interpretation"
+  );
+
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      var interpretationBox = button.closest(".interpretation-box");
+
+      if (!interpretationBox) {
+        return;
+      }
+
+      var text = interpretationBox.querySelector(
+        ".social-interpretation-text"
+      );
+
+      if (!text) {
+        return;
+      }
+
+      var expanded = text.classList.toggle("is-expanded");
+
+      button.textContent = expanded
+        ? "Riduci \u2039"
+        : "Leggi tutto \u203A";
     });
   });
 }

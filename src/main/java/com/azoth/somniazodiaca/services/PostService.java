@@ -9,9 +9,11 @@ import com.azoth.somniazodiaca.dtos.PostDto;
 import com.azoth.somniazodiaca.entities.LikePost;
 import com.azoth.somniazodiaca.entities.Post;
 import com.azoth.somniazodiaca.entities.Utente;
+import com.azoth.somniazodiaca.entities.UtenteFollow;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.LikePostRepository;
 import com.azoth.somniazodiaca.repositories.PostRepository;
+import com.azoth.somniazodiaca.repositories.UtenteFollowRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 
 import jakarta.transaction.Transactional;
@@ -22,18 +24,21 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
         private final UtenteRepository utenteRepository;
         private final InterpretazioneRepository interpretazioneRepository;
         private final LikePostRepository likePostRepository;
+        private final UtenteFollowRepository utenteFollowRepository;
 
         public PostService(
                         PostRepository repository,
                         PostConverter converter,
                         UtenteRepository utenteRepository,
                         InterpretazioneRepository interpretazioneRepository,
-                        LikePostRepository likePostRepository) {
+                        LikePostRepository likePostRepository,
+                        UtenteFollowRepository utenteFollowRepository) {
 
                 super(repository, converter);
                 this.utenteRepository = utenteRepository;
                 this.interpretazioneRepository = interpretazioneRepository;
                 this.likePostRepository = likePostRepository;
+                this.utenteFollowRepository = utenteFollowRepository;
         }
 
         public List<PostDto> findByUtenteId(Long utenteId) {
@@ -146,8 +151,63 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                                                                         post.getId(),
                                                                         utenteId));
 
+                                        dto.setSeguitoDaCurrentUser(
+                                                        post.getUtente() != null
+                                                                        && !post.getUtente().getId().equals(utenteId)
+                                                                        && utenteFollowRepository
+                                                                                        .existsByFollowerIdAndSeguitoId(
+                                                                                                        utenteId,
+                                                                                                        post.getUtente().getId()));
+
                                         return dto;
                                 })
                                 .toList();
+        }
+
+        @Transactional
+        public List<PostDto> findFeedSeguiti(String username) {
+                Utente follower = trovaUtente(username);
+
+                return convertiFeed(
+                                getRepository().findFeedSeguiti(follower.getId()),
+                                follower.getId());
+        }
+
+        @Transactional
+        public void segui(String followerUsername, String seguitoUsername) {
+                Utente follower = trovaUtente(followerUsername);
+                Utente seguito = trovaUtente(seguitoUsername);
+
+                if (follower.getId().equals(seguito.getId())) {
+                        throw new IllegalArgumentException(
+                                        "Non puoi seguire te stesso");
+                }
+
+                boolean giaSeguito = utenteFollowRepository.existsByFollowerIdAndSeguitoId(
+                                follower.getId(),
+                                seguito.getId());
+
+                if (!giaSeguito) {
+                        utenteFollowRepository.save(
+                                        UtenteFollow.builder()
+                                                        .follower(follower)
+                                                        .seguito(seguito)
+                                                        .build());
+                }
+        }
+
+        @Transactional
+        public void smettiDiSeguire(
+                        String followerUsername,
+                        String seguitoUsername) {
+
+                Utente follower = trovaUtente(followerUsername);
+                Utente seguito = trovaUtente(seguitoUsername);
+
+                utenteFollowRepository
+                                .findByFollowerIdAndSeguitoId(
+                                                follower.getId(),
+                                                seguito.getId())
+                                .ifPresent(utenteFollowRepository::delete);
         }
 }

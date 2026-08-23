@@ -1529,6 +1529,26 @@ h4 {
   gap: 10px;
 }
 
+.social-interpretation-text {
+  display: -webkit-box;
+  -webkit-box-orient: vertical;
+  -webkit-line-clamp: 3;
+  overflow: hidden;
+}
+
+.social-interpretation-text.is-expanded {
+  display: block;
+  overflow: visible;
+}
+
+.social-read-more {
+  padding: 0;
+  margin-top: 8px;
+  color: var(--accent-purple);
+  font-size: 12px;
+  cursor: pointer;
+}
+
 .post-card {
   margin-bottom: 16px;
   max-width: 620px;
@@ -1562,6 +1582,28 @@ h4 {
   margin-bottom: 10px;
 }
 
+.post-user .name {
+  display: flex;
+  align-items: center;
+  gap: 8px;
+  flex-wrap: wrap;
+}
+
+.social-follow-action {
+  display: inline-flex;
+  align-items: center;
+}
+
+.social-follow-action form {
+  margin: 0;
+}
+
+.social-follow-action .btn {
+  padding: 3px 9px;
+  font-size: 11px;
+  line-height: 1.2;
+}
+
 .dream-quote {
   background: var(--bg-input);
   border-radius: var(--radius-sm);
@@ -1569,6 +1611,15 @@ h4 {
   font-size: 13px;
   color: var(--text-secondary);
   margin-bottom: 8px;
+}
+
+.dream-quote .label {
+  color: var(--accent-purple);
+  font-weight: 700;
+  font-size: 11px;
+  text-transform: uppercase;
+  margin-bottom: 6px;
+  display: block;
 }
 
 .interpretation-box {
@@ -2454,6 +2505,78 @@ h4 {
   grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.4fr);
   gap: 18px;
   align-items: start;
+}
+
+/* Allineamento contenuti pagina Social */
+.social-title {
+  text-align: center;
+}
+
+.social-tabs {
+  justify-content: center;
+}
+
+#feed-tutti,
+#feed-mio-segno,
+#feed-seguiti {
+  width: 100%;
+}
+
+.social-post-list {
+  width: 100%;
+  max-width: 620px;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+/* Allineamento contenuti pagina Oracolo */
+.oracolo-page {
+  max-width: 100%;
+  margin: 0 auto;
+}
+
+.oracolo-layout {
+  display: grid;
+  grid-template-columns: minmax(220px, 280px) minmax(0, 700px) minmax(220px, 280px);
+  gap: 28px;
+  max-width: 1316px;
+  margin: 0 auto;
+  align-items: start;
+}
+
+.oracolo-history {
+  grid-column: 1;
+}
+
+.oracolo-content {
+  grid-column: 2;
+  width: 100%;
+}
+
+.oracolo-content > h2 {
+  margin-top: 0;
+}
+
+@media (max-width: 900px) {
+  .oracolo-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .oracolo-history,
+  .oracolo-content {
+    width: 100%;
+  }
+
+  .oracolo-content {
+    order: 1;
+  }
+
+  .oracolo-history {
+    order: 2;
+    position: static;
+    max-height: none;
+  }
 }
 
 @media (max-width: 760px) {

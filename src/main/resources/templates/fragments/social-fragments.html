@@ -1,0 +1,124 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<body>
+
+    <div class="social-post-list" th:fragment="social-post-list(posts, emptyMessage, currentUsername)">
+        <div th:if="${#lists.isEmpty(posts)}" class="card text-muted" th:text="${emptyMessage}">
+            Nessun post disponibile.
+        </div>
+
+        <article th:each="post : ${posts}" class="card post-card">
+            <div class="post-header">
+                <div class="post-user">
+                    <div class="avatar social-avatar"
+                        th:classappend="${post.profiloColore != null ? ' ' + post.profiloColore : ''}">
+
+                        <img th:if="${post.avatarPath != null}" th:src="@{${post.avatarPath}}" alt="Avatar">
+
+                        <span th:unless="${post.avatarPath != null}" th:text="${post.username != null and !post.username.isEmpty()
+                  ? #strings.toUpperCase(#strings.substring(post.username, 0, 1))
+                  : '?'}">
+                            U
+                        </span>
+                    </div>
+
+                    <div>
+                        <div class="name">
+                            <span th:text="${'@' + post.username}">@utente</span>
+
+                            <span th:if="${post.premium}" class="badge badge-premium social-premium-badge">
+                                Premium
+                            </span>
+                            <span th:if="${post.username != currentUsername}" class="social-follow-action">
+
+                                <form th:if="${!post.seguitoDaCurrentUser}" method="post"
+                                    th:action="@{'/app/social/utente/' + ${post.username} + '/follow'}">
+
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                                    <button type="submit" class="btn btn-primary btn-sm">
+                                        Segui
+                                    </button>
+                                </form>
+
+                                <form th:if="${post.seguitoDaCurrentUser}" method="post"
+                                    th:action="@{'/app/social/utente/' + ${post.username} + '/unfollow'}">
+
+                                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                                    <button type="submit" class="btn btn-ghost btn-sm">
+                                        Smetti di seguire
+                                    </button>
+                                </form>
+                            </span>
+                        </div>
+
+                        <div class="meta">
+                            <span th:if="${post.segnoZodiacale != null}" th:text="${post.segnoZodiacale}">
+                                Segno
+                            </span>
+
+                            <span th:if="${post.ascendente != null}" th:text="${' · Asc. ' + post.ascendente}">
+                                Ascendente
+                            </span>
+
+                            <span th:if="${post.dataPubblicazione != null}"
+                                th:text="${' · ' + #temporals.format(post.dataPubblicazione, 'dd/MM/yyyy HH:mm')}">
+                                Data
+                            </span>
+                        </div>
+                    </div>
+                </div>
+
+            </div>
+
+            <div class="post-body" th:text="${post.testoVisibile}">
+                Testo del post
+            </div>
+
+            <div th:if="${post.testoSogno != null}" class="dream-quote">
+                <span class="label">Il Sogno</span>
+                <span th:text="${post.testoSogno}">
+                    Testo del sogno
+                </span>
+            </div>
+
+            <div th:if="${post.testoInterpretazione != null}" class="interpretation-box">
+
+                <span class="label">Oracolo</span>
+
+                <div class="social-interpretation-text" th:text="${post.testoInterpretazione}">
+                    Testo dell'interpretazione
+                </div>
+
+                <button type="button" class="social-read-more js-expand-interpretation">
+                    Leggi tutto &rsaquo;
+                </button>
+            </div>
+
+            <div class="post-footer">
+                <form method="post" th:action="@{'/app/social/post/' + ${post.id} + '/like'}">
+
+                    <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                    <button type="submit" class="like-btn flex gap-8 social-like-button"
+                        th:classappend="${post.likedByCurrentUser ? 'liked' : ''}"
+                        th:attr="aria-pressed=${post.likedByCurrentUser}">
+
+                        <span>
+                            <span th:text="${post.likedByCurrentUser ? '♥' : '♡'}">♡</span>
+                            <span th:text="${post.numeroLike != null ? post.numeroLike : 0}">
+                                0
+                            </span>
+                        </span>
+                    </button>
+                </form>
+            </div>
+        </article>
+
+    </div>
+
+</body>
+
+</html>
