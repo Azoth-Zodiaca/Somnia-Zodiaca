@@ -14,6 +14,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
 
     void deleteByUtente(Utente utente);
 
+    long countByUtente_Id(Long utenteId);
+
     @EntityGraph(attributePaths = {
             "utente",
             "utente.segnoZodiacale",
@@ -34,4 +36,5 @@ public interface PostRepository extends JpaRepository<Post, Long> {
     })
     List<Post> findByUtenteSegnoZodiacaleIdOrderByDataPubblicazioneDesc(
             Long segnoZodiacaleId);
+
 }

@@ -12,4 +12,6 @@ public interface SognoRepository extends JpaRepository<Sogno, Long> {
     List<Sogno> findByUtenteId(Long utenteId);
 
     void deleteByUtente(Utente utente);
+
+    long countByUtente_Id(Long utenteId);
 }

@@ -20,6 +20,8 @@ public interface InterpretazioneRepository extends JpaRepository<Interpretazione
 
     void deleteBySogno_Utente(Utente utente);
 
+    long countBySogno_Utente_Id(Long utenteId);
+
     @Query("""
             SELECT i
             FROM Interpretazione i

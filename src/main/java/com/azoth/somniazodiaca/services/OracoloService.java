@@ -23,15 +23,18 @@ public class OracoloService {
     private final UtenteRepository utenteRepository;
     private final SognoRepository sognoRepository;
     private final InterpretazioneRepository interpretazioneRepository;
+    private final BadgeService badgeService;
 
     public OracoloService(
             UtenteRepository utenteRepository,
             SognoRepository sognoRepository,
-            InterpretazioneRepository interpretazioneRepository) {
+            InterpretazioneRepository interpretazioneRepository,
+            BadgeService badgeService) {
 
         this.utenteRepository = utenteRepository;
         this.sognoRepository = sognoRepository;
         this.interpretazioneRepository = interpretazioneRepository;
+        this.badgeService = badgeService;
     }
 
     @Transactional
@@ -65,13 +68,15 @@ public class OracoloService {
                 .prompt(richiesta.prompt())
                 .testo(richiesta.interpretazione())
                 .interpretazioneEnum(InterpretazioneEnum.JUNGIANA)
-                .scadenzaCache(LocalDateTime.now().plusHours(48))
+                .scadenzaCache(LocalDateTime.now().plusHours(DURATA_INTERPRETAZIONE_ORE))
                 .build();
 
         Interpretazione salvata = interpretazioneRepository.save(interpretazione);
 
         utente.setQi(utente.getQi() - COSTO_INTERPRETAZIONE);
         utenteRepository.save(utente);
+
+        badgeService.verificaBadge(username);
 
         return salvata.getId();
     }

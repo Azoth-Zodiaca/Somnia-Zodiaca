@@ -17,4 +17,6 @@ public interface InventarioCosmeticoRepository extends JpaRepository<InventarioC
     List<InventarioCosmetico> findByUtenteIdAndEquipaggiatoTrue(Long utenteId);
 
     void deleteByUtente(Utente utente);
+
+    long countByUtente_Id(Long utenteId);
 }
