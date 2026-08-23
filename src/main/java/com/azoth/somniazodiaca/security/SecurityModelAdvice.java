@@ -88,4 +88,50 @@ public class SecurityModelAdvice {
                 .map(UtenteDetail::getUsername)
                 .orElse("");
     }
+
+    @ModelAttribute("segnoZodiacale")
+    public String segnoZodiacale(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "";
+        }
+
+        return utenteService.findByUsername(authentication.getName())
+                .map(UtenteDetail::getSegnoZodiacale)
+                .map(segno -> segno.getSegnoZodiacale().name())
+                .orElse("Segno non impostato");
+    }
+
+    @ModelAttribute("profiloColore")
+    public String profiloColore(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "#F97316";
+        }
+
+        return utenteService.findByUsername(authentication.getName())
+                .map(UtenteDetail::getProfiloColore)
+                .orElse("#F97316");
+    }
+
+    @ModelAttribute("profiloColoreClasse")
+    public String profiloColoreClasse(Authentication authentication) {
+        if (authentication == null || !authentication.isAuthenticated()) {
+            return "profile-color-orange";
+        }
+
+        return utenteService.findByUsername(authentication.getName())
+                .map(UtenteDetail::getProfiloColore)
+                .map(this::classeColore)
+                .orElse("profile-color-orange");
+    }
+
+    private String classeColore(String colore) {
+        return switch (colore) {
+            case "#F97316" -> "profile-color-orange";
+            case "#E11D48" -> "profile-color-red";
+            case "#16A34A" -> "profile-color-green";
+            case "#2563EB" -> "profile-color-blue";
+            case "#9333EA" -> "profile-color-purple";
+            default -> "profile-color-orange";
+        };
+    }
 }

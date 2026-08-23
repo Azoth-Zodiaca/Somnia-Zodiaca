@@ -69,6 +69,9 @@ public class Utente extends BaseEntity {
     @Column(name = "ultima_ricompensa_giornaliera")
     private LocalDate ultimaRicompensaGiornaliera;
 
+    @Column(name = "profilo_colore", nullable = false, length = 7)
+    private String profiloColore;
+
     @OneToOne(mappedBy = "utente", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.LAZY)
     private TemaNatale temaNatale;
 }

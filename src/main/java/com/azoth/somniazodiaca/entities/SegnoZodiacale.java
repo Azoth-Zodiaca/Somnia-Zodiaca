@@ -34,7 +34,7 @@ public class SegnoZodiacale extends BaseEntity {
     private SegnoZodiacaleEnum segnoZodiacale;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "modalita", nullable = false, unique = true)
+    @Column(name = "modalita", nullable = false)
     private Modalita modalita;
 
     @Column(name = "descrizione", columnDefinition = "TEXT")

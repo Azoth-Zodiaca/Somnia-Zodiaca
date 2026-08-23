@@ -1024,7 +1024,10 @@ h4 {
 .profile-banner {
   height: 160px;
   border-radius: var(--radius-md);
-  background: var(--gradient-gold);
+  background:
+    linear-gradient(115deg,
+      color-mix(in srgb, var(--profile-color) 65%, white),
+      var(--profile-color));
   position: relative;
   margin-bottom: 54px;
 }
@@ -1033,7 +1036,7 @@ h4 {
   width: 92px;
   height: 92px;
   border-radius: 50%;
-  background: var(--gradient-gold);
+  background-color: var(--profile-color);
   border: 4px solid var(--bg-body);
   position: absolute;
   left: 24px;
@@ -1044,6 +1047,42 @@ h4 {
   font-size: 34px;
   font-weight: 700;
   color: #1a1205;
+}
+
+.profile-color-orange {
+  --profile-color: #f97316;
+  --profile-color-light: #fbbf24;
+}
+
+.profile-color-red {
+  --profile-color: #e11d48;
+  --profile-color-light: #fb7185;
+}
+
+.profile-color-green {
+  --profile-color: #16a34a;
+  --profile-color-light: #4ade80;
+}
+
+.profile-color-blue {
+  --profile-color: #2563eb;
+  --profile-color-light: #60a5fa;
+}
+
+.profile-color-purple {
+  --profile-color: #9333ea;
+  --profile-color-light: #c084fc;
+}
+
+.avatar,
+.profile-avatar-lg {
+  background-color: var(--profile-color);
+}
+
+.profile-banner {
+  background: linear-gradient(115deg,
+      var(--profile-color-light),
+      var(--profile-color));
 }
 
 .profile-header-info {

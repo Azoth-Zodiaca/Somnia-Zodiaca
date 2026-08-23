@@ -23,6 +23,9 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .ruolo(d.getRuolo())
                 .qi(d.getQi())
                 .ultimoAccesso(d.getUltimoAccesso())
+                .giorniConsecutivi(d.getGiorniConsecutivi())
+                .ultimaRicompensaGiornaliera(d.getUltimaRicompensaGiornaliera())
+                .profiloColore(d.getProfiloColore())
                 .build();
 
         if (d.getSegnoZodiacale() != null) {
@@ -50,8 +53,8 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .qi(e.getQi())
                 .ultimoAccesso(e.getUltimoAccesso())
                 .giorniConsecutivi(e.getGiorniConsecutivi())
-                .ultimaRicompensaGiornaliera(
-                        e.getUltimaRicompensaGiornaliera())
+                .ultimaRicompensaGiornaliera(e.getUltimaRicompensaGiornaliera())
+                .profiloColore(e.getProfiloColore())
                 .build();
 
         if (e.getSegnoZodiacale() != null) {

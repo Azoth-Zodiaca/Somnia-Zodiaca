@@ -19,6 +19,8 @@ document.addEventListener("DOMContentLoaded", function () {
   initDeleteAccountConfirmation();
   initHistoryButtons();
   initSvuotaOracolo();
+  aggiornaScadenze();
+  setInterval(aggiornaScadenze, 60000);
 });
 
 // controllo della forza della password nella pagina di registrazione
@@ -245,16 +247,54 @@ function initSvuotaOracolo() {
 
     if (saveMessage) {
       saveMessage.textContent = "";
+      saveMessage.hidden = false;
     }
 
     textarea.focus();
   });
 }
 
+function testoScadenza(scadenza) {
+  var differenza =
+    new Date(scadenza).getTime() - Date.now();
+
+  if (differenza <= 0) {
+    return "Scaduta";
+  }
+
+  var minuti = Math.ceil(differenza / 60000);
+  var ore = Math.floor(minuti / 60);
+  var minutiRestanti = minuti % 60;
+
+  if (ore > 0 && minutiRestanti > 0) {
+    return "Scade tra " + ore + " ore e " +
+      minutiRestanti + " minuti";
+  }
+
+  if (ore > 0) {
+    return "Scade tra " + ore +
+      (ore === 1 ? " ora" : " ore");
+  }
+
+  return "Scade tra " + minuti +
+    (minuti === 1 ? " minuto" : " minuti");
+}
+
+function aggiornaScadenze() {
+  document.querySelectorAll(
+    ".history-status span[data-scadenza]"
+  ).forEach(function (statusText) {
+    statusText.textContent = testoScadenza(
+      statusText.getAttribute("data-scadenza")
+    );
+  });
+}
+
 function aggiungiInterpretazioneAllaLista(
   testoSogno,
   testoInterpretazione,
-  interpretazioneId
+  interpretazioneId,
+  scadenza
 ) {
   var history = document.getElementById("oracolo-history");
   var emptyMessage = document.getElementById("history-empty");
@@ -280,7 +320,8 @@ function aggiungiInterpretazioneAllaLista(
 
   var statusText = document.createElement("span");
   statusText.className = "status-temporary";
-  statusText.textContent = "Valida 48 ore";
+  statusText.setAttribute("data-scadenza", scadenza);
+  statusText.textContent = testoScadenza(scadenza);
 
   status.appendChild(statusText);
 
@@ -292,6 +333,9 @@ function aggiungiInterpretazioneAllaLista(
   button.type = "button";
   button.className = "history-open";
   button.textContent = "Leggi";
+  button.dataset.interpretazioneId = interpretazioneId;
+  button.dataset.permanente = "false";
+  button.dataset.scadenza = scadenza;
 
   button.addEventListener("click", function () {
     var resultBox = document.getElementById("risultato-oracolo");
@@ -443,10 +487,15 @@ function initOracoloForm() {
 
       resultBox.dataset.interpretazioneId = savedInterpretationId;
 
+      var scadenza = new Date(
+        Date.now() + 48 * 60 * 60 * 1000
+      ).toISOString();
+
       aggiungiInterpretazioneAllaLista(
         dream,
         generatedInterpretation,
-        savedInterpretationId
+        savedInterpretationId,
+        scadenza
       );
 
       if (saveMessage) {
@@ -504,6 +553,8 @@ function initOracoloForm() {
         saveMessage.textContent = message;
         saveButton.textContent = "Interpretazione salvata";
         saveButton.disabled = true;
+        saveButton.hidden = true;
+        saveButton.classList.add("is-hidden");
 
         var historyItem = document.querySelector(
           '.history-item[data-interpretazione-id="' +
@@ -547,6 +598,19 @@ function initHistoryButtons() {
         "data-interpretazione-id"
       );
 
+      var permanente =
+        button.getAttribute("data-permanente") === "true";
+
+      var scadenza = button.getAttribute("data-scadenza");
+      var historyItem = button.closest(".history-item");
+      var statusText = historyItem
+        ? historyItem.querySelector(".history-status span")
+        : null;
+
+      if (!permanente && scadenza && statusText) {
+        statusText.textContent = testoScadenza(scadenza);
+      }
+
       if (!interpretationId) {
         return;
       }
@@ -557,17 +621,29 @@ function initHistoryButtons() {
       var saveButton = document.getElementById("salva-interpretazione");
       var saveMessage = document.getElementById("salvataggio-messaggio");
 
-      if (interpretationId && saveButton) {
-        saveButton.hidden = false;
-        saveButton.style.display = "inline-block";
-        saveButton.disabled = false;
-        saveButton.textContent = "Rendi permanente";
+      if (saveButton) {
+        if (permanente) {
+          saveButton.hidden = true;
+          saveButton.classList.add("is-hidden");
+        } else {
+          saveButton.hidden = false;
+          saveButton.classList.remove("is-hidden");
+          saveButton.disabled = false;
+          saveButton.textContent = "Rendi permanente";
+        }
       }
 
-      if (interpretationId && saveMessage) {
-        saveMessage.textContent =
-          "Questa interpretazione può essere resa permanente.";
+      if (saveMessage) {
+        if (permanente) {
+          saveMessage.textContent = "";
+          saveMessage.hidden = true;
+        } else {
+          saveMessage.textContent =
+            "Questa interpretazione può essere resa permanente.";
+          saveMessage.hidden = false;
+        }
       }
+
       resultText.innerHTML = DOMPurify.sanitize(
         marked.parse(interpretation)
       );

@@ -30,10 +30,11 @@ public class ProfiloController {
         model.addAttribute("username", utente.getUsername());
         model.addAttribute("ruolo", utente.getRuolo());
         model.addAttribute("saldoQI", utente.getQi());
-        model.addAttribute("segnoZodiacale", utente.getSegnoZodiacale());
-        model.addAttribute("ascendente", utente.getAscendente());
+        model.addAttribute("profiloSegnoZodiacale", utente.getSegnoZodiacale());
+        model.addAttribute("profiloAscendente", utente.getAscendente());
         model.addAttribute("dataRegistrazione", utente.getDataRegistrazione());
         model.addAttribute("ultimoAccesso", utente.getUltimoAccesso());
+        model.addAttribute("profiloColore", utente.getProfiloColore());
         return "app/profilo";
     }
 

@@ -1,6 +1,8 @@
 package com.azoth.somniazodiaca.services;
 
+import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.regex.Pattern;
@@ -34,6 +36,9 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     private final TemaNataleRepository temaNataleRepository;
     private final InventarioCosmeticoRepository inventarioCosmeticoRepository;
     private final InterpretazioneRepository interpretazioneRepository;
+
+    private static final SecureRandom RANDOM = new SecureRandom();
+    private static final HexFormat HEX_FORMAT = HexFormat.of();
 
     private static final Pattern PASSWORD_FORTE = Pattern.compile(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$");
@@ -238,9 +243,17 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
                 .email(registrazione.email())
                 .passwordHash(passwordEncoder.encode(registrazione.password()))
                 .ruolo(Ruolo.BASE)
+                .profiloColore(generaColoreProfilo())
                 .build();
 
         return getRepository().save(utente);
+    }
+
+    private String generaColoreProfilo() {
+        byte[] colore = new byte[3];
+        RANDOM.nextBytes(colore);
+
+        return "#" + HEX_FORMAT.formatHex(colore).toUpperCase();
     }
 
 }

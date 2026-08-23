@@ -71,11 +71,24 @@
     </div>
 
     <div class="sidebar-user">
-      <div class="avatar">L</div>
+      <div class="avatar" th:classappend="${' ' + profiloColoreClasse}" th:text="${username != null and !username.isEmpty()
+       ? #strings.toUpperCase(#strings.substring(username, 0, 1))
+       : '?'}">
+        L
+      </div>
       <div>
         <a th:href="@{/app/profilo}">
-          <div class="username">@lunadark</div>
-          <div class="sign">&#9814; Leone</div>
+          <div class="username" th:text="${'@' + username}">
+            @username
+          </div>
+          <div class="sign">
+            <span>&#9814;</span>
+            <span th:if="${segnoZodiacale != null}" th:text="${#strings.capitalize(
+                  #strings.toLowerCase(segnoZodiacale)
+                  )}">
+              Segno non impostato
+            </span>
+          </div>
         </a>
       </div>
     </div>

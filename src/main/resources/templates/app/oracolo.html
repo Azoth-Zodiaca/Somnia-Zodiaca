@@ -42,8 +42,8 @@
                   Permanente
                 </span>
 
-                <span th:unless="${interpretazione.scadenzaCache == null}" class="status-temporary">
-                  Valida 48 ore
+                <span th:unless="${interpretazione.scadenzaCache == null}" class="status-temporary"
+                  th:attr="data-scadenza=${interpretazione.scadenzaCache}" th:text="${'Scade tra 48 ore'}">
                 </span>
               </div>
 
@@ -53,7 +53,9 @@
 
               <button type="button" class="history-open" th:attr="
                   data-interpretazione=${interpretazione.testo},
-                  data-interpretazione-id=${interpretazione.id}">
+                  data-interpretazione-id=${interpretazione.id},
+                  data-permanente=${interpretazione.scadenzaCache == null},
+                  data-scadenza=${interpretazione.scadenzaCache}">
                 Leggi
               </button>
             </article>
