@@ -53,6 +53,14 @@ public class SocialController {
                 "mieInterpretazioni",
                 interpretazioneService.findByUtenteId(utente.getId()));
 
+        model.addAttribute(
+                "feed",
+                postService.findFeed(authentication.getName()));
+
+        model.addAttribute(
+                "feedMioSegno",
+                postService.findFeedMioSegno(authentication.getName()));
+
         return "app/social";
     }
 

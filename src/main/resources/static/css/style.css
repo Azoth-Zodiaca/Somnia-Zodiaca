@@ -1103,11 +1103,9 @@ h4 {
   position: relative;
   margin-bottom: 54px;
   overflow: visible;
-  background: linear-gradient(
-    115deg,
-    var(--profile-color-light),
-    var(--profile-color)
-  );
+  background: linear-gradient(115deg,
+      var(--profile-color-light),
+      var(--profile-color));
 }
 
 .profile-banner-image {
@@ -1501,18 +1499,34 @@ h4 {
   border-color: var(--accent-purple);
 }
 
-.element-filters {
-  display: flex;
-  gap: 8px;
-  margin-bottom: 18px;
+.social-create-post {
+  margin-top: 16px;
 }
 
-.element-filters button {
-  width: 32px;
-  height: 32px;
-  border-radius: 50%;
+.social-create-post textarea {
+  min-height: 90px;
+  resize: vertical;
+  background: var(--bg-input);
+  color: var(--text-primary);
   border: 1px solid var(--border-color);
-  font-size: 14px;
+  border-radius: var(--radius-sm);
+  padding: 10px 12px;
+}
+
+.social-create-post textarea::placeholder {
+  color: var(--text-muted);
+}
+
+.social-create-post textarea:focus {
+  outline: none;
+  border-color: var(--accent-purple);
+  box-shadow: 0 0 0 2px rgba(139, 92, 246, 0.18);
+}
+
+.social-create-post form {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
 }
 
 .post-card {

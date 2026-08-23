@@ -238,12 +238,13 @@ function initSvuotaOracolo() {
   var resultBox = document.getElementById("risultato-oracolo");
   var resultText = document.getElementById("testo-interpretazione");
   var saveButton = document.getElementById("salva-interpretazione");
-  var saveMessage = document.getElementById("salvataggio-messaggio");
+  var shareBox = document.getElementById("condivisione-interpretazione");
 
   if (!button || !textarea) return;
 
   button.addEventListener("click", function () {
     textarea.value = "";
+
 
     if (counter) {
       counter.textContent = "0 / 4000";
@@ -252,6 +253,10 @@ function initSvuotaOracolo() {
     if (resultBox) {
       resultBox.hidden = true;
       resultBox.removeAttribute("data-interpretazione-id");
+    }
+
+    if (shareBox) {
+      shareBox.classList.add("is-hidden");
     }
 
     if (resultText) {
@@ -263,11 +268,6 @@ function initSvuotaOracolo() {
       saveButton.classList.add("is-hidden");
       saveButton.disabled = false;
       saveButton.textContent = "Salva interpretazione - 20 QI";
-    }
-
-    if (saveMessage) {
-      saveMessage.textContent = "";
-      saveMessage.hidden = false;
     }
 
     textarea.focus();
@@ -361,10 +361,11 @@ function aggiungiInterpretazioneAllaLista(
     var resultBox = document.getElementById("risultato-oracolo");
     var resultText = document.getElementById("testo-interpretazione");
     var saveButton = document.getElementById("salva-interpretazione");
-    var saveMessage = document.getElementById("salvataggio-messaggio");
 
     resultBox.hidden = false;
     resultBox.dataset.interpretazioneId = interpretazioneId;
+
+    mostraFormCondivisione(interpretazioneId);
 
     resultText.innerHTML = DOMPurify.sanitize(
       marked.parse(testoInterpretazione)
@@ -374,16 +375,12 @@ function aggiungiInterpretazioneAllaLista(
       saveButton.hidden = false;
       saveButton.style.display = "inline-block";
       saveButton.disabled = false;
-      saveButton.textContent = "Rendi permanente";
-    }
-
-    if (saveMessage) {
-      saveMessage.textContent = "Questa interpretazione scade tra 48 ore.";
+      saveButton.textContent = "Salva interpretazione - 20 QI";
     }
   });
 
-  item.appendChild(status);
   item.appendChild(date);
+  item.appendChild(status);
   item.appendChild(dream);
   item.appendChild(button);
 
@@ -406,7 +403,6 @@ function initOracoloForm() {
   var resultBox = document.getElementById("risultato-oracolo");
   var resultText = document.getElementById("testo-interpretazione");
   var saveButton = document.getElementById("salva-interpretazione");
-  var saveMessage = document.getElementById("salvataggio-messaggio");
 
   if (!form || !textarea || !resultBox || !resultText) return;
 
@@ -444,10 +440,6 @@ function initOracoloForm() {
     if (saveButton) {
       saveButton.hidden = true;
       saveButton.classList.add("is-hidden");
-    }
-
-    if (saveMessage) {
-      saveMessage.textContent = "";
     }
 
     generatedInterpretation = "";
@@ -505,6 +497,8 @@ function initOracoloForm() {
 
       savedInterpretationId = Number(await saveResponse.text());
 
+      mostraFormCondivisione(savedInterpretationId);
+
       resultBox.dataset.interpretazioneId = savedInterpretationId;
 
       var scadenza = new Date(
@@ -517,10 +511,6 @@ function initOracoloForm() {
         savedInterpretationId,
         scadenza
       );
-
-      if (saveMessage) {
-        saveMessage.textContent = "Salvata automaticamente per 48 ore.";
-      }
 
       if (saveButton) {
         saveButton.removeAttribute("hidden");
@@ -544,13 +534,7 @@ function initOracoloForm() {
         resultBox.dataset.interpretazioneId
       );
 
-      if (!interpretationId) {
-        saveMessage.textContent = "Interpretazione non ancora salvata.";
-        return;
-      }
-
       saveButton.disabled = true;
-      saveMessage.textContent = "Salvataggio permanente in corso...";
 
       try {
         var response = await fetch("/app/oracolo/rendi-permanente", {
@@ -570,7 +554,6 @@ function initOracoloForm() {
           throw new Error(message);
         }
 
-        saveMessage.textContent = message;
         saveButton.textContent = "Interpretazione salvata";
         saveButton.disabled = true;
         saveButton.hidden = true;
@@ -588,12 +571,19 @@ function initOracoloForm() {
           if (statusText) {
             statusText.className = "status-permanent";
             statusText.textContent = "Permanente";
+            statusText.removeAttribute("data-scadenza");
+          }
+
+          var historyButton = historyItem.querySelector(".history-open");
+
+          if (historyButton) {
+            historyButton.dataset.permanente = "true";
+            historyButton.removeAttribute("data-scadenza");
           }
         }
 
       } catch (error) {
         console.error(error);
-        saveMessage.textContent = "Salvataggio permanente non riuscito.";
         saveButton.disabled = false;
       }
     });
@@ -638,8 +628,9 @@ function initHistoryButtons() {
       resultBox.hidden = false;
       resultBox.dataset.interpretazioneId = interpretationId;
 
+      mostraFormCondivisione(interpretationId);
+
       var saveButton = document.getElementById("salva-interpretazione");
-      var saveMessage = document.getElementById("salvataggio-messaggio");
 
       if (saveButton) {
         if (permanente) {
@@ -649,18 +640,7 @@ function initHistoryButtons() {
           saveButton.hidden = false;
           saveButton.classList.remove("is-hidden");
           saveButton.disabled = false;
-          saveButton.textContent = "Rendi permanente";
-        }
-      }
-
-      if (saveMessage) {
-        if (permanente) {
-          saveMessage.textContent = "";
-          saveMessage.hidden = true;
-        } else {
-          saveMessage.textContent =
-            "Questa interpretazione può essere resa permanente.";
-          saveMessage.hidden = false;
+          saveButton.textContent = "Salva interpretazione - 20 QI";
         }
       }
 
@@ -674,6 +654,25 @@ function initHistoryButtons() {
       });
     });
   });
+}
+
+function mostraFormCondivisione(interpretazioneId) {
+  var formBox = document.getElementById("condivisione-interpretazione");
+  var hiddenId = document.getElementById(
+    "condivisione-interpretazione-id"
+  );
+  var testoPost = document.getElementById("testo-post");
+
+  if (!formBox || !hiddenId) {
+    return;
+  }
+
+  hiddenId.value = interpretazioneId;
+  formBox.classList.remove("is-hidden");
+
+  if (testoPost) {
+    testoPost.value = "";
+  }
 }
 
 /* ---------------------------------------------------------

@@ -144,7 +144,27 @@
                 Salva interpretazione - 20 QI
               </button>
 
-              <p id="salvataggio-messaggio" class="text-muted"></p>
+              <div id="condivisione-interpretazione" class="social-create-post is-hidden">
+
+                <h3>Condividi questa interpretazione</h3>
+
+                <form method="post" th:action="@{/app/social/post}">
+                  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                  <input type="hidden" id="condivisione-interpretazione-id" name="interpretazioneId">
+
+                  <label for="testo-post">
+                    Descrizione
+                  </label>
+
+                  <textarea id="testo-post" name="testoVisibile" maxlength="1000" required
+                    placeholder="Aggiungi un pensiero su questa interpretazione..."></textarea>
+
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    Pubblica nella community
+                  </button>
+                </form>
+              </div>
             </div>
           </section>
 
