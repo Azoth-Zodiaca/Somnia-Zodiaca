@@ -10,11 +10,9 @@ document.addEventListener("DOMContentLoaded", function () {
   initSidebarToggle();
   initTabs();
   initChipSelectors();
-  initShopCategories();
   initOracoloCounter();
   initOracoloForm();
   initLikeButtons();
-  initInventoryEquip();
   initSettingsMenu();
   initDeleteAccountConfirmation();
   initHistoryButtons();
@@ -517,7 +515,9 @@ function initOracoloForm() {
         throw new Error(await saveResponse.text());
       }
 
-      savedInterpretationId = Number(await saveResponse.text());
+      var saveData = await saveResponse.json();
+      savedInterpretationId = Number(saveData.id);
+      aggiornaSaldoQi(saveData.qi);
 
       mostraFormCondivisione(savedInterpretationId);
 
@@ -570,13 +570,15 @@ function initOracoloForm() {
           })
         });
 
-        var message = await response.text();
+        var responseData = await response.json();
 
         if (!response.ok) {
-          throw new Error(message);
+          throw new Error("Impossibile rendere permanente l'interpretazione.");
         }
 
-        saveButton.textContent = "Interpretazione salvata";
+        aggiornaSaldoQi(responseData.qi);
+
+        saveButton.textContent = "Interpretazione permanente";
         saveButton.disabled = true;
         saveButton.hidden = true;
         saveButton.classList.add("is-hidden");
@@ -662,7 +664,7 @@ function initHistoryButtons() {
           saveButton.hidden = false;
           saveButton.classList.remove("is-hidden");
           saveButton.disabled = false;
-          saveButton.textContent = "Salva interpretazione - 20 QI";
+          saveButton.textContent = "Rendi permanente - 20 QI";
         }
       }
 
@@ -694,6 +696,14 @@ function mostraFormCondivisione(interpretazioneId) {
 
   if (testoPost) {
     testoPost.value = "";
+  }
+}
+
+function aggiornaSaldoQi(qi) {
+  var saldo = document.getElementById("saldo-qi");
+
+  if (saldo && Number.isFinite(Number(qi))) {
+    saldo.textContent = qi;
   }
 }
 

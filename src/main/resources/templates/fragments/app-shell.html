@@ -6,7 +6,7 @@
      di menu da evidenziare, es: 'dashboard', 'tema-natale', 'oracolo', 'social',
      'shop', 'inventario', 'wallet', 'progressi', 'impostazioni'.
 
-  2) topbar(pageTitle) -> barra in alto con saluto, ricerca, saldo QI, notifiche.
+  2) topbar(pageTitle) -> barra in alto con saluto e saldo QI.
 
   ESEMPIO DI UTILIZZO in una pagina app/dashboard.html:
 
@@ -112,21 +112,16 @@
     </button>
 
     <div class="greeting">
-      <div class="greeting">
-        <strong id="saluto-orario">Buongiorno</strong>,
-        <strong th:text="${username}">username</strong> &#9789;
-      </div>
-      <div class="topbar-right">
-        <a href="/app/wallet" class="qi-pill" title="Apri il wallet">
-          &#10022;
-          <span th:text="${saldoQi}">0</span>
-          QI
-        </a>
-        <button class="icon-btn" title="Notifiche">
-          &#128276;
-          <span class="dot"></span>
-        </button>
-      </div>
+      <strong id="saluto-orario">Buongiorno</strong>,
+      <strong th:text="${username}">username</strong> &#9789;
+    </div>
+    <div class="topbar-right">
+      <a href="/app/wallet" class="qi-pill" title="Apri il wallet">
+        &#10022;
+        <span id="saldo-qi" th:text="${saldoQi}">0</span>
+        QI
+      </a>
+    </div>
   </header>
 
 </body>

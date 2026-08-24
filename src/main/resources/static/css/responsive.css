@@ -127,8 +127,7 @@ button {
     .dashboard-grid,
     .natal-grid,
     .natal-data-layout,
-    .settings-layout,
-    .auth-page {
+    .settings-layout {
         grid-template-columns: 1fr;
     }
 
@@ -170,6 +169,16 @@ button {
         padding: 20px 14px 40px;
     }
 
+    .login-page,
+    .register-page {
+        padding: 20px 14px;
+    }
+
+    .login-page .auth-form-panel,
+    .register-page .auth-form-panel {
+        padding: 36px 24px;
+    }
+
     .topbar {
         padding: 12px 14px;
     }
@@ -181,11 +190,6 @@ button {
     .qi-pill {
         padding: 7px 9px;
         font-size: 11px;
-    }
-
-    .icon-btn {
-        width: 34px;
-        height: 34px;
     }
 
     h1 {

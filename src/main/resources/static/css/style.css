@@ -59,6 +59,29 @@ body {
   height: 100%;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.38) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.38);
+  border-radius: var(--radius-full);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 72, 153, 0.58);
+}
+
 body {
   background-color: var(--bg-body);
   color: var(--text-primary);
@@ -561,32 +584,13 @@ h4 {
 /* ---------- Pagine di autenticazione / onboarding ---------- */
 .auth-page {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 460px;
 }
 
-.auth-side {
+.login-page {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 40px 60px;
-}
-
-.auth-side .quote {
-  font-family: Georgia, serif;
-  font-size: 30px;
-  max-width: 380px;
-}
-
-.auth-side .quote .italic {
-  font-style: italic;
-  color: var(--accent-purple);
-}
-
-.auth-side .quote-sub {
-  color: var(--text-muted);
-  font-size: 13px;
-  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
 }
 
 .auth-form-panel {
@@ -596,6 +600,35 @@ h4 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.login-page .auth-form-panel {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  width: min(100%, 460px);
+}
+
+.login-page .auth-form-panel .brand {
+  align-self: center;
+  margin-bottom: 44px;
+}
+
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.register-page .auth-form-panel {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  width: min(100%, 460px);
+}
+
+.register-page .auth-form-panel .brand {
+  align-self: center;
+  margin-bottom: 36px;
 }
 
 .auth-form-panel h2 {
@@ -823,28 +856,6 @@ h4 {
   font-size: 13px;
   font-weight: 600;
   color: var(--accent-gold);
-}
-
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--bg-input);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  font-size: 15px;
-}
-
-.icon-btn .dot {
-  position: absolute;
-  top: 6px;
-  right: 7px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-pink);
 }
 
 .app-content {
@@ -1951,23 +1962,9 @@ h4 {
   margin: 0 auto 60px;
 }
 
-.login-copyright {
-  font-size: 12px;
-}
-
-.login-subtitle {
-  margin-top: -14px;
-  margin-bottom: 20px;
-  font-size: 13px;
-}
-
 .login-register-link {
   color: var(--accent-purple);
   font-weight: 600;
-}
-
-.register-copyright {
-  font-size: 12px;
 }
 
 .register-login-link {
