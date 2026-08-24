@@ -142,7 +142,44 @@
           <p class="text-muted">Elenco dei sogni salvati/pubblicati.</p>
         </div>
         <div id="tab-badge" class="js-tab-panel is-hidden">
-          <p class="text-muted">Badge ottenuti (vedi anche pagina Wallet).</p>
+          <div class="card">
+            <div class="card-title">
+              <span>&#127942; I tuoi badge</span>
+              <span class="text-muted"
+                    th:text="${badgeSbloccati + '/' + totaleBadge + ' sbloccati'}">
+                0/0 sbloccati
+              </span>
+            </div>
+          
+            <div class="badge-grid">
+              <div th:each="badge : ${badges}"
+                   class="badge-slot"
+                   th:classappend="${badge.sbloccato} ? ' unlocked' : ''">
+            
+                <div class="badge-icon"
+                     th:text="${badge.sbloccato ? badge.icona : '?'}">
+                  ?
+                </div>
+              
+                <div class="badge-name"
+                     th:text="${badge.nome}">
+                  Nome badge
+                </div>
+              
+                <div class="badge-progress"
+                     th:if="${!badge.sbloccato and badge.soglia != null}"
+                     th:text="${badge.progresso + '/' + badge.soglia}">
+                  0/0
+                </div>
+              
+                <div class="badge-progress"
+                     th:if="${badge.sbloccato}"
+                     th:text="${badge.descrizione}">
+                  Badge ottenuto
+                </div>
+              </div>
+            </div>
+          </div>
         </div>
         <div id="tab-statistiche" class="js-tab-panel is-hidden">
           <p class="text-muted">Grafici/numeri di utilizzo nel tempo.</p>
