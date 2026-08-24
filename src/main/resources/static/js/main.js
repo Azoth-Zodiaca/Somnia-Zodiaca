@@ -922,6 +922,19 @@ function initSettingsMenu() {
     ? activeLink.getAttribute("data-target")
     : null;
 
+  var requestedSection = new URLSearchParams(window.location.search).get("sezione");
+  var requestedLink = requestedSection
+    ? document.querySelector('.settings-menu a[data-target="sezione-' + requestedSection + '"]')
+    : null;
+
+  if (requestedLink) {
+    activeLink = requestedLink;
+    activeTargetId = requestedLink.getAttribute("data-target");
+    links.forEach(function (item) {
+      item.classList.toggle("active", item === requestedLink);
+    });
+  }
+
   sections.forEach(function (section) {
     section.classList.toggle("is-hidden", section.id !== activeTargetId);
   });

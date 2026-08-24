@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: head(title='Premium - Somnia Zodiaca', responsive=false)}"></head>
+<head th:replace="~{fragments/head :: head(title='Premium - Somnia Zodiaca', responsive=true)}"></head>
 <body>
 
   <div th:replace="~{fragments/public-nav :: navbar}"></div>
@@ -8,7 +8,7 @@
   <section class="container pricing-hero">
     <span class="eyebrow">Premium</span>
     <h1>Diventa <span class="highlight">Custode del Cielo</span></h1>
-    <p>Letture illimitate, +500 QI ogni mese, cosmetici esclusivi e nessuna scadenza sui tuoi sogni salvati.</p>
+    <p>Letture illimitate, +500 QI ogni mese e nessuna scadenza sui tuoi sogni salvati.</p>
   </section>
 
   <section class="container">
@@ -42,12 +42,13 @@
         <tr><td>Salvataggio sogni</td><td>20 QI</td><td class="yes">Gratis</td></tr>
         <tr><td>Rigenerazioni letture</td><td>10 QI</td><td class="yes">Illimitate</td></tr>
         <tr><td>QI mensili in regalo</td><td class="no">&#10005;</td><td class="yes">+500 QI/mese</td></tr>
-        <tr><td>Cosmetici esclusivi</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
         <tr><td>Badge Premium</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
         <tr><td>Priorità community</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
       </tbody>
     </table>
   </section>
+
+  <div th:replace="~{fragments/public-footer :: footer}"></div>
 
   <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
 </body>

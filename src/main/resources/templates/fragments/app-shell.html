@@ -19,7 +19,7 @@
   Thymeleaf al controller Spring, basta sostituirli con th:text, per esempio:
      <span th:text="${utente.username}">lunadark</span>
 -->
-<html xmlns:th="http://www.thymeleaf.org">
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 
@@ -47,18 +47,20 @@
         <span class="icon">&#10022;</span> Wallet
       </a>
 
-      <div class="section-gap"></div>
-      <a href="/app/impostazioni" th:classappend="${active == 'impostazioni'} ? 'active' : ''">
-        <span class="icon">&#9881;</span> Impostazioni
-      </a>
     </div>
 
     <!-- Box promozionale premium: mostralo solo se l'utente NON è premium
          (in Spring: th:if="${!utente.premium}") -->
-    <div class="sidebar-promo">
+    <div class="sidebar-promo" sec:authorize="hasAnyRole('BASE', 'ADMIN')">
       <span class="badge badge-premium">Premium</span>
-      <p>Custode del Cielo<br>+500 QI mensili, letture illimitate, cosmetici esclusivi.</p>
-      <a href="/premium">Scopri di più &rarr;</a>
+      <p>Custode del Cielo<br>+500 QI mensili e letture illimitate.</p>
+      <a href="/app/impostazioni?sezione=premium">Scopri di più &rarr;</a>
+    </div>
+
+    <div class="sidebar-settings">
+      <a href="/app/impostazioni" th:classappend="${active == 'impostazioni'} ? 'active' : ''">
+        <span class="icon">&#9881;</span> Impostazioni
+      </a>
     </div>
 
     <div class="sidebar-user">

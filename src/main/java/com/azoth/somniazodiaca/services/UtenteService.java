@@ -97,6 +97,32 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     }
 
     @Transactional
+    public UtenteDetail attivaPremium(String username) {
+        Utente utente = getRepository().findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        if (utente.getRuolo() != Ruolo.BASE) {
+            throw new IllegalStateException("L'abbonamento Premium non è attivabile per questo account");
+        }
+
+        utente.setRuolo(Ruolo.PREMIUM);
+        return getConverter().fromEToD(getRepository().save(utente));
+    }
+
+    @Transactional
+    public UtenteDetail cancellaPremium(String username) {
+        Utente utente = getRepository().findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        if (utente.getRuolo() != Ruolo.PREMIUM) {
+            throw new IllegalStateException("L'account non ha un abbonamento Premium attivo");
+        }
+
+        utente.setRuolo(Ruolo.BASE);
+        return getConverter().fromEToD(getRepository().save(utente));
+    }
+
+    @Transactional
     public void addQi(String username, int quantitaQi) {
         if (quantitaQi <= 0) {
             throw new IllegalArgumentException("La quantità QI deve essere positiva");

@@ -12,15 +12,22 @@
     </a>
     <nav>
       <a href="/">Home</a>
-      <a href="/oracolo-info">Oracolo</a>
       <a href="/enciclopedia">Enciclopedia</a>
-      <a href="/social-info">Community</a>
       <a href="/premium">Premium</a>
     </nav>
-    <div class="nav-actions">
+    <div class="nav-actions" th:if="${#strings.isEmpty(username)}">
       <a href="/login" class="btn btn-outline btn-sm">Accedi</a>
       <a href="/register" class="btn btn-primary btn-sm">Iscriviti</a>
     </div>
+    <a th:unless="${#strings.isEmpty(username)}" href="/app/dashboard" class="public-profile-link"
+      aria-label="Apri la dashboard" title="Apri la dashboard">
+      <span class="public-profile-avatar avatar" th:classappend="${' ' + profiloColoreClasse}">
+        <img th:if="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:src="@{${avatarPath}}"
+          alt="Immagine profilo">
+        <span th:unless="${avatarPath != null and !#strings.isEmpty(avatarPath)}"
+          th:text="${username != null and !username.isEmpty() ? #strings.toUpperCase(#strings.substring(username, 0, 1)) : '?'}">U</span>
+      </span>
+    </a>
   </header>
 </body>
 </html>

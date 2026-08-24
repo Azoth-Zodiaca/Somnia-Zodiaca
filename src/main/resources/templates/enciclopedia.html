@@ -1,6 +1,6 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: head(title='Enciclopedia dello Zodiaco - Somnia Zodiaca', responsive=false)}"></head>
+<head th:replace="~{fragments/head :: head(title='Enciclopedia dello Zodiaco - Somnia Zodiaca', responsive=true)}"></head>
 <body>
   <div th:replace="~{fragments/public-nav :: navbar}"></div>
 
@@ -38,6 +38,8 @@
       <div class="zodiac-item">&#128167; Acqua</div>
     </div>
   </section>
+
+  <div th:replace="~{fragments/public-footer :: footer}"></div>
 
   <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
 </body>
