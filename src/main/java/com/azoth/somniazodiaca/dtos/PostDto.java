@@ -1,6 +1,7 @@
 package com.azoth.somniazodiaca.dtos;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -23,6 +24,7 @@ public class PostDto implements GenericDto {
     private Integer numeroLike;
 
     private Integer numeroCommenti;
+    private List<CommentoDto> commenti;
 
     private String username;
     private boolean premium;

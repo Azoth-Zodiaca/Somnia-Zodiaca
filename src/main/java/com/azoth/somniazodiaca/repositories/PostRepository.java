@@ -12,6 +12,15 @@ import com.azoth.somniazodiaca.entities.Utente;
 
 public interface PostRepository extends JpaRepository<Post, Long> {
 
+    @EntityGraph(attributePaths = {
+            "utente",
+            "utente.segnoZodiacale",
+            "utente.ascendente",
+            "interpretazione",
+            "interpretazione.sogno",
+            "commenti",
+            "commenti.utente"
+    })
     List<Post> findByUtenteIdOrderByDataPubblicazioneDesc(Long utenteId);
 
     void deleteByUtente(Utente utente);
@@ -24,7 +33,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "utente.ascendente",
             "interpretazione",
             "interpretazione.sogno",
-            "commenti"
+            "commenti",
+            "commenti.utente"
     })
     List<Post> findAllByOrderByDataPubblicazioneDesc();
 
@@ -34,7 +44,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "utente.ascendente",
             "interpretazione",
             "interpretazione.sogno",
-            "commenti"
+            "commenti",
+            "commenti.utente"
     })
     List<Post> findByUtenteSegnoZodiacaleIdOrderByDataPubblicazioneDesc(
             Long segnoZodiacaleId);
@@ -45,7 +56,8 @@ public interface PostRepository extends JpaRepository<Post, Long> {
             "utente.ascendente",
             "interpretazione",
             "interpretazione.sogno",
-            "commenti"
+            "commenti",
+            "commenti.utente"
     })
     @Query("""
             SELECT p

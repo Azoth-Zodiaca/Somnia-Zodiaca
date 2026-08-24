@@ -129,14 +129,14 @@
 
             <!-- Risultato dell'interpretazione: mostralo solo dopo l'invio
                (in Spring: th:if="${interpretazione != null}") -->
-            <div class="card mt-20" id="risultato-oracolo" hidden>
+            <div class="card mt-20 oracolo-result" id="risultato-oracolo" hidden>
               <div class="card-title">
                 <span>&#10022; Interpretazione</span>
               </div>
 
-              <p id="testo-interpretazione" class="text-muted"></p>
+              <p id="testo-interpretazione" class="oracolo-result-text"></p>
 
-              <button id="salva-interpretazione" type="button" class="btn btn-primary btn-sm" hidden>
+              <button id="salva-interpretazione" type="button" class="btn btn-primary btn-sm oracolo-save-button" hidden>
                 Rendi permanente - 20 QI
               </button>
 
@@ -156,7 +156,7 @@
                   <textarea id="testo-post" name="testoVisibile" maxlength="1000" required
                     placeholder="Aggiungi un pensiero su questa interpretazione..."></textarea>
 
-                  <button type="submit" class="btn btn-primary btn-sm">
+                  <button id="pubblica-interpretazione" type="submit" class="btn btn-primary btn-sm" disabled>
                     Pubblica nella community
                   </button>
                 </form>

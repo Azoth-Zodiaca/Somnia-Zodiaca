@@ -807,6 +807,122 @@ WHERE
             testo_visibile = 'A volte bisogna solo avere il coraggio di salire sul palco.'
     );
 
+-- Aggiunge commenti demo ai post per testare la sezione Social
+INSERT INTO commenti (
+        post_id,
+        utente_id,
+        testo,
+        created_at,
+        updated_at
+)
+SELECT
+        p.id,
+        @marco_id,
+        'Mi e capitato qualcosa di simile: questo sogno fa riflettere molto.',
+        NOW() - INTERVAL 90 MINUTE,
+        NOW() - INTERVAL 90 MINUTE
+FROM post p
+WHERE p.testo_visibile = 'Non riesco a smettere di pensare a questo sogno.'
+    AND NOT EXISTS (
+            SELECT 1
+            FROM commenti c
+            WHERE c.post_id = p.id
+                AND c.utente_id = @marco_id
+                AND c.testo = 'Mi e capitato qualcosa di simile: questo sogno fa riflettere molto.'
+    );
+
+INSERT INTO commenti (
+        post_id,
+        utente_id,
+        testo,
+        created_at,
+        updated_at
+)
+SELECT
+        p.id,
+        @giulia_id,
+        'La fiducia nel percorso si sente davvero in queste parole.',
+        NOW() - INTERVAL 70 MINUTE,
+        NOW() - INTERVAL 70 MINUTE
+FROM post p
+WHERE p.testo_visibile = 'Non riesco a smettere di pensare a questo sogno.'
+    AND NOT EXISTS (
+            SELECT 1
+            FROM commenti c
+            WHERE c.post_id = p.id
+                AND c.utente_id = @giulia_id
+                AND c.testo = 'La fiducia nel percorso si sente davvero in queste parole.'
+    );
+
+INSERT INTO commenti (
+        post_id,
+        utente_id,
+        testo,
+        created_at,
+        updated_at
+)
+SELECT
+        p.id,
+        @sofia_id,
+        'Che bella immagine, sembra un invito a guardare avanti.',
+        NOW() - INTERVAL 55 MINUTE,
+        NOW() - INTERVAL 55 MINUTE
+FROM post p
+WHERE p.testo_visibile = 'Mi sono svegliato con una grande energia addosso.'
+    AND NOT EXISTS (
+            SELECT 1
+            FROM commenti c
+            WHERE c.post_id = p.id
+                AND c.utente_id = @sofia_id
+                AND c.testo = 'Che bella immagine, sembra un invito a guardare avanti.'
+    );
+
+INSERT INTO commenti (
+        post_id,
+        utente_id,
+        testo,
+        created_at,
+        updated_at
+)
+SELECT
+        p.id,
+        @ely_id,
+        'Mi piace il significato di crescita che emerge da questo sogno.',
+        NOW() - INTERVAL 40 MINUTE,
+        NOW() - INTERVAL 40 MINUTE
+FROM post p
+WHERE p.testo_visibile = 'Mi sono svegliato con una grande energia addosso.'
+    AND NOT EXISTS (
+            SELECT 1
+            FROM commenti c
+            WHERE c.post_id = p.id
+                AND c.utente_id = @ely_id
+                AND c.testo = 'Mi piace il significato di crescita che emerge da questo sogno.'
+    );
+
+INSERT INTO commenti (
+        post_id,
+        utente_id,
+        testo,
+        created_at,
+        updated_at
+)
+SELECT
+        p.id,
+        @sofia_id,
+        'A volte condividere queste sensazioni aiuta a capirle meglio.',
+        NOW() - INTERVAL 25 MINUTE,
+        NOW() - INTERVAL 25 MINUTE
+FROM post p
+WHERE p.testo_visibile = 'Non pensavo di sentirmi cosi sicura nel sogno.'
+    AND NOT EXISTS (
+            SELECT 1
+            FROM commenti c
+            WHERE c.post_id = p.id
+                AND c.utente_id = @sofia_id
+                AND c.testo = 'A volte condividere queste sensazioni aiuta a capirle meglio.'
+    );
+
 COMMIT;
 
 -- Controllo finale
