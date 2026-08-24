@@ -233,45 +233,9 @@
           </div>
 
           <!-- Analisi AI in fondo alla pagina Riepilogo -->
-          <div class="card mt-20">
-            <div class="card-title">
-              <span>&#10022; Analisi AI</span>
-              <div class="flex gap-8">
-                <span class="text-muted natal-analysis-date">Ultima: 3 gg fa</span>
-                <button class="btn btn-ghost btn-sm">Rigenera -30 QI</button>
-              </div>
-            </div>
-            <div class="ai-analysis-layout">
-              <div class="ai-tabs">
-                <button class="active">Sintesi</button>
-                <button>Personalità</button>
-                <button>Relazioni</button>
-                <button>Carriera</button>
-                <button>Ombre</button>
-                <button>Consigli</button>
-              </div>
-              <div class="ai-analysis-text">
-                <!-- Testo generato dall'AI: in Spring th:utext="${analisiAi.sintesi}"
-                     (attenzione a sanificare l'HTML se proviene da un modello AI) -->
-                <p>Il tuo Sole in Leone in decima casa parla di vocazione visibile: sei costruito per essere visto, ma
-                  non superficialmente — c'è un'esigenza autentica di lasciare traccia. L'Ascendente in Scorpione
-                  aggiunge magnetismo silenzioso: entri nelle stanze senza fare rumore, ma vieni notata comunque.</p>
-                <p>La Luna in Acquario in sesta casa suggerisce una vita quotidiana anticonvenzionale, che rifiuta il
-                  ruolo di serva della routine. Ti nutre l'innovazione applicata alle piccole cose, non le rivoluzioni
-                  astratte.</p>
-              </div>
-            </div>
-            <div class="flex gap-8 mt-20">
-              <button class="btn btn-ghost btn-sm">Copia</button>
-              <button class="btn btn-ghost btn-sm">&#8681; PDF</button>
-              <button class="btn btn-ghost btn-sm">&#8599; Condividi</button>
-              <div class="card mt-20" th:if="${interpretazione != null}">
-                <div class="card-title">Interpretazione del tema</div>
-                <div class="ai-analysis-text" th:text="${interpretazione}">
-                  Interpretazione non ancora disponibile.
-                </div>
-              </div>
-            </div>
+          <div class="card mt-20" th:if="${interpretazione != null}">
+            <div class="card-title">Interpretazione del tema</div>
+            <div class="ai-analysis-text" th:text="${interpretazione}"></div>
           </div>
         </div>
 

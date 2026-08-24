@@ -2196,13 +2196,6 @@ h4 {
   text-align: right;
 }
 
-.natal-data-layout {
-  display: grid;
-  grid-template-columns: minmax(280px, 1fr) minmax(320px, 1.4fr);
-  gap: 18px;
-  align-items: start;
-}
-
 /* Allineamento contenuti pagina Social */
 .social-title {
   text-align: center;
@@ -2275,10 +2268,12 @@ h4 {
   }
 }
 
-@media (max-width: 760px) {
-  .natal-data-layout {
-    grid-template-columns: 1fr;
-  }
+.natal-summary-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(360px, 1.4fr);
+  gap: 18px;
+  margin-bottom: 20px;
+  align-items: start;
 }
 
 .natal-card-subtitle {
@@ -2299,19 +2294,11 @@ h4 {
   gap: 6px;
 }
 
-.natal-data-layout {
-  display: grid;
-  grid-template-columns: minmax(260px, 0.85fr) minmax(380px, 1.5fr);
-  gap: 18px;
-  align-items: start;
-  margin-bottom: 20px;
-}
-
-.natal-summary-column {
-  display: flex;
-  flex-direction: column;
-  gap: 18px;
-  min-width: 0;
+.natal-planet-symbol {
+  width: 20px;
+  color: var(--accent-gold);
+  font-size: 17px;
+  text-align: center;
 }
 
 .natal-birth-card,
@@ -2355,26 +2342,6 @@ h4 {
   color: #c7d2e3;
 }
 
-.sign-symbol {
-  color: #7772a8;
-  font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif;
-  font-variant-emoji: text;
-}
-
-/* .sign-symbol {
-  color: var(--accent-purple);
-} */
-
-@media (max-width: 760px) {
-  .natal-data-layout {
-    grid-template-columns: 1fr;
-  }
-
-  .natal-planet-position {
-    text-align: right;
-  }
-}
-
 .planet-row {
   display: grid;
   grid-template-columns: minmax(130px, 1fr) minmax(150px, 1.2fr) 70px 90px 100px;
@@ -2392,23 +2359,123 @@ h4 {
   color: var(--text-secondary);
 }
 
+.natal-planets-card {
+  min-width: 0;
+  height: 100%;
+}
+
 .natal-data-layout {
   display: grid;
-  grid-template-columns: minmax(280px, 0.85fr) minmax(480px, 1.5fr);
+  grid-template-columns: minmax(280px, 0.82fr) minmax(520px, 1.5fr);
   gap: 20px;
   align-items: stretch;
+  width: 100%;
+  margin-bottom: 20px;
 }
 
 .natal-summary-column {
-  display: grid;
-  grid-template-rows: auto 1fr;
+  display: flex;
+  flex-direction: column;
   gap: 18px;
   min-width: 0;
+  height: 100%;
+}
+
+.natal-triad-card {
+  margin-top: auto;
 }
 
 .natal-planets-card {
   min-width: 0;
+  width: 100%;
   height: 100%;
+}
+
+.planet-row {
+  display: grid;
+  grid-template-columns:
+    minmax(150px, 1.15fr) minmax(145px, 1.2fr) 58px 88px 92px;
+  gap: 12px;
+  align-items: center;
+  min-height: 38px;
+  padding: 7px 0;
+  border-bottom: 1px solid var(--border-color);
+  font-size: 13px;
+}
+
+.planet-row:last-child {
+  border-bottom: none;
+}
+
+.planet-row-header {
+  min-height: 24px;
+  padding-top: 0;
+  color: var(--text-muted);
+  font-size: 10px;
+  letter-spacing: 0.5px;
+  text-transform: uppercase;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.natal-planet-name,
+.planet-sign,
+.planet-house,
+.planet-angle,
+.planet-retrograde {
+  min-width: 0;
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.planet-sign,
+.planet-house,
+.planet-angle,
+.planet-retrograde {
+  color: var(--text-secondary);
+}
+
+.planet-house,
+.planet-angle,
+.planet-retrograde {
+  justify-content: flex-end;
+  text-align: right;
+}
+
+.planet-angle,
+.planet-retrograde {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.planet-retrograde {
+  white-space: nowrap;
+}
+
+.planet-symbol,
+.sign-symbol {
+  width: 20px;
+  min-width: 20px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif;
+  font-size: 16px;
+  line-height: 1;
+  font-variant-emoji: text;
+}
+
+.sun-symbol,
+.planet-row .planet-symbol:first-child {
+  color: var(--accent-gold);
+}
+
+.moon-symbol {
+  color: #c7d2e3;
+}
+
+.sign-symbol {
+  color: #7772a8;
 }
 
 @media (max-width: 1000px) {
@@ -2418,5 +2485,18 @@ h4 {
 
   .natal-planets-card {
     height: auto;
+  }
+}
+
+@media (max-width: 680px) {
+  .planet-row {
+    grid-template-columns:
+      minmax(120px, 1fr) minmax(120px, 1fr) 46px 70px;
+    gap: 8px;
+  }
+
+  .planet-row-header span:last-child,
+  .planet-retrograde {
+    display: none;
   }
 }
