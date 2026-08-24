@@ -1,10 +1,6 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <title>Privacy - Quicksilver</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
-</head>
+<head th:replace="~{fragments/head :: head(title='Privacy - Quicksilver', responsive=false)}"></head>
 <body>
   <div th:replace="~{fragments/public-nav :: navbar}"></div>
   <section class="container" style="max-width:760px;padding:60px 24px;">

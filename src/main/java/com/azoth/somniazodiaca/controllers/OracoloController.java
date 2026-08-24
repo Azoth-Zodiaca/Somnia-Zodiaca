@@ -1,6 +1,7 @@
 package com.azoth.somniazodiaca.controllers;
 
 import java.util.List;
+import java.util.Map;
 
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
@@ -133,9 +134,9 @@ public class OracoloController {
                                 .append(temaNatale.getLuogoNascita());
         }
 
-        @PostMapping(value = "/app/oracolo/salva", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+        @PostMapping(value = "/app/oracolo/salva", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
         @ResponseBody
-        public String salvaInterpretazione(
+        public Map<String, Object> salvaInterpretazione(
                         @RequestBody SalvaInterpretazioneRequest richiesta,
                         Authentication authentication) {
 
@@ -143,12 +144,16 @@ public class OracoloController {
                                 authentication.getName(),
                                 richiesta);
 
-                return String.valueOf(id);
+                Integer qi = utenteService.findByUsername(authentication.getName())
+                                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"))
+                                .getQi();
+
+                return Map.of("id", id, "qi", qi);
         }
 
-        @PostMapping(value = "/app/oracolo/rendi-permanente", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.TEXT_PLAIN_VALUE)
+        @PostMapping(value = "/app/oracolo/rendi-permanente", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)
         @ResponseBody
-        public String rendiPermanente(
+        public Map<String, Integer> rendiPermanente(
                         @RequestBody RendiPermanenteRequest richiesta,
                         Authentication authentication) {
 
@@ -156,6 +161,10 @@ public class OracoloController {
                                 authentication.getName(),
                                 richiesta.interpretazioneId());
 
-                return "Interpretazione resa permanente";
+                Integer qi = utenteService.findByUsername(authentication.getName())
+                                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"))
+                                .getQi();
+
+                return Map.of("qi", qi);
         }
 }

@@ -1,11 +1,6 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Somnia Zodiaca - Il tuo cielo, i tuoi sogni interpretati</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}" href="../static/css/style.css">
-</head>
+<head th:replace="~{fragments/head :: head(title='Somnia Zodiaca - Il tuo cielo, i tuoi sogni interpretati', responsive=false)}"></head>
 <body>
 
   <!-- Navbar pubblica riutilizzabile -->

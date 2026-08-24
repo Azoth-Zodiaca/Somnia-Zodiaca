@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Social - Somnia Zodiaca</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
-  <link rel="stylesheet" th:href="@{/css/responsive.css}" href="../../static/css/responsive.css">
-</head>
+<head th:replace="~{fragments/head :: head(title='Social - Somnia Zodiaca', responsive=true)}"></head>
 
 <body>
   <div class="app-layout">
