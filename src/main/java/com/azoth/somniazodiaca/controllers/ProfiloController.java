@@ -1,5 +1,6 @@
 package com.azoth.somniazodiaca.controllers;
 
+import java.util.List;
 import org.springframework.http.MediaType;
 import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
@@ -9,16 +10,23 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.azoth.somniazodiaca.dtos.BadgeViewDto;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
+import com.azoth.somniazodiaca.services.BadgeService;
 import com.azoth.somniazodiaca.services.UtenteService;
 
 @Controller
 public class ProfiloController {
 
     private final UtenteService utenteService;
+    private final BadgeService badgeService;
 
-    public ProfiloController(UtenteService utenteService) {
+    public ProfiloController(
+            UtenteService utenteService,
+            BadgeService badgeService) {
+
         this.utenteService = utenteService;
+        this.badgeService = badgeService;
     }
 
     @GetMapping("/profilo")
@@ -41,6 +49,17 @@ public class ProfiloController {
         model.addAttribute("profiloColore", utente.getProfiloColore());
         model.addAttribute("avatarPath", utente.getAvatarPath());
         model.addAttribute("bannerPath", utente.getBannerPath());
+
+        List<BadgeViewDto> badges = badgeService
+                .getProgressi(authentication.getName());
+            
+        long badgeSbloccati = badges.stream()
+                .filter(BadgeViewDto::sbloccato)
+                .count();
+            
+        model.addAttribute("badges", badges);
+        model.addAttribute("badgeSbloccati", badgeSbloccati);
+        model.addAttribute("totaleBadge", badges.size());
         
         return "app/profilo";
     }
