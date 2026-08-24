@@ -813,6 +813,86 @@ button {
     margin: 0 auto;
 }
 
+@media (max-width: 960px) {
+    .social-page {
+        max-width: none;
+        transform: none;
+    }
+
+    .social-feed-column {
+        width: 620px;
+        max-width: 100%;
+    }
+
+    .social-comments-panel {
+        position: static;
+        width: 100%;
+        max-height: 420px;
+        margin-top: 10px;
+    }
+
+    .post-with-comments:has(.social-comments-panel:not(.is-hidden)) {
+        margin-bottom: 20px;
+    }
+
+    .social-following {
+        position: fixed;
+        z-index: 60;
+        top: 50%;
+        right: auto;
+        bottom: auto;
+        left: 50%;
+        width: min(360px, calc(100vw - 32px));
+        max-height: min(420px, calc(100vh - 120px));
+        overflow-y: auto;
+        display: none;
+        transform: translate(-50%, -50%);
+    }
+
+    .social-following.is-open {
+        display: block;
+    }
+
+    .social-following-toggle {
+        display: flex;
+        margin: 0 max(0px, calc((100% - 620px) / 2)) 14px auto;
+        padding: 8px 14px;
+        font-size: 12px;
+    }
+
+    .social-following-close {
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        min-height: 28px;
+        padding: 5px 9px;
+        border-radius: var(--radius-sm);
+        background: var(--bg-input);
+        color: var(--text-secondary);
+        font-size: 11px;
+        font-weight: 600;
+    }
+
+    .social-following-backdrop {
+        position: fixed;
+        z-index: 55;
+        inset: 0;
+        width: 100%;
+        height: 100%;
+        background: rgba(0, 0, 0, 0.6);
+        cursor: default;
+        display: none;
+    }
+
+    .social-following-backdrop.is-open {
+        display: block;
+    }
+
+    body.social-following-open {
+        overflow: hidden;
+    }
+}
+
 .post-card {
     width: 100%;
     max-width: none;
@@ -871,6 +951,35 @@ button {
 }
 
 @media (max-width: 760px) {
+    .oracolo-result {
+        padding: 18px;
+    }
+
+    .oracolo-result-text {
+        font-size: 14px;
+        line-height: 1.65;
+    }
+
+    .social-create-post form .btn {
+        align-self: stretch;
+    }
+
+    .post-user .name {
+        flex-wrap: nowrap;
+        white-space: nowrap;
+    }
+
+    .post-user .name>span:first-child {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+    }
+
+    .post-user .name .social-premium-badge,
+    .post-user .name .social-follow-action {
+        flex-shrink: 0;
+    }
+
     .social-title {
         font-size: 24px;
         margin-bottom: 14px;
@@ -915,8 +1024,9 @@ button {
 
     .post-user .name {
         align-items: flex-start;
-        flex-direction: column;
-        gap: 6px;
+        flex-direction: row;
+        align-items: center;
+        gap: 8px;
     }
 
     .social-follow-action {
@@ -928,7 +1038,7 @@ button {
     }
 
     .social-follow-action .btn {
-        white-space: normal;
+        white-space: nowrap;
         text-align: center;
     }
 

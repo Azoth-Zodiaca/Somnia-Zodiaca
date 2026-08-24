@@ -8,11 +8,13 @@
 
 document.addEventListener("DOMContentLoaded", function () {
   initSidebarToggle();
+  initSocialFollowing();
   initTabs();
   initChipSelectors();
   initOracoloCounter();
   initOracoloForm();
   initLikeButtons();
+  initComments();
   initSettingsMenu();
   initDeleteAccountConfirmation();
   initHistoryButtons();
@@ -145,6 +147,40 @@ function initSidebarToggle() {
   window.addEventListener("resize", function () {
     if (window.innerWidth > 960) {
       setSidebarState(false);
+    }
+  });
+}
+
+function initSocialFollowing() {
+  var toggleBtn = document.getElementById("social-following-toggle");
+  var panel = document.getElementById("social-following-panel");
+  var closeBtn = document.getElementById("social-following-close");
+  var backdrop = document.getElementById("social-following-backdrop");
+
+  if (!toggleBtn || !panel) return;
+
+  function setPanelState(isOpen) {
+    panel.classList.toggle("is-open", isOpen);
+    if (backdrop) backdrop.classList.toggle("is-open", isOpen);
+    document.body.classList.toggle("social-following-open", isOpen);
+    toggleBtn.setAttribute("aria-expanded", String(isOpen));
+  }
+
+  toggleBtn.addEventListener("click", function () {
+    setPanelState(!panel.classList.contains("is-open"));
+  });
+
+  if (closeBtn) closeBtn.addEventListener("click", function () {
+    setPanelState(false);
+  });
+
+  if (backdrop) backdrop.addEventListener("click", function () {
+    setPanelState(false);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && panel.classList.contains("is-open")) {
+      setPanelState(false);
     }
   });
 }
@@ -385,7 +421,7 @@ function aggiungiInterpretazioneAllaLista(
     resultBox.hidden = false;
     resultBox.dataset.interpretazioneId = interpretazioneId;
 
-    mostraFormCondivisione(interpretazioneId);
+    mostraFormCondivisione(interpretazioneId, false);
 
     resultText.innerHTML = DOMPurify.sanitize(
       marked.parse(testoInterpretazione)
@@ -519,7 +555,7 @@ function initOracoloForm() {
       savedInterpretationId = Number(saveData.id);
       aggiornaSaldoQi(saveData.qi);
 
-      mostraFormCondivisione(savedInterpretationId);
+      mostraFormCondivisione(savedInterpretationId, false);
 
       resultBox.dataset.interpretazioneId = savedInterpretationId;
 
@@ -582,6 +618,11 @@ function initOracoloForm() {
         saveButton.disabled = true;
         saveButton.hidden = true;
         saveButton.classList.add("is-hidden");
+
+        var publishButton = document.getElementById("pubblica-interpretazione");
+        if (publishButton) {
+          publishButton.disabled = false;
+        }
 
         var historyItem = document.querySelector(
           '.history-item[data-interpretazione-id="' +
@@ -652,7 +693,7 @@ function initHistoryButtons() {
       resultBox.hidden = false;
       resultBox.dataset.interpretazioneId = interpretationId;
 
-      mostraFormCondivisione(interpretationId);
+      mostraFormCondivisione(interpretationId, permanente);
 
       var saveButton = document.getElementById("salva-interpretazione");
 
@@ -680,12 +721,13 @@ function initHistoryButtons() {
   });
 }
 
-function mostraFormCondivisione(interpretazioneId) {
+function mostraFormCondivisione(interpretazioneId, permanente) {
   var formBox = document.getElementById("condivisione-interpretazione");
   var hiddenId = document.getElementById(
     "condivisione-interpretazione-id"
   );
   var testoPost = document.getElementById("testo-post");
+  var publishButton = document.getElementById("pubblica-interpretazione");
 
   if (!formBox || !hiddenId) {
     return;
@@ -693,6 +735,13 @@ function mostraFormCondivisione(interpretazioneId) {
 
   hiddenId.value = interpretazioneId;
   formBox.classList.remove("is-hidden");
+
+  if (publishButton) {
+    publishButton.disabled = !permanente;
+    publishButton.title = permanente
+      ? "Pubblica nella community"
+      : "Rendi permanente l'interpretazione prima di pubblicarla";
+  }
 
   if (testoPost) {
     testoPost.value = "";
@@ -714,13 +763,118 @@ function aggiornaSaldoQi(qi) {
              <span class="like-count">24</span></button>
 --------------------------------------------------------- */
 function initLikeButtons() {
-  var likeButtons = document.querySelectorAll(".like-btn");
+  var likeForms = document.querySelectorAll("form[data-like-endpoint]");
 
-  likeButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      btn.disabled = true;
+  likeForms.forEach(function (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      var button = form.querySelector(".like-btn");
+      var endpoint = form.dataset.likeEndpoint;
+
+      if (!button || !endpoint) return;
+
+      button.disabled = true;
+
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: new FormData(form)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Like request failed");
+          return response.json();
+        })
+        .then(function (data) {
+          var postId = button.getAttribute("data-post-id");
+          var matchingButtons = document.querySelectorAll(
+            '.like-btn[data-post-id="' + postId + '"]'
+          );
+
+          matchingButtons.forEach(function (matchingButton) {
+            var icon = matchingButton.querySelector(".like-icon");
+            var count = matchingButton.querySelector(".like-count");
+
+            matchingButton.classList.toggle("liked", data.liked);
+            matchingButton.setAttribute("aria-pressed", String(data.liked));
+            if (icon) icon.textContent = data.liked ? "♥" : "♡";
+            if (count) count.textContent = data.count;
+          });
+        })
+        .catch(function () {
+          form.submit();
+        })
+        .finally(function () {
+          button.disabled = false;
+        });
     });
   });
+}
+
+function initComments() {
+  var buttons = document.querySelectorAll(".js-comments-toggle");
+  var panels = document.querySelectorAll(".social-comments-panel");
+  var commentForms = document.querySelectorAll(".social-comment-form");
+
+  commentForms.forEach(function (form) {
+    form.addEventListener("submit", function () {
+      sessionStorage.setItem("social-comment-scroll", String(window.scrollY));
+
+      var commentPanel = form.closest(".social-comments-panel");
+      if (commentPanel) {
+        sessionStorage.setItem("social-comment-panel", commentPanel.id);
+      }
+    });
+  });
+
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      var targetId = button.getAttribute("data-comments-target");
+      var target = document.getElementById(targetId);
+      var isOpen = target && !target.classList.contains("is-hidden");
+
+      panels.forEach(function (panel) {
+        panel.classList.add("is-hidden");
+      });
+      buttons.forEach(function (otherButton) {
+        otherButton.setAttribute("aria-expanded", "false");
+      });
+
+      if (!isOpen && target) {
+        target.classList.remove("is-hidden");
+        button.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+
+  var initialTargetId = window.location.hash.substring(1);
+  var savedPanelId = sessionStorage.getItem("social-comment-panel");
+  if (!initialTargetId && savedPanelId) {
+    initialTargetId = savedPanelId;
+  }
+
+  var initialTarget = document.getElementById(initialTargetId);
+  var initialButton = document.querySelector(
+    '[data-comments-target="' + initialTargetId + '"]'
+  );
+
+  if (initialTarget && initialButton) {
+    initialTarget.classList.remove("is-hidden");
+    initialButton.setAttribute("aria-expanded", "true");
+  }
+
+  var savedScroll = sessionStorage.getItem("social-comment-scroll");
+  if (savedScroll !== null) {
+    sessionStorage.removeItem("social-comment-scroll");
+    sessionStorage.removeItem("social-comment-panel");
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        window.scrollTo(0, Number(savedScroll));
+      });
+    });
+  }
 }
 
 function initInterpretationExpanders() {

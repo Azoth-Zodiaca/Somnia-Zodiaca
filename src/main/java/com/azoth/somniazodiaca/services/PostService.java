@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 
 import com.azoth.somniazodiaca.converters.PostConverter;
 import com.azoth.somniazodiaca.dtos.PostDto;
+import com.azoth.somniazodiaca.entities.Commento;
 import com.azoth.somniazodiaca.entities.LikePost;
 import com.azoth.somniazodiaca.entities.Post;
 import com.azoth.somniazodiaca.entities.Utente;
@@ -15,6 +16,7 @@ import com.azoth.somniazodiaca.repositories.LikePostRepository;
 import com.azoth.somniazodiaca.repositories.PostRepository;
 import com.azoth.somniazodiaca.repositories.UtenteFollowRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
+import com.azoth.somniazodiaca.repositories.CommentoRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -25,6 +27,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
         private final InterpretazioneRepository interpretazioneRepository;
         private final LikePostRepository likePostRepository;
         private final UtenteFollowRepository utenteFollowRepository;
+        private final CommentoRepository commentoRepository;
         private final BadgeService badgeService;
 
         public PostService(
@@ -34,6 +37,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                         InterpretazioneRepository interpretazioneRepository,
                         LikePostRepository likePostRepository,
                         UtenteFollowRepository utenteFollowRepository,
+                        CommentoRepository commentoRepository,
                         BadgeService badgeService) {
 
                 super(repository, converter);
@@ -41,6 +45,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                 this.interpretazioneRepository = interpretazioneRepository;
                 this.likePostRepository = likePostRepository;
                 this.utenteFollowRepository = utenteFollowRepository;
+                this.commentoRepository = commentoRepository;
                 this.badgeService = badgeService;
         }
 
@@ -74,6 +79,11 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                         throw new IllegalArgumentException("L'interpretazione non appartiene all'utente autenticato");
                 }
 
+                if (interpretazione.getScadenzaCache() != null) {
+                        throw new IllegalStateException(
+                                        "Rendi permanente l'interpretazione prima di pubblicarla");
+                }
+
                 Post post = Post.builder()
                                 .utente(utente)
                                 .interpretazione(interpretazione)
@@ -87,7 +97,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
         }
 
         @Transactional
-        public void toggleLike(String username, Long postId) {
+        public LikeResult toggleLike(String username, Long postId) {
                 var utente = utenteRepository.findByUsername(username)
                                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
@@ -117,6 +127,34 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                     badgeService.verificaBadge(
                             post.getUtente().getUsername());
                 }
+
+                return new LikeResult(
+                                likeAggiunto,
+                                post.getNumeroLike());
+        }
+
+        @Transactional
+        public void aggiungiCommento(String username, Long postId, String testo) {
+                if (testo == null || testo.isBlank()) {
+                        throw new IllegalArgumentException("Il commento non può essere vuoto");
+                }
+
+                String testoPulito = testo.trim();
+                if (testoPulito.length() > 500) {
+                        throw new IllegalArgumentException("Il commento non può superare 500 caratteri");
+                }
+
+                Commento commento = Commento.builder()
+                                .post(getRepository().findById(postId)
+                                                .orElseThrow(() -> new IllegalArgumentException("Post non trovato")))
+                                .utente(trovaUtente(username))
+                                .testo(testoPulito)
+                                .build();
+
+                commentoRepository.save(commento);
+        }
+
+        public record LikeResult(boolean liked, int count) {
         }
 
         @Transactional
@@ -182,6 +220,13 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                 return convertiFeed(
                                 getRepository().findFeedSeguiti(follower.getId()),
                                 follower.getId());
+        }
+
+        @Transactional
+        public List<Utente> findSeguiti(String username) {
+                Utente follower = trovaUtente(username);
+
+                return utenteFollowRepository.findSeguitiByFollowerId(follower.getId());
         }
 
         @Transactional
