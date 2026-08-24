@@ -42,7 +42,7 @@ public class TemaNataleViewService {
 
     private PianetaTemaView convertiPianeta(JsonNode pianeta, JsonNode houses) {
         double longitudine = pianeta.path("longitude").asDouble();
-        
+
         String segno = segnoDaLongitudine(longitudine);
         int casa = casaDi(longitudine, houses);
 
@@ -178,18 +178,18 @@ public class TemaNataleViewService {
 
     private String simboloSegno(String segno) {
         return switch (segno) {
-            case "Ariete" -> "\u2648";
-            case "Toro" -> "\u2649";
-            case "Gemelli" -> "\u264A";
-            case "Cancro" -> "\u264B";
-            case "Leone" -> "\u264C";
-            case "Vergine" -> "\u264D";
-            case "Bilancia" -> "\u264E";
-            case "Scorpione" -> "\u264F";
-            case "Sagittario" -> "\u2650";
-            case "Capricorno" -> "\u2651";
-            case "Acquario" -> "\u2652";
-            case "Pesci" -> "\u2653";
+            case "Ariete" -> "\u2648\uFE0E";
+            case "Toro" -> "\u2649\uFE0E";
+            case "Gemelli" -> "\u264A\uFE0E";
+            case "Cancro" -> "\u264B\uFE0E";
+            case "Leone" -> "\u264C\uFE0E";
+            case "Vergine" -> "\u264D\uFE0E";
+            case "Bilancia" -> "\u264E\uFE0E";
+            case "Scorpione" -> "\u264F\uFE0E";
+            case "Sagittario" -> "\u2650\uFE0E";
+            case "Capricorno" -> "\u2651\uFE0E";
+            case "Acquario" -> "\u2652\uFE0E";
+            case "Pesci" -> "\u2653\uFE0E";
             default -> "";
         };
     }
