@@ -1,6 +1,9 @@
 package com.azoth.somniazodiaca.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
+import java.util.stream.Collectors;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -17,6 +20,7 @@ import com.azoth.somniazodiaca.repositories.PostRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
 import com.azoth.somniazodiaca.repositories.UtenteBadgeRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
+import com.azoth.somniazodiaca.dtos.BadgeViewDto;
 
 @Service
 public class BadgeService {
@@ -47,6 +51,43 @@ public class BadgeService {
         this.likePostRepository = likePostRepository;
     }
 
+    @Transactional(readOnly = true)
+    public List<BadgeViewDto> getProgressi(String username) {
+        Utente utente = utenteRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        Map<Long, UtenteBadge> badgeOttenuti = utenteBadgeRepository
+                .findByUtente_IdOrderByCreatedAtDesc(utente.getId())
+                .stream()
+                .collect(Collectors.toMap(
+                        utenteBadge -> utenteBadge.getBadge().getId(),
+                        Function.identity(),
+                        (primo, secondo) -> primo));
+
+        return badgeRepository.findAll()
+                .stream()
+                .filter(badge -> Boolean.TRUE.equals(badge.getAttivo()))
+                .map(badge -> {
+                    UtenteBadge utenteBadge = badgeOttenuti.get(badge.getId());
+                    long progresso = calcolaProgresso(utente, badge);
+
+                    return BadgeViewDto.builder()
+                            .codice(badge.getCodice())
+                            .nome(badge.getNome())
+                            .descrizione(badge.getDescrizione())
+                            .icona(badge.getIcona())
+                            .sbloccato(utenteBadge != null)
+                            .progresso(progresso)
+                            .soglia(badge.getSoglia())
+                            .ricompensaQi(badge.getRicompensaQi())
+                            .ottenutoIl(utenteBadge == null
+                                    ? null
+                                    : utenteBadge.getCreatedAt())
+                            .build();
+                })
+                .toList();
+    }
+
     @Transactional
     public void verificaBadge(String username) {
         Utente utente = utenteRepository.findByUsername(username)
@@ -73,21 +114,21 @@ public class BadgeService {
                 utente,
                 TipoCondizione.LIKE_RICEVUTI,
                 likePostRepository.countLikeRicevuti(utenteId));
-                
+
         long giorniConsecutivi = utente.getGiorniConsecutivi() == null
                 ? 0
                 : utente.getGiorniConsecutivi();
-                
+
         verifica(
                 utente,
                 TipoCondizione.GIORNI_CONSECUTIVI,
                 giorniConsecutivi);
-        
+
                 if (utente.getRuolo() == Ruolo.PREMIUM) {
                     verifica(utente, TipoCondizione.UTENTE_PREMIUM, 1);
                 }
             }
-    
+
     private void verifica(
             Utente utente,
             TipoCondizione tipoCondizione,
@@ -126,4 +167,35 @@ public class BadgeService {
             }
         }
     }
+
+    private long calcolaProgresso(
+            Utente utente,
+            Badge badge) {
+
+        Long utenteId = utente.getId();
+
+        return switch (badge.getTipoCondizione()) {
+            case NUMERO_SOGNI ->
+                sognoRepository.countByUtente_Id(utenteId);
+
+            case NUMERO_INTERPRETAZIONI ->
+                interpretazioneRepository
+                        .countBySogno_Utente_Id(utenteId);
+
+            case NUMERO_POST ->
+                postRepository.countByUtente_Id(utenteId);
+
+            case LIKE_RICEVUTI ->
+                likePostRepository.countLikeRicevuti(utenteId);
+
+            case GIORNI_CONSECUTIVI ->
+                utente.getGiorniConsecutivi() == null
+                        ? 0
+                        : utente.getGiorniConsecutivi();
+
+            case UTENTE_PREMIUM ->
+                utente.getRuolo() == Ruolo.PREMIUM ? 1 : 0;
+        };
+    }
+
 }

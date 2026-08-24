@@ -31,6 +31,7 @@ import com.azoth.somniazodiaca.repositories.PostRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
 import com.azoth.somniazodiaca.repositories.TemaNataleRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
+import com.azoth.somniazodiaca.repositories.UtenteBadgeRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -45,6 +46,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     private final InventarioCosmeticoRepository inventarioCosmeticoRepository;
     private final InterpretazioneRepository interpretazioneRepository;
     private final BadgeService badgeService;
+    private final UtenteBadgeRepository utenteBadgeRepository;
     
 
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -72,7 +74,8 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             TemaNataleRepository temaNataleRepository,
             InventarioCosmeticoRepository inventarioCosmeticoRepository,
             InterpretazioneRepository interpretazioneRepository,
-            BadgeService badgeService) {
+            BadgeService badgeService,
+            UtenteBadgeRepository utenteBadgeRepository) {
 
         super(repository, converter);
         this.passwordEncoder = passwordEncoder;
@@ -82,6 +85,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         this.inventarioCosmeticoRepository = inventarioCosmeticoRepository;
         this.interpretazioneRepository = interpretazioneRepository;
         this.badgeService = badgeService;
+        this.utenteBadgeRepository = utenteBadgeRepository;
     }
 
     public Optional<UtenteDetail> findByUsername(String username) {
@@ -234,6 +238,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         // Solo dopo possiamo eliminare i sogni.
         sognoRepository.deleteByUtente(utente);
 
+        utenteBadgeRepository.deleteByUtente(utente);
         getRepository().delete(utente);
     }
 
