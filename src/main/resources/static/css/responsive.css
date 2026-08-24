@@ -1,0 +1,1423 @@
+.sidebar-toggle {
+  display: none;
+  width: 36px;
+  height: 36px;
+  flex: 0 0 36px;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 4px;
+  border-radius: var(--radius-sm);
+  background: var(--bg-input);
+  border: 1px solid var(--border-color);
+}
+
+.sidebar-toggle span {
+  display: block;
+  width: 16px;
+  height: 2px;
+  flex: 0 0 2px;
+  border-radius: 2px;
+  background: var(--text-primary);
+}
+
+.sidebar-backdrop {
+  display: none;
+}
+
+/* ---------- Responsive comune ---------- */
+
+html,
+body {
+    min-width: 0;
+    overflow-x: hidden;
+}
+
+.app-main,
+.app-content,
+.card,
+.dashboard-col,
+.oracolo-content,
+.oracolo-history {
+    min-width: 0;
+}
+
+.app-content {
+    width: 100%;
+}
+
+img,
+textarea,
+input,
+select,
+button {
+    max-width: 100%;
+}
+
+.sidebar-toggle {
+    display: none;
+}
+
+.sidebar-backdrop {
+    display: none;
+}
+
+@media (max-width: 960px) {
+    .sidebar-toggle {
+        display: inline-flex;
+    }
+
+    .sidebar {
+        z-index: 50;
+        transform: translateX(-100%);
+        transition: transform 0.2s ease;
+    }
+
+    .sidebar.open {
+        transform: translateX(0);
+    }
+
+    .sidebar-backdrop {
+        display: block;
+        position: fixed;
+        inset: 0;
+        z-index: 45;
+        background: rgba(0, 0, 0, 0.55);
+        opacity: 0;
+        pointer-events: none;
+        transition: opacity 0.2s ease;
+    }
+
+    .sidebar-backdrop.visible {
+        opacity: 1;
+        pointer-events: auto;
+    }
+
+    body.sidebar-open {
+        overflow: hidden;
+    }
+
+    .app-main {
+        margin-left: 0;
+    }
+
+    .topbar {
+        gap: 12px;
+        padding: 12px 16px;
+    }
+
+    .topbar .greeting {
+        min-width: 0;
+        overflow: hidden;
+        text-overflow: ellipsis;
+        white-space: nowrap;
+    }
+
+    .topbar-right {
+        margin-left: auto;
+        gap: 8px;
+        flex-shrink: 0;
+    }
+
+    .qi-pill {
+        padding: 7px 10px;
+        font-size: 12px;
+    }
+
+    .dashboard-grid,
+    .natal-grid,
+    .natal-data-layout,
+    .inventory-grid,
+    .settings-layout,
+    .auth-page {
+        grid-template-columns: 1fr;
+    }
+
+    .stats-grid,
+    .owned-grid,
+    .zodiac-grid,
+    .recharge-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .hero {
+        flex-direction: column;
+    }
+
+    .oracolo-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+    }
+
+    .oracolo-history,
+    .oracolo-content {
+        width: 100%;
+        max-width: none;
+    }
+
+    .oracolo-content {
+        order: 1;
+    }
+
+    .oracolo-history {
+        order: 2;
+        position: static;
+        max-height: none;
+    }
+}
+
+@media (max-width: 760px) {
+    .app-content {
+        padding: 20px 14px 40px;
+    }
+
+    .topbar {
+        padding: 12px 14px;
+    }
+
+    .topbar .greeting {
+        font-size: 13px;
+    }
+
+    .qi-pill {
+        padding: 7px 9px;
+        font-size: 11px;
+    }
+
+    .icon-btn {
+        width: 34px;
+        height: 34px;
+    }
+
+    h1 {
+        font-size: 28px;
+    }
+
+    h2 {
+        font-size: 24px;
+    }
+
+    h3 {
+        font-size: 18px;
+    }
+
+    .card {
+        padding: 16px;
+        border-radius: var(--radius-sm);
+    }
+
+    .stats-grid,
+    .dashboard-grid,
+    .natal-grid,
+    .natal-data-layout,
+    .inventory-grid,
+    .settings-layout,
+    .settings-row {
+        grid-template-columns: 1fr;
+    }
+
+    .owned-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .badge-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .zodiac-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .dashboard-progress,
+    .progressi-progress {
+        width: 100%;
+    }
+
+    .profile-quickstats {
+        flex-wrap: wrap;
+        gap: 8px 14px;
+    }
+
+    .profile-meta {
+        line-height: 1.8;
+    }
+
+    .tab-row,
+    .social-tabs,
+    .ai-tabs {
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 2px;
+    }
+
+    .tab-row {
+        gap: 16px;
+    }
+
+    .ai-analysis-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .ai-tabs {
+        display: flex;
+        flex-wrap: nowrap;
+    }
+
+    .ai-tabs button {
+        flex-shrink: 0;
+    }
+
+    .natal-header {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .natal-header .btn {
+        width: 100%;
+    }
+
+    .oracolo-page {
+        padding: 20px 14px 40px;
+    }
+
+    .oracolo-box textarea {
+        min-height: 130px;
+    }
+
+    .chip-row {
+        gap: 6px;
+    }
+
+    .chip {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .oracolo-footer {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .oracolo-footer>.flex {
+        width: 100%;
+    }
+
+    .oracolo-footer .btn {
+        flex: 1;
+    }
+
+    .history-item {
+        display: grid;
+        grid-template-columns: 1fr auto;
+        column-gap: 12px;
+    }
+
+    .history-date,
+    .history-dream {
+        grid-column: 1;
+    }
+
+    .history-open {
+        grid-column: 2;
+        grid-row: 1 / span 2;
+        align-self: center;
+        margin: 0;
+    }
+
+    .featured-item {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .featured-item .icon-box {
+        width: 58px;
+        height: 58px;
+        flex: 0 0 58px;
+        font-size: 24px;
+    }
+
+    .item-footer {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 8px;
+    }
+
+    .item-footer .btn {
+        width: 100%;
+    }
+
+    .wallet-balance {
+        padding: 24px 16px;
+    }
+
+    .wallet-balance .amount {
+        font-size: 32px;
+    }
+
+    .daily-rewards {
+        gap: 4px;
+    }
+
+    .daily-reward {
+        font-size: 11px;
+    }
+
+    .settings-menu {
+        display: flex;
+        gap: 6px;
+        max-width: 100%;
+        overflow-x: auto;
+        padding-bottom: 2px;
+    }
+
+    .settings-menu a {
+        flex: 0 0 auto;
+        white-space: nowrap;
+    }
+
+    .settings-section .btn {
+        width: 100%;
+    }
+
+    .comparison-table {
+        display: block;
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+}
+
+/* ---------- Dashboard responsive ---------- */
+
+.dashboard-grid,
+.dashboard-col {
+    min-width: 0;
+}
+
+.stat-card {
+    min-width: 0;
+    overflow: hidden;
+}
+
+.stat-card .stat-value {
+    overflow-wrap: anywhere;
+}
+
+.oracolo-mini textarea {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+}
+
+.dream-item p {
+    overflow-wrap: anywhere;
+}
+
+.dream-item .dream-actions {
+    flex-wrap: wrap;
+}
+
+@media (max-width: 760px) {
+    .stats-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .stat-card {
+        padding: 14px 12px;
+    }
+
+    .stat-card .stat-value {
+        font-size: 19px;
+    }
+
+    .stat-card .stat-delta {
+        font-size: 11px;
+    }
+
+    .dashboard-grid {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .dashboard-col {
+        gap: 14px;
+    }
+
+    .oracolo-mini .oracolo-actions {
+        justify-content: stretch;
+    }
+
+    .oracolo-mini .oracolo-actions .btn {
+        width: 100%;
+    }
+
+    .dream-item .dream-actions {
+        flex-direction: column;
+        align-items: stretch;
+    }
+
+    .dream-item .dream-actions .btn {
+        width: 100%;
+    }
+
+    .goal-item {
+        gap: 12px;
+    }
+
+    .goal-item .goal-left {
+        min-width: 0;
+    }
+
+    .goal-item .goal-name {
+        overflow-wrap: anywhere;
+    }
+
+    .activity-item {
+        gap: 12px;
+    }
+
+    .activity-item span:first-child {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+}
+
+@media (max-width: 360px) {
+    .stats-grid {
+        grid-template-columns: 1fr;
+    }
+}
+
+/* ---------- Tema Natale responsive ---------- */
+
+.natal-header,
+.natal-grid,
+.natal-data-layout,
+.ai-analysis-layout {
+    min-width: 0;
+}
+
+.natal-header>div,
+.natal-grid>*,
+.natal-data-layout>*,
+.ai-analysis-layout>* {
+    min-width: 0;
+}
+
+.natal-header .subtitle {
+    overflow-wrap: anywhere;
+}
+
+.natal-data-layout {
+    grid-template-columns: minmax(0, 1fr) minmax(0, 1.4fr);
+}
+
+.natal-planets-card {
+    width: 100%;
+    max-width: none;
+}
+
+.triad-item {
+    gap: 12px;
+}
+
+.triad-item>span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.triad-item>span:last-child {
+    text-align: right;
+}
+
+.natal-wheel {
+    width: min(100%, 340px);
+}
+
+.natal-actions {
+    flex-wrap: wrap;
+}
+
+.ai-analysis-layout {
+    grid-template-columns: 140px minmax(0, 1fr);
+}
+
+.ai-analysis-text {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.ai-analysis-layout .ai-tabs {
+    min-width: 0;
+}
+
+@media (max-width: 960px) {
+    .natal-data-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .natal-planets-card {
+        max-width: none;
+    }
+
+    .natal-grid {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ai-analysis-layout {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .ai-tabs {
+        overflow-x: auto;
+        white-space: nowrap;
+    }
+
+    .ai-tabs button {
+        flex: 0 0 auto;
+    }
+}
+
+@media (max-width: 760px) {
+    .natal-header {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .natal-header .btn {
+        width: 100%;
+    }
+
+    .natal-grid,
+    .natal-data-layout {
+        gap: 14px;
+    }
+
+    .natal-wheel {
+        width: min(100%, 280px);
+    }
+
+    .natal-actions {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .natal-actions .btn {
+        width: 100%;
+    }
+
+    .triad-item {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 4px;
+    }
+
+    .triad-item>span:last-child {
+        text-align: left;
+    }
+
+    .card-title {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .card-title>.flex {
+        width: 100%;
+        flex-wrap: wrap;
+    }
+
+    .card-title>.flex .btn {
+        flex: 1 1 auto;
+    }
+
+    .ai-analysis-text {
+        font-size: 13px;
+        line-height: 1.6;
+    }
+}
+
+
+/* ---------- Oracolo responsive ---------- */
+
+.oracolo-page {
+    width: 100%;
+    max-width: none;
+}
+
+.oracolo-layout {
+    display: grid;
+    grid-template-columns: minmax(220px, 280px) minmax(0, 700px);
+    gap: 28px;
+    width: 100%;
+    max-width: 1008px;
+    margin: 0 auto;
+    align-items: start;
+}
+
+.oracolo-history,
+.oracolo-content {
+    min-width: 0;
+    width: 100%;
+}
+
+.oracolo-history {
+    position: sticky;
+    top: 24px;
+    max-height: calc(100vh - 48px);
+    overflow-y: auto;
+}
+
+.oracolo-content>h2 {
+    margin-top: 0;
+    margin-bottom: 10px;
+}
+
+.oracolo-box textarea {
+    display: block;
+    min-width: 0;
+    max-width: 100%;
+    overflow-wrap: anywhere;
+}
+
+.oracolo-options {
+    min-width: 0;
+}
+
+.chip-row {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 8px;
+}
+
+.chip {
+    white-space: nowrap;
+}
+
+.oracolo-footer {
+    gap: 16px;
+}
+
+.oracolo-footer>span {
+    min-width: 0;
+    overflow-wrap: anywhere;
+}
+
+.oracolo-footer>.flex {
+    flex-shrink: 0;
+}
+
+@media (max-width: 960px) {
+    .oracolo-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 24px;
+        max-width: 700px;
+    }
+
+    .oracolo-content {
+        order: 1;
+    }
+
+    .oracolo-history {
+        order: 2;
+        position: static;
+        max-height: none;
+    }
+}
+
+@media (max-width: 760px) {
+    .oracolo-page {
+        padding: 20px 14px 40px;
+    }
+
+    .oracolo-layout {
+        gap: 20px;
+    }
+
+    .oracolo-content>h2 {
+        font-size: 24px;
+        line-height: 1.2;
+    }
+
+    .oracolo-box {
+        padding: 14px;
+    }
+
+    .oracolo-box textarea {
+        min-height: 140px;
+        font-size: 13px;
+    }
+
+    .chip-row {
+        gap: 6px;
+    }
+
+    .chip {
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .field-checkbox {
+        align-items: flex-start;
+    }
+
+    .field-checkbox label {
+        min-width: 0;
+        overflow-wrap: anywhere;
+    }
+
+    .oracolo-footer {
+        align-items: stretch;
+        flex-direction: column;
+        gap: 12px;
+    }
+
+    .oracolo-footer>span {
+        line-height: 1.4;
+    }
+
+    .oracolo-footer>.flex {
+        display: flex;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .oracolo-footer .btn {
+        min-width: 0;
+        flex: 1 1 0;
+        padding-left: 10px;
+        padding-right: 10px;
+    }
+
+    .history-item {
+        display: grid;
+        grid-template-columns: minmax(0, 1fr) auto;
+        column-gap: 12px;
+        row-gap: 4px;
+    }
+
+    .history-date,
+    .history-status,
+    .history-dream {
+        grid-column: 1;
+    }
+
+    .history-open {
+        grid-column: 2;
+        grid-row: 1 / span 3;
+        align-self: center;
+        margin: 0;
+    }
+}
+
+/* ---------- Social responsive ---------- */
+
+.social-post-list {
+    width: 100%;
+    max-width: 620px;
+    min-width: 0;
+    margin: 0 auto;
+}
+
+.post-card {
+    width: 100%;
+    max-width: none;
+    min-width: 0;
+    overflow: hidden;
+}
+
+.post-header,
+.post-user,
+.post-user>div:last-child,
+.post-user .name,
+.post-body,
+.dream-quote,
+.interpretation-box {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.post-user .name {
+    align-items: center;
+}
+
+.post-user .name>span:first-child,
+.post-user .meta,
+.post-body,
+.dream-quote>span:not(.label),
+.interpretation-box {
+    overflow-wrap: anywhere;
+}
+
+.post-user .meta {
+    line-height: 1.4;
+}
+
+.social-follow-action {
+    flex-shrink: 0;
+}
+
+.social-follow-action .btn {
+    white-space: nowrap;
+}
+
+.post-body,
+.dream-quote,
+.interpretation-box {
+    line-height: 1.55;
+}
+
+.post-footer {
+    flex-wrap: wrap;
+}
+
+.post-footer form,
+.social-like-button {
+    min-width: 0;
+}
+
+@media (max-width: 760px) {
+    .social-title {
+        font-size: 24px;
+        margin-bottom: 14px;
+    }
+
+    .social-tabs {
+        display: flex;
+        justify-content: center;
+        gap: 16px;
+        max-width: 100%;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+    }
+
+    .social-tabs a {
+        flex: 0 0 auto;
+    }
+
+    .social-post-list {
+        max-width: none;
+    }
+
+    .post-card {
+        padding: 14px;
+        margin-bottom: 12px;
+    }
+
+    .post-header {
+        align-items: flex-start;
+    }
+
+    .post-user {
+        align-items: flex-start;
+        width: 100%;
+        gap: 8px;
+    }
+
+    .post-user>div:last-child {
+        flex: 1 1 auto;
+    }
+
+    .post-user .name {
+        align-items: flex-start;
+        flex-direction: column;
+        gap: 6px;
+    }
+
+    .social-follow-action {
+        max-width: 100%;
+    }
+
+    .social-follow-action form {
+        max-width: 100%;
+    }
+
+    .social-follow-action .btn {
+        white-space: normal;
+        text-align: center;
+    }
+
+    .post-body {
+        font-size: 13px;
+    }
+
+    .dream-quote,
+    .interpretation-box {
+        font-size: 13px;
+        padding: 10px;
+    }
+
+    .post-footer {
+        gap: 12px;
+        margin-top: 12px;
+    }
+}
+
+@media (max-width: 360px) {
+    .social-avatar {
+        width: 30px;
+        height: 30px;
+        font-size: 12px;
+    }
+
+    .post-user {
+        gap: 7px;
+    }
+
+    .post-card {
+        padding: 12px;
+    }
+}
+
+/* ---------- Wallet responsive ---------- */
+
+.wallet-balance,
+.recharge-grid,
+.recharge-card,
+.daily-rewards,
+.badge-grid {
+    min-width: 0;
+}
+
+.wallet-balance .amount,
+.recharge-card .amount {
+    overflow-wrap: anywhere;
+}
+
+.recharge-card {
+    width: 100%;
+}
+
+.recharge-card .best-value {
+    white-space: nowrap;
+    z-index: 1;
+}
+
+.daily-rewards {
+    width: 100%;
+    grid-template-columns: repeat(7, minmax(0, 1fr));
+}
+
+.daily-reward {
+    min-width: 0;
+    aspect-ratio: 1;
+}
+
+.badge-slot {
+    min-width: 0;
+}
+
+.badge-slot .badge-name,
+.badge-slot .badge-progress {
+    overflow-wrap: anywhere;
+}
+
+@media (max-width: 960px) {
+    .recharge-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .badge-grid {
+        grid-template-columns: repeat(6, minmax(0, 1fr));
+    }
+}
+
+@media (max-width: 760px) {
+    .wallet-title {
+        font-size: 24px;
+    }
+
+    .wallet-balance {
+        padding: 24px 16px;
+    }
+
+    .wallet-balance .amount {
+        font-size: 32px;
+    }
+
+    .recharge-grid {
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .recharge-card {
+        padding: 14px 10px;
+    }
+
+    .recharge-card .best-value {
+        top: -9px;
+        padding: 3px 6px;
+        font-size: 9px;
+    }
+
+    .recharge-card .amount {
+        font-size: 17px;
+    }
+
+    .recharge-card .bonus {
+        font-size: 10px;
+    }
+
+    .recharge-card .btn {
+        width: 100%;
+        padding-left: 6px;
+        padding-right: 6px;
+        font-size: 12px;
+    }
+
+    .card>.card-title {
+        align-items: flex-start;
+        flex-wrap: wrap;
+        gap: 8px;
+    }
+
+    .daily-rewards {
+        gap: 4px;
+    }
+
+    .daily-reward {
+        font-size: 11px;
+    }
+
+    .badge-grid {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 10px;
+    }
+
+    .badge-slot .badge-name {
+        font-size: 10px;
+        line-height: 1.3;
+    }
+
+    .badge-slot .badge-progress {
+        font-size: 9px;
+        line-height: 1.3;
+    }
+}
+
+@media (max-width: 360px) {
+    .recharge-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .recharge-card {
+        padding: 16px;
+    }
+
+    .daily-reward {
+        font-size: 10px;
+    }
+}
+
+/* ---------- Impostazioni responsive ---------- */
+
+.settings-layout {
+    min-width: 0;
+    grid-template-columns: 200px minmax(0, 1fr);
+}
+
+.settings-menu,
+.settings-layout>div {
+    min-width: 0;
+}
+
+.settings-menu a {
+    overflow-wrap: anywhere;
+}
+
+.settings-section {
+    width: 100%;
+    min-width: 0;
+}
+
+.settings-section form {
+    min-width: 0;
+}
+
+.settings-section input,
+.settings-section select,
+.settings-section textarea {
+    display: block;
+    max-width: 100%;
+}
+
+@media (max-width: 960px) {
+    .settings-layout {
+        grid-template-columns: minmax(150px, 200px) minmax(0, 1fr);
+        gap: 18px;
+    }
+}
+
+@media (max-width: 760px) {
+    .settings-title {
+        font-size: 24px;
+    }
+
+    .settings-layout {
+        display: flex;
+        flex-direction: column;
+        gap: 14px;
+    }
+
+    .settings-menu {
+        display: flex;
+        width: 100%;
+        gap: 6px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+        scrollbar-width: thin;
+    }
+
+    .settings-menu a {
+        flex: 0 0 auto;
+        margin-bottom: 0;
+        padding: 8px 10px;
+        font-size: 12px;
+    }
+
+    .settings-layout>div {
+        width: 100%;
+    }
+
+    .settings-section {
+        padding: 16px;
+    }
+
+    .settings-section h3 {
+        font-size: 18px;
+    }
+
+    .settings-section .btn {
+        width: 100%;
+    }
+
+    .danger-zone form,
+    .premium-section {
+        width: 100%;
+    }
+
+    .danger-zone p,
+    .premium-section p {
+        overflow-wrap: anywhere;
+    }
+}
+
+/* ---------- Profilo responsive ---------- */
+
+.profile-banner {
+    width: 100%;
+    min-width: 0;
+}
+
+.profile-banner-image {
+    max-width: none;
+}
+
+.profile-header-info,
+.profile-meta,
+.profile-quickstats,
+.tab-row {
+    min-width: 0;
+    max-width: 100%;
+}
+
+.profile-header-info {
+    flex-wrap: wrap;
+}
+
+.profile-header-info h2,
+.profile-meta,
+.profile-quickstats span {
+    overflow-wrap: anywhere;
+}
+
+.profile-quickstats {
+    flex-wrap: wrap;
+    row-gap: 8px;
+}
+
+.profile-premium-promo {
+    width: 100%;
+}
+
+@media (max-width: 760px) {
+    .profile-banner {
+        height: 130px;
+        margin-bottom: 58px;
+    }
+
+    .profile-avatar-lg {
+        width: 76px;
+        height: 76px;
+        left: 14px;
+        bottom: -42px;
+        font-size: 28px;
+    }
+
+    .profile-edit-button {
+        top: 10px;
+        right: 10px;
+        padding: 6px 10px;
+        font-size: 12px;
+    }
+
+    .profile-header-info {
+        align-items: flex-start;
+        gap: 8px;
+    }
+
+    .profile-header-info h2 {
+        font-size: 21px;
+    }
+
+    .profile-header-info .badge {
+        margin-top: 3px;
+    }
+
+    .profile-meta {
+        font-size: 12px;
+        line-height: 1.8;
+    }
+
+    .profile-quickstats {
+        display: grid;
+        grid-template-columns: repeat(2, minmax(0, 1fr));
+        gap: 8px;
+        font-size: 12px;
+    }
+
+    .tab-row {
+        display: flex;
+        gap: 16px;
+        overflow-x: auto;
+        white-space: nowrap;
+        padding-bottom: 4px;
+    }
+
+    .tab-row a {
+        flex: 0 0 auto;
+        font-size: 12px;
+    }
+
+    .cosmetics-strip {
+        grid-template-columns: repeat(4, minmax(0, 1fr));
+        gap: 8px;
+    }
+
+    .cosmetic-slot {
+        font-size: 17px;
+    }
+
+    .info-row {
+        align-items: flex-start;
+        gap: 14px;
+    }
+
+    .info-row>span:last-child {
+        min-width: 0;
+        text-align: right;
+        overflow-wrap: anywhere;
+    }
+
+    .profile-premium-promo {
+        max-width: none;
+    }
+}
+
+@media (max-width: 360px) {
+    .profile-quickstats {
+        grid-template-columns: 1fr;
+    }
+
+    .profile-banner {
+        height: 115px;
+    }
+
+    .profile-edit-button {
+        max-width: calc(100% - 100px);
+        overflow-wrap: anywhere;
+    }
+}
+
+/* ---------- Sidebar responsive ---------- */
+.sidebar-toggle:focus-visible,
+.sidebar-nav a:focus-visible,
+.sidebar-backdrop:focus-visible {
+    outline: 2px solid var(--accent-pink);
+    outline-offset: 3px;
+}
+
+.sidebar-toggle {
+    flex: 0 0 36px;
+}
+
+@media (max-width: 960px) {
+    .sidebar {
+        visibility: hidden;
+        pointer-events: none;
+    }
+
+    .sidebar.open {
+        visibility: visible;
+        pointer-events: auto;
+    }
+
+    .sidebar-backdrop.visible {
+        visibility: visible;
+    }
+
+    .sidebar-backdrop {
+        visibility: hidden;
+    }
+
+    .topbar {
+        position: relative;
+        z-index: auto;
+    }
+
+    .sidebar-toggle {
+        position: relative;
+        z-index: 101;
+        display: inline-flex;
+        cursor: pointer;
+        pointer-events: auto;
+    }
+
+    .sidebar-backdrop {
+        z-index: 45;
+    }
+
+    .sidebar {
+        z-index: 50;
+    }
+}
+
+@media (prefers-reduced-motion: reduce) {
+
+    .sidebar,
+    .sidebar-backdrop {
+        transition: none;
+    }
+}
+
+@media (max-width: 960px) {
+    .sidebar {
+        padding-top: 66px;
+    }
+
+    .sidebar .brand {
+        padding: 6px 8px 22px 58px;
+        white-space: nowrap;
+    }
+}

@@ -2,8 +2,10 @@
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Dashboard - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+  <link rel="stylesheet" th:href="@{/css/responsive.css}" href="../../static/css/responsive.css">
 </head>
 <body>
   <div class="app-layout">
@@ -112,13 +114,6 @@
               <div class="avatar dashboard-avatar">L</div>
               <div class="dashboard-username">@lunadark</div>
               <a href="/app/profilo" class="btn btn-outline btn-sm mt-20">Personalizza</a>
-            </div>
-
-            <!-- Novità nello shop -->
-            <div class="card">
-              <div class="card-title"><span>Nuovi nello shop</span><a href="/app/shop" class="link">Apr &rarr;</a></div>
-              <div class="shop-preview-item"><span>&#10024; Aura Cosmica</span><span class="price">340 QI</span></div>
-              <div class="shop-preview-item"><span>&#128081; Corona di Saturno</span><span class="price">500 QI</span></div>
             </div>
 
             <!-- Attività recente -->
