@@ -79,117 +79,130 @@
           </span>
         </p>
         <div class="profile-quickstats">
-          <span>&#10022; <span th:text="${saldoQI}">0</span></span>
-          <span>Liv. 7 Sognatore</span>
-          <span>&#9825; 87 Like</span>
-          <span>&#9789; 14 Sogni</span>
-          <span>&#128172; 9 Post</span>
+          <span>&#10022; <span th:text="${saldoQI}">0</span> QI</span>
+          <span>&#9825; <span th:text="${numeroLike}">0</span> Like</span>
+          <span>&#9789; <span th:text="${numeroSogni}">0</span> Sogni</span>
+          <span>&#128172; <span th:text="${numeroPost}">0</span> Post</span>
         </div>
 
-        <!-- Tab: Panoramica / Post / Sogni / Cosmetici / Badge / Statistiche -->
+        <!-- Tab: Panoramica / Post -->
         <div class="tab-row" data-tab-group="profilo-tabs">
-          <a href="#" class="js-tab active" data-target="tab-panoramica">Panoramica</a>
-          <a href="#" class="js-tab" data-target="tab-post">Post</a>
-          <a href="#" class="js-tab" data-target="tab-sogni">Sogni</a>
-          <a href="#" class="js-tab" data-target="tab-cosmetici">Cosmetici</a>
-          <a href="#" class="js-tab" data-target="tab-badge">Badge</a>
-          <a href="#" class="js-tab" data-target="tab-statistiche">Statistiche</a>
+          <a href="#" class="js-tab active" data-target="tab-panoramica">
+            Panoramica
+          </a>
+          <a href="#" class="js-tab" data-target="tab-post">
+            Post
+          </a>
         </div>
 
         <div id="tab-panoramica" class="js-tab-panel">
           <div class="dashboard-grid">
             <div class="card">
-              <div class="card-title"><span>Identità astrale</span></div>
-              <div class="info-row"><span class="label">Sole</span><span>&#9804; Leone</span></div>
-              <div class="info-row"><span class="label">Elemento</span><span>&#128293; Fuoco</span></div>
-              <div class="info-row"><span class="label">Modalità</span><span>&#9635; Fisso</span></div>
-              <div class="info-row"><span class="label">Pianeta</span><span>Sole</span></div>
-              <div class="info-row"><span class="label">Metallo</span><span>&#10022; Oro</span></div>
-              <div class="info-row"><span class="label">Ascendente</span><span>&#9807; Scorpione (04:35)</span></div>
-            </div>
-            <div class="card">
-              <div class="card-title"><span>Bio</span></div>
-              <p class="text-muted profile-bio">"Cerco significati nel buio."</p>
-              <div class="card-title mt-20"><span>Wallet</span></div>
-              <div class="profile-wallet-amount">&#10022; 1.240</div>
-            </div>
-          </div>
-
-          <!-- Cosmetici posseduti, anteprima -->
-          <div class="card mt-20">
-            <div class="card-title"><span>Cosmetici &middot; 2/8</span><span class="text-muted">Collezione 25%</span>
-            </div>
-            <div class="cosmetics-strip">
-              <div class="cosmetic-slot">?</div>
-              <div class="cosmetic-slot">?</div>
-              <div class="cosmetic-slot filled">&#128167;</div>
-              <div class="cosmetic-slot filled">&#127800;</div>
-              <div class="cosmetic-slot">?</div>
-              <div class="cosmetic-slot">?</div>
-              <div class="cosmetic-slot">?</div>
-              <div class="cosmetic-slot">?</div>
-            </div>
-          </div>
-        </div>
-
-        <!-- Gli altri pannelli tab (Post, Sogni, Cosmetici, Badge, Statistiche)
-             vanno riempiti allo stesso modo; qui restano vuoti/nascosti come
-             punto di partenza da completare -->
-        <div id="tab-post" class="js-tab-panel is-hidden">
-          <p class="text-muted">Elenco dei post pubblicati dall'utente (th:each="post : ${utente.post}").</p>
-        </div>
-        <div id="tab-sogni" class="js-tab-panel is-hidden">
-          <p class="text-muted">Elenco dei sogni salvati/pubblicati.</p>
-        </div>
-        <div id="tab-badge" class="js-tab-panel is-hidden">
-          <div class="card">
-            <div class="card-title">
-              <span>&#127942; I tuoi badge</span>
-              <span class="text-muted"
-                    th:text="${badgeSbloccati + '/' + totaleBadge + ' sbloccati'}">
-                0/0 sbloccati
-              </span>
+              <div class="card-title">
+                <span>Identità astrale</span>
+              </div>
+            
+              <div class="info-row">
+                <span class="label">Sole</span>
+                <span th:if="${profiloSegnoZodiacale != null}"
+                      th:text="${#strings.capitalize(
+                        #strings.toLowerCase(profiloSegnoZodiacale.segnoZodiacale.name())
+                      )}">
+                  Non impostato
+                </span>
+              </div>
+            
+              <div class="info-row">
+                <span class="label">Elemento</span>
+                <span th:if="${profiloSegnoZodiacale != null}"
+                      th:text="${profiloSegnoZodiacale.segnoZodiacale.elemento.nome}">
+                  Non impostato
+                </span>
+              </div>
+            
+              <div class="info-row">
+                <span class="label">Modalità</span>
+                <span th:if="${profiloSegnoZodiacale != null}"
+                      th:text="${profiloSegnoZodiacale.segnoZodiacale.modalita}">
+                  Non impostata
+                </span>
+              </div>
+            
+              <div class="info-row">
+                <span class="label">Pianeta</span>
+                <span th:if="${profiloSegnoZodiacale != null}"
+                      th:text="${profiloSegnoZodiacale.segnoZodiacale.pianeta.nome}">
+                  Non impostato
+                </span>
+              </div>
+            
+              <div class="info-row">
+                <span class="label">Metallo</span>
+                <span th:if="${profiloSegnoZodiacale != null}"
+                      th:text="${profiloSegnoZodiacale.segnoZodiacale.metallo.nome}">
+                  Non impostato
+                </span>
+              </div>
+            
+              <div class="info-row">
+                <span class="label">Ascendente</span>
+                <span th:if="${profiloAscendente != null}"
+                      th:text="${#strings.capitalize(
+                        #strings.toLowerCase(profiloAscendente.segnoZodiacale.name())
+                      )}">
+                  Non impostato
+                </span>
+              </div>
             </div>
           
-            <div class="badge-grid">
-              <div th:each="badge : ${badges}"
-                   class="badge-slot"
-                   th:classappend="${badge.sbloccato} ? ' unlocked' : ''">
+            <div class="card">
+              <div class="card-title">
+                <span>&#127942; Badge</span>
+                <span class="text-muted"
+                      th:text="${badgeSbloccati + '/' + totaleBadge + ' sbloccati'}">
+                  0/0 sbloccati
+                </span>
+              </div>
             
-                <div class="badge-icon"
-                     th:text="${badge.sbloccato ? badge.icona : '?'}">
-                  ?
-                </div>
+              <div class="badge-grid">
+                <div th:each="badge : ${badges}"
+                     class="badge-slot"
+                     th:classappend="${badge.sbloccato} ? ' unlocked' : ''">
               
-                <div class="badge-name"
-                     th:text="${badge.nome}">
-                  Nome badge
-                </div>
-              
-                <div class="badge-progress"
-                     th:if="${!badge.sbloccato and badge.soglia != null}"
-                     th:text="${badge.progresso + '/' + badge.soglia}">
-                  0/0
-                </div>
-              
-                <div class="badge-progress"
-                     th:if="${badge.sbloccato}"
-                     th:text="${badge.descrizione}">
-                  Badge ottenuto
+                  <div class="badge-icon"
+                       th:text="${badge.sbloccato ? badge.icona : '?'}">
+                    ?
+                  </div>
+                
+                  <div class="badge-name"
+                       th:text="${badge.nome}">
+                    Nome badge
+                  </div>
+                
+                  <div class="badge-progress"
+                       th:if="${!badge.sbloccato and badge.soglia != null}"
+                       th:text="${badge.progresso + '/' + badge.soglia}">
+                    0/0
+                  </div>
+                
+                  <div class="badge-progress"
+                       th:if="${badge.sbloccato}"
+                       th:text="${badge.descrizione}">
+                    Badge ottenuto
+                  </div>
                 </div>
               </div>
             </div>
           </div>
         </div>
-        <div id="tab-statistiche" class="js-tab-panel is-hidden">
-          <p class="text-muted">Grafici/numeri di utilizzo nel tempo.</p>
-        </div>
 
-        <!-- Box pubblicitario premium, visibile solo se l'utente non è premium -->
-        <div class="card sidebar-promo mt-20 profile-premium-promo">
-        <span class="badge badge-premium">Premium</span>
-        <p>Custode del Cielo<br>+500 QI mensili, letture illimitate, cosmetici esclusivi.</p>
-        <a href="/premium">Scopri di più &rarr;</a></div>
+        <div id="tab-post" class="js-tab-panel is-hidden"
+             th:insert="~{fragments/social-fragments :: social-post-list(
+               posts=${postsProfilo},
+               currentUsername=${currentUsername},
+               emptyMessage='Non hai ancora pubblicato post.'
+             )}">
+        </div>
     </div>
     </main>
   </div>
