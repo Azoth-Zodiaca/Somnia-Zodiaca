@@ -99,10 +99,55 @@ function initUploadProfilo() {
 function initSidebarToggle() {
   var toggleBtn = document.getElementById("sidebar-toggle");
   var sidebar = document.getElementById("sidebar");
+  var backdrop = document.getElementById("sidebar-backdrop");
+
   if (!toggleBtn || !sidebar) return;
 
-  toggleBtn.addEventListener("click", function () {
-    sidebar.classList.toggle("open");
+  function setSidebarState(isOpen) {
+    sidebar.classList.toggle("open", isOpen);
+    document.body.classList.toggle("sidebar-open", isOpen);
+
+    toggleBtn.setAttribute("aria-expanded", String(isOpen));
+    toggleBtn.setAttribute(
+      "aria-label",
+      isOpen ? "Chiudi menu di navigazione" : "Apri menu di navigazione"
+    );
+
+    if (backdrop) {
+      backdrop.classList.toggle("visible", isOpen);
+      backdrop.setAttribute("aria-hidden", String(!isOpen));
+    }
+  }
+
+  toggleBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    var isOpen = sidebar.classList.contains("open");
+    setSidebarState(!isOpen);
+  });
+
+  if (backdrop) {
+    backdrop.addEventListener("click", function () {
+      setSidebarState(false);
+    });
+  }
+
+  sidebar.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      setSidebarState(false);
+    });
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && sidebar.classList.contains("open")) {
+      setSidebarState(false);
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 960) {
+      setSidebarState(false);
+    }
   });
 }
 

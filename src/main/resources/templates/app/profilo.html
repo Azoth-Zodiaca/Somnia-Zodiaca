@@ -3,8 +3,10 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Profilo - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+  <link rel="stylesheet" th:href="@{/css/responsive.css}" href="../../static/css/responsive.css">
 </head>
 
 <body>
@@ -156,10 +158,10 @@
         </div>
 
         <!-- Box pubblicitario premium, visibile solo se l'utente non è premium -->
-        <div class="card sidebar-promo mt-20 profile-premium-promo"></div>
+        <div class="card sidebar-promo mt-20 profile-premium-promo">
         <span class="badge badge-premium">Premium</span>
         <p>Custode del Cielo<br>+500 QI mensili, letture illimitate, cosmetici esclusivi.</p>
-        <a href="/premium">Scopri di più &rarr;</a>
+        <a href="/premium">Scopri di più &rarr;</a></div>
     </div>
     </main>
   </div>

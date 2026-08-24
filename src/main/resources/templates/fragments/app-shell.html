@@ -71,10 +71,14 @@
     </div>
 
     <div class="sidebar-user">
-      <div class="avatar" th:classappend="${' ' + profiloColoreClasse}" th:text="${username != null and !username.isEmpty()
-       ? #strings.toUpperCase(#strings.substring(username, 0, 1))
-       : '?'}">
-        L
+      <div class="avatar" th:classappend="${' ' + profiloColoreClasse}">
+        <img th:if="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:src="@{${avatarPath}}"
+          alt="Immagine profilo">
+        <span th:unless="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:text="${username != null and !username.isEmpty()
+          ? #strings.toUpperCase(#strings.substring(username, 0, 1))
+          : '?'}">
+          L
+        </span>
       </div>
       <div>
         <a th:href="@{/app/profilo}">
@@ -93,24 +97,33 @@
       </div>
     </div>
   </nav>
+  <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
 
   <!-- ============ TOPBAR ============ -->
   <header th:fragment="topbar(pageTitle)" class="topbar">
+    <button id="sidebar-toggle" class="sidebar-toggle" type="button" aria-label="Apri menu di navigazione"
+      aria-controls="sidebar" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
     <div class="greeting">
-      <strong id="saluto-orario">Buongiorno</strong>,
-      <strong th:text="${username}">username</strong> &#9789;
-    </div>
-    <div class="topbar-right">
-      <a href="/app/wallet" class="qi-pill" title="Apri il wallet">
-        &#10022;
-        <span th:text="${saldoQi}">0</span>
-        QI
-      </a>
-      <button class="icon-btn" title="Notifiche">
-        &#128276;
-        <span class="dot"></span>
-      </button>
-    </div>
+      <div class="greeting">
+        <strong id="saluto-orario">Buongiorno</strong>,
+        <strong th:text="${username}">username</strong> &#9789;
+      </div>
+      <div class="topbar-right">
+        <a href="/app/wallet" class="qi-pill" title="Apri il wallet">
+          &#10022;
+          <span th:text="${saldoQi}">0</span>
+          QI
+        </a>
+        <button class="icon-btn" title="Notifiche">
+          &#128276;
+          <span class="dot"></span>
+        </button>
+      </div>
   </header>
 
 </body>

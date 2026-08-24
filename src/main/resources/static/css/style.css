@@ -791,6 +791,15 @@ h4 {
   font-weight: 700;
   color: #1a1205;
   flex-shrink: 0;
+  overflow: hidden;
+}
+
+.avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .sidebar-user .username {
@@ -2036,95 +2045,6 @@ h4 {
   gap: 16px;
 }
 
-/* Responsive semplice: sotto i 960px la sidebar si nasconde di default */
-@media (max-width: 960px) {
-
-  /* Sotto i 960px la sidebar è già "fixed" di suo: qui la spostiamo
-     fuori dallo schermo di default e la facciamo rientrare con la
-     classe "open" (aggiunta da main.js -> initSidebarToggle) */
-  .sidebar {
-    z-index: 50;
-    transform: translateX(-100%);
-    transition: transform 0.2s ease;
-  }
-
-  .sidebar.open {
-    transform: translateX(0);
-  }
-
-  .app-main {
-    margin-left: 0;
-  }
-
-  .stats-grid,
-  .shop-grid,
-  .owned-grid,
-  .zodiac-grid,
-  .recharge-grid {
-    grid-template-columns: repeat(2, 1fr);
-  }
-
-  .dashboard-grid,
-  .natal-grid,
-  .inventory-grid,
-  .settings-layout,
-  .auth-page {
-    grid-template-columns: 1fr;
-  }
-
-  .hero {
-    flex-direction: column;
-  }
-}
-
-@media (max-width: 760px) {
-  .oracolo-page {
-    padding: 20px 14px 40px;
-  }
-
-  .oracolo-layout {
-    display: flex;
-    flex-direction: column;
-    gap: 24px;
-  }
-
-  .oracolo-content {
-    order: 1;
-    width: 100%;
-  }
-
-  .oracolo-history {
-    order: 2;
-    position: static;
-    width: 100%;
-    max-height: none;
-  }
-
-  .history-item {
-    display: grid;
-    grid-template-columns: 1fr auto;
-    column-gap: 12px;
-  }
-
-  .history-date,
-  .history-dream {
-    grid-column: 1;
-  }
-
-  .history-open {
-    grid-column: 2;
-    grid-row: 1 / span 2;
-    align-self: center;
-    margin: 0;
-  }
-
-  .oracolo-footer {
-    align-items: flex-end;
-    flex-direction: column;
-    gap: 12px;
-  }
-}
-
 .onboarding-title {
   font-weight: 500;
   margin-bottom: 6px;
@@ -2404,6 +2324,15 @@ h4 {
   width: 32px;
   height: 32px;
   font-size: 13px;
+  overflow: hidden;
+}
+
+.social-avatar img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  border-radius: 50%;
 }
 
 .social-read-more {
@@ -2553,34 +2482,6 @@ h4 {
   width: 100%;
 }
 
-.oracolo-content > h2 {
+.oracolo-content>h2 {
   margin-top: 0;
-}
-
-@media (max-width: 900px) {
-  .oracolo-layout {
-    display: flex;
-    flex-direction: column;
-  }
-
-  .oracolo-history,
-  .oracolo-content {
-    width: 100%;
-  }
-
-  .oracolo-content {
-    order: 1;
-  }
-
-  .oracolo-history {
-    order: 2;
-    position: static;
-    max-height: none;
-  }
-}
-
-@media (max-width: 760px) {
-  .natal-data-layout {
-    grid-template-columns: 1fr;
-  }
 }

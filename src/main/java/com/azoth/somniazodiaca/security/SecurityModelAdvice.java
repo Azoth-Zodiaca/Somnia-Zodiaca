@@ -101,6 +101,18 @@ public class SecurityModelAdvice {
                 .orElse("Segno non impostato");
     }
 
+    @ModelAttribute("avatarPath")
+    public String avatarPath(Authentication authentication) {
+        if (authentication == null
+                || !authentication.isAuthenticated()) {
+            return null;
+        }
+
+        return utenteService.findByUsername(authentication.getName())
+                .map(UtenteDetail::getAvatarPath)
+                .orElse(null);
+    }
+
     @ModelAttribute("profiloColore")
     public String profiloColore(Authentication authentication) {
         if (authentication == null || !authentication.isAuthenticated()) {
