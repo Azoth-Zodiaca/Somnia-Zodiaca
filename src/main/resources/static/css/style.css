@@ -584,32 +584,13 @@ h4 {
 /* ---------- Pagine di autenticazione / onboarding ---------- */
 .auth-page {
   min-height: 100vh;
-  display: grid;
-  grid-template-columns: 1fr 460px;
 }
 
-.auth-side {
+.login-page {
   display: flex;
-  flex-direction: column;
-  justify-content: space-between;
-  padding: 40px 60px;
-}
-
-.auth-side .quote {
-  font-family: Georgia, serif;
-  font-size: 30px;
-  max-width: 380px;
-}
-
-.auth-side .quote .italic {
-  font-style: italic;
-  color: var(--accent-purple);
-}
-
-.auth-side .quote-sub {
-  color: var(--text-muted);
-  font-size: 13px;
-  margin-top: 10px;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
 }
 
 .auth-form-panel {
@@ -619,6 +600,35 @@ h4 {
   display: flex;
   flex-direction: column;
   justify-content: center;
+}
+
+.login-page .auth-form-panel {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  width: min(100%, 460px);
+}
+
+.login-page .auth-form-panel .brand {
+  align-self: center;
+  margin-bottom: 44px;
+}
+
+.register-page {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 32px 24px;
+}
+
+.register-page .auth-form-panel {
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-md);
+  width: min(100%, 460px);
+}
+
+.register-page .auth-form-panel .brand {
+  align-self: center;
+  margin-bottom: 36px;
 }
 
 .auth-form-panel h2 {
@@ -1952,23 +1962,9 @@ h4 {
   margin: 0 auto 60px;
 }
 
-.login-copyright {
-  font-size: 12px;
-}
-
-.login-subtitle {
-  margin-top: -14px;
-  margin-bottom: 20px;
-  font-size: 13px;
-}
-
 .login-register-link {
   color: var(--accent-purple);
   font-weight: 600;
-}
-
-.register-copyright {
-  font-size: 12px;
 }
 
 .register-login-link {

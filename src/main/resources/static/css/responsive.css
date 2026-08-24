@@ -127,8 +127,7 @@ button {
     .dashboard-grid,
     .natal-grid,
     .natal-data-layout,
-    .settings-layout,
-    .auth-page {
+    .settings-layout {
         grid-template-columns: 1fr;
     }
 
@@ -168,6 +167,16 @@ button {
 @media (max-width: 760px) {
     .app-content {
         padding: 20px 14px 40px;
+    }
+
+    .login-page,
+    .register-page {
+        padding: 20px 14px;
+    }
+
+    .login-page .auth-form-panel,
+    .register-page .auth-form-panel {
+        padding: 36px 24px;
     }
 
     .topbar {
