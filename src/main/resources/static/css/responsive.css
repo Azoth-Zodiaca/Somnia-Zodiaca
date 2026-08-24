@@ -134,7 +134,6 @@ button {
     }
 
     .stats-grid,
-    .shop-grid,
     .owned-grid,
     .zodiac-grid,
     .recharge-grid {
@@ -218,7 +217,6 @@ button {
         grid-template-columns: 1fr;
     }
 
-    .shop-grid,
     .owned-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
         gap: 10px;
@@ -344,13 +342,13 @@ button {
         font-size: 24px;
     }
 
-    .shop-item .item-footer {
+    .item-footer {
         align-items: stretch;
         flex-direction: column;
         gap: 8px;
     }
 
-    .shop-item .item-footer .btn {
+    .item-footer .btn {
         width: 100%;
     }
 
@@ -481,12 +479,10 @@ button {
         overflow-wrap: anywhere;
     }
 
-    .shop-preview-item,
     .activity-item {
         gap: 12px;
     }
 
-    .shop-preview-item span:first-child,
     .activity-item span:first-child {
         min-width: 0;
         overflow-wrap: anywhere;

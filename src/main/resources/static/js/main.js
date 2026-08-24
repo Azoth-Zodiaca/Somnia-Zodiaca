@@ -238,30 +238,6 @@ function initChipSelectors() {
 }
 
 /* ---------------------------------------------------------
-   4) Filtri categoria dello Shop (Tutti / Cornici / Sfondi...).
-   Aggiunge/rimuove la classe "active" e mostra/nasconde
-   gli articoli in base a data-category.
---------------------------------------------------------- */
-function initShopCategories() {
-  var buttons = document.querySelectorAll(".shop-categories button");
-  if (buttons.length === 0) return;
-
-  buttons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      buttons.forEach(function (b) { b.classList.remove("active"); });
-      btn.classList.add("active");
-
-      var category = btn.getAttribute("data-category");
-      document.querySelectorAll(".shop-item").forEach(function (item) {
-        var itemCategory = item.getAttribute("data-category");
-        var show = (category === "tutti" || category === itemCategory);
-        item.classList.toggle("is-hidden", !show);
-      });
-    });
-  });
-}
-
-/* ---------------------------------------------------------
    5) Contatore caratteri nel form "Racconta il tuo sogno"
    della pagina Oracolo. Richiede una textarea con
    id="dream-text" e un elemento con id="dream-counter".
@@ -763,34 +739,6 @@ function initInterpretationExpanders() {
       button.textContent = expanded
         ? "Riduci \u2039"
         : "Leggi tutto \u203A";
-    });
-  });
-}
-
-/* ---------------------------------------------------------
-   7) Equipaggia/rimuovi un cosmetico nella pagina Inventario.
-   Solo dimostrativo lato client: in Spring questa azione
-   andrebbe collegata a una chiamata al server (form o fetch)
-   che salva la scelta nel database.
---------------------------------------------------------- */
-function initInventoryEquip() {
-  var equipButtons = document.querySelectorAll(".js-equip-btn");
-  if (equipButtons.length === 0) return;
-
-  equipButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var equipped = btn.getAttribute("data-equipped") === "true";
-      if (equipped) {
-        btn.setAttribute("data-equipped", "false");
-        btn.textContent = "Equipaggia";
-        btn.classList.remove("btn-primary");
-        btn.classList.add("btn-ghost");
-      } else {
-        btn.setAttribute("data-equipped", "true");
-        btn.textContent = "Equipaggiato \u2713";
-        btn.classList.remove("btn-ghost");
-        btn.classList.add("btn-primary");
-      }
     });
   });
 }
