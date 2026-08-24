@@ -77,24 +77,27 @@
               <div class="card-title">
                 <span>Triade principale</span>
               </div>
-
               <p class="natal-card-subtitle">
                 La tua firma stellare
               </p>
 
-              <div class="triad-item">
+              <div class="triad-item triad-item-aligned">
                 <span class="triad-name">Sole</span>
 
-                <span th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Sole'}">
-                  <span class="planet-symbol sun-symbol" th:text="${pianeta.simbolo}">☉</span>
-                  <span class="sign-symbol" th:text="${pianeta.simboloSegno}">♏</span>
+                <span class="triad-value" th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Sole'}">
+                  <span class="planet-symbol sun-symbol" th:text="${pianeta.simbolo}">
+                    ☉
+                  </span>
+                  <span class="sign-symbol" th:text="${pianeta.simboloSegno}">
+                    ♏︎
+                  </span>
                   <span th:text="${pianeta.segno}">Scorpione</span>
                   <span>· </span>
                   <span th:text="${pianeta.casaRomana}">VIII</span>
                 </span>
               </div>
 
-              <div class="triad-item">
+              <div class="triad-item triad-item-aligned">
                 <span class="triad-name">Luna</span>
 
                 <span th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Luna'}">
@@ -106,11 +109,16 @@
                 </span>
               </div>
 
-              <div class="triad-item">
+              <div class="triad-item triad-item-aligned">
                 <span class="triad-name">Ascendente</span>
-                <span>
-                  <span class="sign-symbol" th:text="${ascendenteSimbolo}">♑</span>
-                  <span th:text="${ascendenteSegno}">Capricorno</span>
+
+                <span class="triad-value">
+                  <span class="sign-symbol" th:text="${ascendenteSimbolo}">
+                    ♑︎
+                  </span>
+                  <span th:text="${ascendenteSegno}">
+                    Capricorno
+                  </span>
                 </span>
               </div>
             </div>

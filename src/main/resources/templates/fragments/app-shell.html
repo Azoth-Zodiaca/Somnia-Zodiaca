@@ -77,10 +77,22 @@
             @username
           </div>
           <div class="sign">
-            <span>&#9814;</span>
-            <span th:if="${segnoZodiacale != null}" th:text="${#strings.capitalize(
-                  #strings.toLowerCase(segnoZodiacale)
-                  )}">
+            <span th:if="${segnoZodiacaleAbbreviato != null}">
+              <span th:text="${segnoZodiacaleAbbreviato}">Leo</span>
+
+              <span class="sign-symbol" th:text="${segnoZodiacaleSimbolo}">
+                ♌︎
+              </span>
+
+              <span th:if="${ascendenteSimbolo != null}">
+                · Asc.
+                <span class="sign-symbol" th:text="${ascendenteSimbolo}">
+                  ♏︎
+                </span>
+              </span>
+            </span>
+
+            <span th:unless="${segnoZodiacaleAbbreviato != null}">
               Segno non impostato
             </span>
           </div>

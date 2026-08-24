@@ -2500,3 +2500,28 @@ h4 {
     display: none;
   }
 }
+
+.triad-item-aligned {
+  display: grid;
+  grid-template-columns: 92px minmax(0, 1fr);
+  gap: 16px;
+  align-items: center;
+}
+
+.triad-value {
+  display: inline-flex;
+  align-items: center;
+  justify-content: flex-end;
+  gap: 6px;
+  min-width: 0;
+  text-align: right;
+}
+
+.triad-value .planet-symbol,
+.triad-value .sign-symbol {
+  flex: 0 0 20px;
+}
+
+.triad-value>span:not(.planet-symbol):not(.sign-symbol) {
+  white-space: nowrap;
+}
