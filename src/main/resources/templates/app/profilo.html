@@ -3,8 +3,10 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Profilo - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+  <link rel="stylesheet" th:href="@{/css/responsive.css}" href="../../static/css/responsive.css">
 </head>
 
 <body>
@@ -145,21 +147,18 @@
         <div id="tab-sogni" class="js-tab-panel is-hidden">
           <p class="text-muted">Elenco dei sogni salvati/pubblicati.</p>
         </div>
-        <div id="tab-cosmetici" class="js-tab-panel is-hidden">
-          <p class="text-muted">Griglia completa dei cosmetici posseduti (vedi anche pagina Inventario).</p>
-        </div>
         <div id="tab-badge" class="js-tab-panel is-hidden">
-          <p class="text-muted">Badge ottenuti (vedi anche pagina Wallet/Progressi).</p>
+          <p class="text-muted">Badge ottenuti (vedi anche pagina Wallet).</p>
         </div>
         <div id="tab-statistiche" class="js-tab-panel is-hidden">
           <p class="text-muted">Grafici/numeri di utilizzo nel tempo.</p>
         </div>
 
         <!-- Box pubblicitario premium, visibile solo se l'utente non è premium -->
-        <div class="card sidebar-promo mt-20 profile-premium-promo"></div>
+        <div class="card sidebar-promo mt-20 profile-premium-promo">
         <span class="badge badge-premium">Premium</span>
         <p>Custode del Cielo<br>+500 QI mensili, letture illimitate, cosmetici esclusivi.</p>
-        <a href="/premium">Scopri di più &rarr;</a>
+        <a href="/premium">Scopri di più &rarr;</a></div>
     </div>
     </main>
   </div>

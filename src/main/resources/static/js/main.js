@@ -99,10 +99,55 @@ function initUploadProfilo() {
 function initSidebarToggle() {
   var toggleBtn = document.getElementById("sidebar-toggle");
   var sidebar = document.getElementById("sidebar");
+  var backdrop = document.getElementById("sidebar-backdrop");
+
   if (!toggleBtn || !sidebar) return;
 
-  toggleBtn.addEventListener("click", function () {
-    sidebar.classList.toggle("open");
+  function setSidebarState(isOpen) {
+    sidebar.classList.toggle("open", isOpen);
+    document.body.classList.toggle("sidebar-open", isOpen);
+
+    toggleBtn.setAttribute("aria-expanded", String(isOpen));
+    toggleBtn.setAttribute(
+      "aria-label",
+      isOpen ? "Chiudi menu di navigazione" : "Apri menu di navigazione"
+    );
+
+    if (backdrop) {
+      backdrop.classList.toggle("visible", isOpen);
+      backdrop.setAttribute("aria-hidden", String(!isOpen));
+    }
+  }
+
+  toggleBtn.addEventListener("click", function (event) {
+    event.preventDefault();
+
+    var isOpen = sidebar.classList.contains("open");
+    setSidebarState(!isOpen);
+  });
+
+  if (backdrop) {
+    backdrop.addEventListener("click", function () {
+      setSidebarState(false);
+    });
+  }
+
+  sidebar.querySelectorAll("a").forEach(function (link) {
+    link.addEventListener("click", function () {
+      setSidebarState(false);
+    });
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && sidebar.classList.contains("open")) {
+      setSidebarState(false);
+    }
+  });
+
+  window.addEventListener("resize", function () {
+    if (window.innerWidth > 960) {
+      setSidebarState(false);
+    }
   });
 }
 
@@ -188,30 +233,6 @@ function initChipSelectors() {
       if (hiddenInput) {
         hiddenInput.value = value;
       }
-    });
-  });
-}
-
-/* ---------------------------------------------------------
-   4) Filtri categoria dello Shop (Tutti / Cornici / Sfondi...).
-   Aggiunge/rimuove la classe "active" e mostra/nasconde
-   gli articoli in base a data-category.
---------------------------------------------------------- */
-function initShopCategories() {
-  var buttons = document.querySelectorAll(".shop-categories button");
-  if (buttons.length === 0) return;
-
-  buttons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      buttons.forEach(function (b) { b.classList.remove("active"); });
-      btn.classList.add("active");
-
-      var category = btn.getAttribute("data-category");
-      document.querySelectorAll(".shop-item").forEach(function (item) {
-        var itemCategory = item.getAttribute("data-category");
-        var show = (category === "tutti" || category === itemCategory);
-        item.classList.toggle("is-hidden", !show);
-      });
     });
   });
 }
@@ -718,34 +739,6 @@ function initInterpretationExpanders() {
       button.textContent = expanded
         ? "Riduci \u2039"
         : "Leggi tutto \u203A";
-    });
-  });
-}
-
-/* ---------------------------------------------------------
-   7) Equipaggia/rimuovi un cosmetico nella pagina Inventario.
-   Solo dimostrativo lato client: in Spring questa azione
-   andrebbe collegata a una chiamata al server (form o fetch)
-   che salva la scelta nel database.
---------------------------------------------------------- */
-function initInventoryEquip() {
-  var equipButtons = document.querySelectorAll(".js-equip-btn");
-  if (equipButtons.length === 0) return;
-
-  equipButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      var equipped = btn.getAttribute("data-equipped") === "true";
-      if (equipped) {
-        btn.setAttribute("data-equipped", "false");
-        btn.textContent = "Equipaggia";
-        btn.classList.remove("btn-primary");
-        btn.classList.add("btn-ghost");
-      } else {
-        btn.setAttribute("data-equipped", "true");
-        btn.textContent = "Equipaggiato \u2713";
-        btn.classList.remove("btn-ghost");
-        btn.classList.add("btn-primary");
-      }
     });
   });
 }

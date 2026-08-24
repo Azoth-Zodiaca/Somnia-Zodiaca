@@ -3,8 +3,10 @@
 
 <head>
   <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
   <title>Tema Natale - Somnia Zodiaca</title>
   <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
+  <link rel="stylesheet" th:href="@{/css/responsive.css}" href="../../static/css/responsive.css">
 </head>
 
 <body>
@@ -45,45 +47,116 @@
 
         <div class="natal-data-layout">
 
-          <div class="card natal-birth-card" th:if="${temaNatale != null}">
-            <div class="card-title">Dati di nascita</div>
+          <div class="natal-summary-column">
 
-            <p>
-              <strong>Luogo:</strong>
-              <span th:text="${temaNatale.luogoNascita}">Napoli</span>
-            </p>
+            <div class="card natal-birth-card" th:if="${temaNatale != null}">
+              <div class="card-title">Dati di nascita</div>
 
-            <p>
-              <strong>Latitudine:</strong>
-              <span th:text="${temaNatale.latitudine}">40.8518</span>
-            </p>
+              <p>
+                <strong>Luogo:</strong>
+                <span th:text="${temaNatale.luogoNascita}">Napoli</span>
+              </p>
 
-            <p>
-              <strong>Longitudine:</strong>
-              <span th:text="${temaNatale.longitudine}">14.2681</span>
-            </p>
+              <p>
+                <strong>Latitudine:</strong>
+                <span th:text="${temaNatale.latitudine}">40.8518</span>
+              </p>
 
-            <p>
-              <strong>Fuso orario:</strong>
-              <span th:text="${temaNatale.timezone}">Europe/Rome</span>
-            </p>
+              <p>
+                <strong>Longitudine:</strong>
+                <span th:text="${temaNatale.longitudine}">14.2681</span>
+              </p>
+
+              <p>
+                <strong>Fuso orario:</strong>
+                <span th:text="${temaNatale.timezone}">Europe/Rome</span>
+              </p>
+            </div>
+
+            <div class="card natal-triad-card" th:if="${pianeti != null}">
+              <div class="card-title">
+                <span>Triade principale</span>
+              </div>
+
+              <p class="natal-card-subtitle">
+                La tua firma stellare
+              </p>
+
+              <div class="triad-item">
+                <span class="triad-name">Sole</span>
+
+                <span th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Sole'}">
+                  <span class="planet-symbol sun-symbol" th:text="${pianeta.simbolo}">☉</span>
+                  <span class="sign-symbol" th:text="${pianeta.simboloSegno}">♏</span>
+                  <span th:text="${pianeta.segno}">Scorpione</span>
+                  <span>· </span>
+                  <span th:text="${pianeta.casaRomana}">VIII</span>
+                </span>
+              </div>
+
+              <div class="triad-item">
+                <span class="triad-name">Luna</span>
+
+                <span th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Luna'}">
+                  <span class="planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
+                  <span class="sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
+                  <span th:text="${pianeta.segno}">Capricorno</span>
+                  <span>· </span>
+                  <span th:text="${pianeta.casaRomana}">X</span>
+                </span>
+              </div>
+
+              <div class="triad-item">
+                <span class="triad-name">Ascendente</span>
+                <span>
+                  <span class="sign-symbol" th:text="${ascendenteSimbolo}">♑</span>
+                  <span th:text="${ascendenteSegno}">Capricorno</span>
+                </span>
+              </div>
+            </div>
+
           </div>
 
           <div class="card natal-planets-card" th:if="${pianeti != null}">
-            <div class="card-title">Pianeti</div>
-
-            <div class="triad-item" th:each="pianeta : ${pianeti}">
-              <span th:text="${pianeta.nome}">Sole</span>
-              <span>
-                <span th:text="${pianeta.segno}"></span>
-                (<span th:text="${pianeta.casa}"></span>)
-                ·
-                <span th:text="${#numbers.formatDecimal(pianeta.longitudine, 1, 2)}"></span>
-                °
-                <span th:if="${pianeta.retrogrado}"> · Retrogrado</span>
-              </span>
+            <div class="planet-row planet-row-header">
+              <span>Pianeta</span>
+              <span>Segno</span>
+              <span>Casa</span>
+              <span>Angolo</span>
+              <span>Stato</span>
             </div>
 
+            <div class="planet-row" th:each="pianeta : ${pianeti}">
+              <span class="natal-planet-name">
+                <span class="planet-symbol" th:text="${pianeta.simbolo}">
+                  ☉
+                </span>
+                <span th:text="${pianeta.nome}">Sole</span>
+              </span>
+
+              <span class="planet-sign">
+                <span class="sign-symbol" th:text="${pianeta.simboloSegno}">
+                  ♏︎
+                </span>
+                <span th:text="${pianeta.segno}">Scorpione</span>
+              </span>
+
+              <span class="planet-house" th:text="${pianeta.casaRomana}">
+                VIII
+              </span>
+
+              <span class="planet-angle">
+                <span th:text="${#numbers.formatDecimal(pianeta.longitudine, 1, 2)}">
+                  228.77
+                </span>
+                °
+              </span>
+
+              <span class="planet-retrograde">
+                <span th:if="${pianeta.retrogrado}">Retrogrado</span>
+                <span th:unless="${pianeta.retrogrado}">Diretto</span>
+              </span>
+            </div>
           </div>
 
         </div>
@@ -100,29 +173,7 @@
         <div id="tab-riepilogo" class="js-tab-panel">
           <div class="natal-grid">
 
-            <!-- Grafico/ruota del tema natale: qui un cerchio segnaposto.
-                 In produzione si userebbe una libreria per disegnare la
-                 carta astrale reale (es. SVG generato lato server o JS). -->
-            <div class="card">
-              <div class="natal-wheel">Grafico carta astrale</div>
-              <div class="flex natal-actions">
-                <button class="btn btn-ghost btn-sm">&#128269;+</button>
-                <button class="btn btn-ghost btn-sm">&#128269;-</button>
-                <button class="btn btn-ghost btn-sm">&#8635; Reset</button>
-                <button class="btn btn-ghost btn-sm">&#8681; PNG</button>
-              </div>
-            </div>
-
             <div class="dashboard-col">
-              <!-- Triade principale: Sole, Luna, Ascendente -->
-              <div class="card">
-                <div class="card-title"><span>Triade principale</span></div>
-                <div class="triad-item"><span class="triad-name">Sole</span><span>&#9804; Leone &middot; X casa</span>
-                </div>
-                <div class="triad-item"><span class="triad-name">Luna</span><span>&#9810; Acquario &middot; VI
-                    casa</span></div>
-                <div class="triad-item"><span class="triad-name">Ascendente</span><span>&#9807; Scorpione</span></div>
-              </div>
 
               <!-- Distribuzione elementi -->
               <div class="card">
@@ -178,66 +229,38 @@
                   slanci d'iniziativa."</p>
               </div>
 
-              <!-- Pianeti dominanti -->
-              <div class="card">
-                <div class="card-title"><span>Pianeti dominanti</span></div>
-                <div class="triad-item"><span>&#9737; Sole &middot; Leone - X casa</span><span>24 pt</span></div>
-                <div class="triad-item"><span>&#9794; Marte &middot; Ariete - V casa</span><span>18 pt</span></div>
-                <div class="triad-item"><span>&#9792; Venere &middot; Cancro - IX casa</span><span>12 pt</span></div>
-              </div>
             </div>
           </div>
 
           <!-- Analisi AI in fondo alla pagina Riepilogo -->
-          <div class="card mt-20">
-            <div class="card-title">
-              <span>&#10022; Analisi AI</span>
-              <div class="flex gap-8">
-                <span class="text-muted natal-analysis-date">Ultima: 3 gg fa</span>
-                <button class="btn btn-ghost btn-sm">Rigenera -30 QI</button>
-              </div>
-            </div>
-            <div class="ai-analysis-layout">
-              <div class="ai-tabs">
-                <button class="active">Sintesi</button>
-                <button>Personalità</button>
-                <button>Relazioni</button>
-                <button>Carriera</button>
-                <button>Ombre</button>
-                <button>Consigli</button>
-              </div>
-              <div class="ai-analysis-text">
-                <!-- Testo generato dall'AI: in Spring th:utext="${analisiAi.sintesi}"
-                     (attenzione a sanificare l'HTML se proviene da un modello AI) -->
-                <p>Il tuo Sole in Leone in decima casa parla di vocazione visibile: sei costruito per essere visto, ma
-                  non superficialmente — c'è un'esigenza autentica di lasciare traccia. L'Ascendente in Scorpione
-                  aggiunge magnetismo silenzioso: entri nelle stanze senza fare rumore, ma vieni notata comunque.</p>
-                <p>La Luna in Acquario in sesta casa suggerisce una vita quotidiana anticonvenzionale, che rifiuta il
-                  ruolo di serva della routine. Ti nutre l'innovazione applicata alle piccole cose, non le rivoluzioni
-                  astratte.</p>
-              </div>
-            </div>
-            <div class="flex gap-8 mt-20">
-              <button class="btn btn-ghost btn-sm">Copia</button>
-              <button class="btn btn-ghost btn-sm">&#8681; PDF</button>
-              <button class="btn btn-ghost btn-sm">&#8599; Condividi</button>
           <div class="card mt-20" th:if="${interpretazione != null}">
             <div class="card-title">Interpretazione del tema</div>
-            <div class="ai-analysis-text" th:text="${interpretazione}">
-              Interpretazione non ancora disponibile.
-            </div>
+            <div class="ai-analysis-text" th:text="${interpretazione}"></div>
           </div>
         </div>
 
         <div id="tab-carta" class="js-tab-panel is-hidden">
           <p class="text-muted">Vista dettagliata della carta astrale.</p>
+          <!-- Grafico da implementare (es. SVG generato lato server o JS). -->
+          <div class="card">
+            <div class="natal-wheel">Grafico carta astrale</div>
+            <div class="flex natal-actions">
+              <button class="btn btn-ghost btn-sm">&#128269;+</button>
+              <button class="btn btn-ghost btn-sm">&#128269;-</button>
+              <button class="btn btn-ghost btn-sm">&#8635; Reset</button>
+              <button class="btn btn-ghost btn-sm">&#8681; PNG</button>
+            </div>
+          </div>
         </div>
+
         <div id="tab-pianeti" class="js-tab-panel is-hidden">
-          <p class="text-muted">Tabella con posizione di ogni pianeta, segno e casa.</p>
+          <p class="text-muted">Spiegazione di ogni pianeta e sua possibile interpretazione</p>
         </div>
+
         <div id="tab-case" class="js-tab-panel is-hidden">
           <p class="text-muted">Le 12 case astrologiche con relativo significato.</p>
         </div>
+
       </main>
     </div>
   </div>
