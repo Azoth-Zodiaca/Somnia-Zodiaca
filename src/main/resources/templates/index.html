@@ -3,10 +3,10 @@
 <head th:replace="~{fragments/head :: head(title='Somnia Zodiaca - Il tuo cielo, i tuoi sogni interpretati', responsive=true)}"></head>
 <body>
 
-  <!-- Navbar pubblica riutilizzabile -->
+  <!-- Navigazione pubblica condivisa. -->
   <div th:replace="~{fragments/public-nav :: navbar}"></div>
 
-  <!-- HERO: proposta principale e accesso rapido alla registrazione -->
+  <!-- Presentazione del servizio e accesso alla registrazione. -->
   <section class="container hero">
     <div>
       <span class="eyebrow">Il tuo spazio nel cielo</span>
@@ -18,12 +18,11 @@
       </div>
     </div>
 
-    <!-- Ruota zodiacale animata: in produzione qui va un componente
-         SVG/Canvas con animazione del "sistema solare". Per ora è un
-         cerchio segnaposto animato via CSS/JS. -->
+    <!-- Elemento visuale interattivo della hero. -->
     <div class="zodiac-wheel" id="hero-wheel"></div>
   </section>
 
+  <!-- Panoramica delle funzioni principali. -->
   <section class="container public-features" id="funzioni">
     <div class="section-title">
       <span class="eyebrow">Un cielo da vivere</span>
@@ -81,14 +80,13 @@
     </div>
   </section>
 
-  <!-- Sezione "12 storie, un cielo solo": elenco dei 12 segni -->
+  <!-- Elenco dei dodici segni zodiacali. -->
   <section class="container" id="come-funziona">
     <div class="section-title">
       <span class="eyebrow">Zodiaco</span>
       <h2>Dodici storie, un cielo solo</h2>
     </div>
     <div class="zodiac-grid">
-      <!-- In Spring: th:each="segno : ${segniZodiacali}" e th:text per nome/date -->
       <div class="zodiac-item"><div class="icon">&#9800;</div>Ariete<span class="dates">21 mar</span></div>
       <div class="zodiac-item"><div class="icon">&#9801;</div>Toro<span class="dates">20 apr</span></div>
       <div class="zodiac-item"><div class="icon">&#9802;</div>Gemelli<span class="dates">21 mag</span></div>
@@ -104,7 +102,7 @@
     </div>
   </section>
 
-  <!-- Footer pubblico riutilizzato in tutte le pagine pubbliche -->
+  <!-- Footer pubblico condiviso. -->
   <div th:replace="~{fragments/public-footer :: footer}"></div>
 
   <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>

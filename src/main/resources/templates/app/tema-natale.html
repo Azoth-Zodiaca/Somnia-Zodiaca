@@ -12,6 +12,7 @@
 
       <main class="app-content">
 
+        <!-- Intestazione del tema e dati di nascita. -->
         <div class="natal-header">
           <div>
             <h2 class="serif natal-title">Il tuo cielo di nascita</h2>
@@ -39,6 +40,7 @@
           </p>
         </div>
 
+        <!-- Riepilogo dei dati anagrafici e della triade principale. -->
         <div class="natal-data-layout">
 
           <div class="natal-summary-column">
@@ -164,7 +166,7 @@
         </div>
 
 
-        <!-- Tab interne: Riepilogo / Carta / Pianeti / Case -->
+        <!-- Viste del tema: riepilogo, carta, pianeti e case. -->
         <div class="tab-row" data-tab-group="natale-tabs">
           <a href="#" class="js-tab active" data-target="tab-riepilogo">Riepilogo</a>
           <a href="#" class="js-tab" data-target="tab-carta">Carta</a>
@@ -177,7 +179,7 @@
 
             <div class="dashboard-col">
 
-              <!-- Distribuzione elementi -->
+              <!-- Distribuzione dei quattro elementi. -->
               <div class="card">
                 <div class="card-title">Elementi</div>
 
@@ -195,7 +197,7 @@
                 </div>
               </div>
 
-              <!-- Modalità: Cardinale / Fisso / Mobile -->
+              <!-- Distribuzione delle modalità astrologiche. -->
               <div class="card">
                 <div class="card-title">Modalità</div>
 
@@ -220,6 +222,7 @@
             </div>
           </div>
 
+          <!-- Interpretazione testuale del profilo astrologico. -->
           <div class="card natal-interpretation-card"
             th:if="${temaNatale != null and temaNatale.interpretazioneAstroWay != null}">
             <div class="card-title">Lettura del profilo</div>

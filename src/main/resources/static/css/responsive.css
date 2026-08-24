@@ -429,6 +429,14 @@ button {
         gap: 18px;
     }
 
+    .public-user-actions {
+        gap: 10px;
+    }
+
+    .public-logout-button {
+        font-size: 12px;
+    }
+
     .public-profile-name {
         display: none;
     }

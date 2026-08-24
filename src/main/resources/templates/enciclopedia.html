@@ -2,16 +2,17 @@
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head(title='Enciclopedia dello Zodiaco - Somnia Zodiaca', responsive=true)}"></head>
 <body>
+  <!-- Navigazione pubblica condivisa. -->
   <div th:replace="~{fragments/public-nav :: navbar}"></div>
 
+  <!-- Consultazione dei segni, degli elementi e dei pianeti. -->
   <section class="container encyclopedia-section">
     <div class="section-title encyclopedia-title">
       <span class="eyebrow">Enciclopedia</span>
       <h2>Segni, pianeti ed elementi</h2>
     </div>
 
-    <!-- Elenco dei 12 segni: cliccando si arriverebbe a una scheda di
-         dettaglio, es. /enciclopedia/segni/leone -->
+    <!-- Elenco dei dodici segni zodiacali. -->
     <div class="zodiac-grid">
       <a class="zodiac-item" href="/enciclopedia/segni/ariete"><div class="icon">&#9800;</div>Ariete</a>
       <a class="zodiac-item" href="/enciclopedia/segni/toro"><div class="icon">&#9801;</div>Toro</a>

@@ -10,8 +10,7 @@
 
       <main class="app-content">
 
-        <!-- Statistiche rapide: in Spring, th:each su una lista di
-             oggetti "statistica" con etichetta/valore/variazione -->
+        <!-- Riepilogo delle metriche principali dell'utente. -->
         <div class="stats-grid">
           <div class="card stat-card">
             <div class="stat-label">QI</div>
@@ -36,10 +35,10 @@
         </div>
 
         <div class="dashboard-grid">
-          <!-- COLONNA PRINCIPALE -->
+          <!-- Colonna principale: accesso rapido all'Oracolo e sogni in scadenza. -->
           <div class="dashboard-col">
 
-            <!-- Mini oracolo: form rapido per interpretare un sogno -->
+            <!-- Form rapido per inviare un sogno all'Oracolo. -->
             <div class="card oracolo-mini">
               <div class="card-title">
                 <span>&#9789; Oracolo &mdash; Hai sognato stanotte?</span>
@@ -52,7 +51,7 @@
               </form>
             </div>
 
-            <!-- Sogni in scadenza: in Spring th:each="sogno : ${sogniInScadenza}" -->
+            <!-- Anteprima dei sogni temporanei prossimi alla scadenza. -->
             <div class="card">
               <div class="card-title">
                 <span>&#9210; Sogni in scadenza</span>
@@ -71,10 +70,10 @@
             </div>
           </div>
 
-          <!-- COLONNA LATERALE -->
+          <!-- Colonna laterale: progressi, obiettivi, profilo e attività. -->
           <div class="dashboard-col">
 
-            <!-- Progressione livello utente -->
+            <!-- Livello e progresso dell'utente. -->
             <div class="card">
               <div class="dashboard-level">Livello 7 &middot; Sognatore</div>
               <div class="progress-bar mt-10">
@@ -83,7 +82,7 @@
               <p class="text-muted mt-10 dashboard-xp">720/1000 XP &middot; Prossimo: Interprete</p>
             </div>
 
-            <!-- Obiettivi giornalieri -->
+            <!-- Obiettivi disponibili nella giornata corrente. -->
             <div class="card">
               <div class="card-title"><span>Obiettivi di oggi</span></div>
               <div class="goal-list">
@@ -102,7 +101,7 @@
               </div>
             </div>
 
-            <!-- Avatar rapido -->
+            <!-- Accesso rapido alla personalizzazione del profilo. -->
             <div class="card text-center">
               <span class="text-muted dashboard-avatar-label">Il tuo avatar</span>
               <div class="avatar dashboard-avatar">L</div>
@@ -110,7 +109,7 @@
               <a href="/app/profilo" class="btn btn-outline btn-sm mt-20">Personalizza</a>
             </div>
 
-            <!-- Attività recente -->
+            <!-- Ultime variazioni del saldo e delle attività. -->
             <div class="card">
               <div class="card-title"><span>Attività</span><a href="/app/wallet" class="link">Storico &rarr;</a></div>
               <div class="activity-item">

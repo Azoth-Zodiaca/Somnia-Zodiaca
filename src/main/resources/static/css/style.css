@@ -386,6 +386,27 @@ h4 {
   color: var(--text-primary);
 }
 
+.public-user-actions {
+  display: flex;
+  align-items: center;
+  gap: 14px;
+}
+
+.public-logout-form {
+  margin: 0;
+}
+
+.public-logout-button {
+  padding: 6px 0;
+  color: var(--text-secondary);
+  font-size: 13px;
+  font-weight: 600;
+}
+
+.public-logout-button:hover {
+  color: var(--text-primary);
+}
+
 .public-profile-avatar {
   width: 38px;
   height: 38px;
