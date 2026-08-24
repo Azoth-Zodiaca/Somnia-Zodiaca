@@ -38,6 +38,7 @@ public class UtenteDetail implements GenericDto {
     private LocalDateTime dataRegistrazione;
     private LocalDateTime ultimoAccesso;
     private Integer giorniConsecutivi;
+    private Integer giorniRicompensaGiornaliera;
     private LocalDate ultimaRicompensaGiornaliera;
     private String profiloColore;
     private String avatarPath;

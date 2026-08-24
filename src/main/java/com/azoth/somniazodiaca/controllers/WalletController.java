@@ -32,6 +32,11 @@ public class WalletController {
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
         model.addAttribute("utente", utente);
+        int giorniRicompense = utente.getGiorniRicompensaGiornaliera() == null
+                ? 0
+                : utente.getGiorniRicompensaGiornaliera();
+        model.addAttribute("giorniRicompense", giorniRicompense);
+        model.addAttribute("giornoRicompensa", Math.min(giorniRicompense + 1, 7));
         model.addAttribute(
                 "ricompensaRiscossa",
                 LocalDate.now().equals(

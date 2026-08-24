@@ -125,7 +125,10 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         }
 
         if (ultimoGiorno != null && ultimoGiorno.plusDays(1).equals(oggi)) {
-            utente.setGiorniConsecutivi(utente.getGiorniConsecutivi() + 1);
+            int giorniConsecutivi = utente.getGiorniConsecutivi() == null
+                    ? 0
+                    : utente.getGiorniConsecutivi();
+            utente.setGiorniConsecutivi(giorniConsecutivi + 1);
         } else {
             utente.setGiorniConsecutivi(1);
         }
@@ -149,13 +152,23 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
                     "La ricompensa è già stata riscossa oggi");
         }
 
-        int[] ricompense = { 10, 15, 20, 25, 30, 40, 50 };
+        if (utente.getUltimaRicompensaGiornaliera() != null
+                && !utente.getUltimaRicompensaGiornaliera().plusDays(1).equals(oggi)) {
+            utente.setGiorniRicompensaGiornaliera(0);
+        }
 
-        int giorno = Math.max(1, utente.getGiorniConsecutivi());
+        int[] ricompense = { 10, 20, 40, 70, 110, 150, 200 };
+
+        int giorno = Math.min(
+            Math.max(0, utente.getGiorniRicompensaGiornaliera() == null
+                ? 0
+                : utente.getGiorniRicompensaGiornaliera()) + 1,
+            ricompense.length);
         int indice = Math.min(giorno, ricompense.length) - 1;
         int quantitaQi = ricompense[indice];
 
         utente.setQi(utente.getQi() + quantitaQi);
+        utente.setGiorniRicompensaGiornaliera(giorno == ricompense.length ? 0 : giorno);
         utente.setUltimaRicompensaGiornaliera(oggi);
 
         getRepository().save(utente);

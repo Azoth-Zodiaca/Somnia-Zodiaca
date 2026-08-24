@@ -45,7 +45,8 @@ public class AdminInitializer {
                             .passwordHash(encoder.encode("admin"))
                             .ruolo(Ruolo.ADMIN)
                             .qi(10000)
-                            .giorniConsecutivi(7)
+                            .giorniConsecutivi(6)
+                            .giorniRicompensaGiornaliera(6)
                             .profiloColore("#F97316")
                             .build();
 
@@ -60,10 +61,12 @@ public class AdminInitializer {
         admin.setEmail("admin@somniazodiaca.it");
         admin.setRuolo(Ruolo.ADMIN);
         admin.setQi(10000);
-        admin.setGiorniConsecutivi(7);
         admin.setProfiloColore("#F97316");
         admin.setSegnoZodiacale(segno);
         admin.setAscendente(segno);
+        admin.setGiorniConsecutivi(6);
+        admin.setGiorniRicompensaGiornaliera(6);
+        admin.setUltimaRicompensaGiornaliera(LocalDate.now().minusDays(1));
         utenteRepository.save(admin);
 
         if (temaNataleRepository.findByUtenteId(admin.getId()).isEmpty()) {
