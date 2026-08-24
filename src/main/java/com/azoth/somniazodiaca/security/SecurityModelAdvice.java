@@ -3,6 +3,7 @@ package com.azoth.somniazodiaca.security;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
@@ -66,74 +67,40 @@ public class SecurityModelAdvice {
                 .anyMatch(authority::equals);
     }
 
-    @ModelAttribute("saldoQi")
-    public Integer saldoQi(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return 0;
-        }
-
-        return utenteService.findByUsername(authentication.getName())
-                .map(UtenteDetail::getQi)
-                .orElse(0);
+    private String abbrevia(String segno) {
+        return switch (segno) {
+            case "ARIETE" -> "Ari";
+            case "TORO" -> "Tau";
+            case "GEMELLI" -> "Gem";
+            case "CANCRO" -> "Can";
+            case "LEONE" -> "Leo";
+            case "VERGINE" -> "Vir";
+            case "BILANCIA" -> "Lib";
+            case "SCORPIONE" -> "Sco";
+            case "SAGITTARIO" -> "Sag";
+            case "CAPRICORNO" -> "Cap";
+            case "ACQUARIO" -> "Aqu";
+            case "PESCI" -> "Pis";
+            default -> segno;
+        };
     }
 
-    // aggiunta metodo per nome utente
-    @ModelAttribute("username")
-    public String username(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "";
-        }
-
-        return utenteService.findByUsername(authentication.getName())
-                .map(UtenteDetail::getUsername)
-                .orElse("");
-    }
-
-    @ModelAttribute("segnoZodiacale")
-    public String segnoZodiacale(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "";
-        }
-
-        return utenteService.findByUsername(authentication.getName())
-                .map(UtenteDetail::getSegnoZodiacale)
-                .map(segno -> segno.getSegnoZodiacale().name())
-                .orElse("Segno non impostato");
-    }
-
-    @ModelAttribute("avatarPath")
-    public String avatarPath(Authentication authentication) {
-        if (authentication == null
-                || !authentication.isAuthenticated()) {
-            return null;
-        }
-
-        return utenteService.findByUsername(authentication.getName())
-                .map(UtenteDetail::getAvatarPath)
-                .orElse(null);
-    }
-
-    @ModelAttribute("profiloColore")
-    public String profiloColore(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "#F97316";
-        }
-
-        return utenteService.findByUsername(authentication.getName())
-                .map(UtenteDetail::getProfiloColore)
-                .orElse("#F97316");
-    }
-
-    @ModelAttribute("profiloColoreClasse")
-    public String profiloColoreClasse(Authentication authentication) {
-        if (authentication == null || !authentication.isAuthenticated()) {
-            return "profile-color-orange";
-        }
-
-        return utenteService.findByUsername(authentication.getName())
-                .map(UtenteDetail::getProfiloColore)
-                .map(this::classeColore)
-                .orElse("profile-color-orange");
+    private String simboloSegno(String segno) {
+        return switch (segno) {
+            case "ARIETE" -> "\u2648\uFE0E";
+            case "TORO" -> "\u2649\uFE0E";
+            case "GEMELLI" -> "\u264A\uFE0E";
+            case "CANCRO" -> "\u264B\uFE0E";
+            case "LEONE" -> "\u264C\uFE0E";
+            case "VERGINE" -> "\u264D\uFE0E";
+            case "BILANCIA" -> "\u264E\uFE0E";
+            case "SCORPIONE" -> "\u264F\uFE0E";
+            case "SAGITTARIO" -> "\u2650\uFE0E";
+            case "CAPRICORNO" -> "\u2651\uFE0E";
+            case "ACQUARIO" -> "\u2652\uFE0E";
+            case "PESCI" -> "\u2653\uFE0E";
+            default -> "";
+        };
     }
 
     private String classeColore(String colore) {
@@ -145,5 +112,78 @@ public class SecurityModelAdvice {
             case "#9333EA" -> "profile-color-purple";
             default -> "profile-color-orange";
         };
+    }
+
+    @ModelAttribute
+    public void sidebarAttributes(
+            Authentication authentication,
+            Model model) {
+
+        if (authentication == null
+                || !authentication.isAuthenticated()
+                || authentication instanceof AnonymousAuthenticationToken) {
+
+            model.addAttribute("username", "");
+            model.addAttribute("saldoQi", 0);
+            model.addAttribute("segnoZodiacale", null);
+            model.addAttribute("segnoZodiacaleAbbreviato", null);
+            model.addAttribute("segnoZodiacaleSimbolo", null);
+            model.addAttribute("ascendenteSimbolo", null);
+            model.addAttribute("avatarPath", null);
+            model.addAttribute("profiloColore", "#F97316");
+            model.addAttribute(
+                    "profiloColoreClasse",
+                    "profile-color-orange");
+
+            return;
+        }
+
+        UtenteDetail utente = utenteService
+                .findByUsername(authentication.getName())
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Utente non trovato"));
+
+        model.addAttribute("username", utente.getUsername());
+        model.addAttribute("saldoQi", utente.getQi());
+        model.addAttribute("avatarPath", utente.getAvatarPath());
+
+        String colore = utente.getProfiloColore() != null
+                ? utente.getProfiloColore()
+                : "#F97316";
+
+        model.addAttribute("profiloColore", colore);
+        model.addAttribute(
+                "profiloColoreClasse",
+                classeColore(colore));
+
+        if (utente.getSegnoZodiacale() == null) {
+            model.addAttribute("segnoZodiacale", null);
+            model.addAttribute("segnoZodiacaleAbbreviato", null);
+            model.addAttribute("segnoZodiacaleSimbolo", null);
+        } else {
+            String segno = utente.getSegnoZodiacale()
+                    .getSegnoZodiacale()
+                    .name();
+
+            model.addAttribute("segnoZodiacale", segno);
+            model.addAttribute(
+                    "segnoZodiacaleAbbreviato",
+                    abbrevia(segno));
+            model.addAttribute(
+                    "segnoZodiacaleSimbolo",
+                    simboloSegno(segno));
+        }
+
+        if (utente.getAscendente() == null) {
+            model.addAttribute("ascendenteSimbolo", null);
+        } else {
+            String ascendente = utente.getAscendente()
+                    .getSegnoZodiacale()
+                    .name();
+
+            model.addAttribute(
+                    "ascendenteSimbolo",
+                    simboloSegno(ascendente));
+        }
     }
 }

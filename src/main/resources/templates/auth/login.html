@@ -2,33 +2,19 @@
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head(title='Accedi - Somnia Zodiaca', responsive=false)}"></head>
 <body>
-  <div class="auth-page">
-
-    <div class="auth-side">
-      <a href="/" class="brand"><span class="brand-dot"></span> Somnia Zodiaca</a>
-      <div class="quote">
-        "Le stelle<br><span class="italic">inclinano</span>,<br>non obbligano."
-        <p class="quote-sub">Citazione del giorno</p>
-      </div>
-      <span class="text-muted login-copyright">&copy; 2026 Somnia Zodiaca</span>
-    </div>
-
-    <!-- Form di login. In Spring Security tipicamente:
-         th:action="@{/login}" method="post", con eventuale
-         th:if="${param.error}" per mostrare un messaggio di errore. -->
+  <div class="auth-page login-page">
     <div class="auth-form-panel">
+      <a href="/" class="brand"><span class="brand-dot"></span> Somnia Zodiaca</a>
       <h2>Bentornato</h2>
-      <p class="text-muted login-subtitle">Il tuo cielo ti aspetta.</p>
 
       <form th:action="@{/login}" method="post" action="#">
         <div class="field">
-          <label for="username">Username o email</label>
-          <input type="text" id="username" name="username" placeholder="admin o tua@email.it" required>
+          <label for="usernameOrEmail">Username o email</label>
+          <input type="text" id="usernameOrEmail" name="usernameOrEmail" placeholder="Inserisci username o email" required>
         </div>
         <div class="field">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="********" required>
-          <span class="field-hint"><a href="/password-dimenticata">Password dimenticata?</a></span>
+          <input type="password" id="password" name="password" placeholder="Inserisci password" required>
         </div>
 
         <button type="submit" class="btn btn-primary btn-block">Accedi</button>
