@@ -127,14 +127,12 @@ button {
     .dashboard-grid,
     .natal-grid,
     .natal-data-layout,
-    .inventory-grid,
     .settings-layout,
     .auth-page {
         grid-template-columns: 1fr;
     }
 
     .stats-grid,
-    .owned-grid,
     .zodiac-grid,
     .recharge-grid {
         grid-template-columns: repeat(2, minmax(0, 1fr));
@@ -211,15 +209,9 @@ button {
     .dashboard-grid,
     .natal-grid,
     .natal-data-layout,
-    .inventory-grid,
     .settings-layout,
     .settings-row {
         grid-template-columns: 1fr;
-    }
-
-    .owned-grid {
-        grid-template-columns: repeat(2, minmax(0, 1fr));
-        gap: 10px;
     }
 
     .badge-grid {
@@ -231,8 +223,7 @@ button {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .dashboard-progress,
-    .progressi-progress {
+    .dashboard-progress {
         width: 100%;
     }
 
@@ -340,16 +331,6 @@ button {
         height: 58px;
         flex: 0 0 58px;
         font-size: 24px;
-    }
-
-    .item-footer {
-        align-items: stretch;
-        flex-direction: column;
-        gap: 8px;
-    }
-
-    .item-footer .btn {
-        width: 100%;
     }
 
     .wallet-balance {
