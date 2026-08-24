@@ -11,7 +11,6 @@ import com.azoth.somniazodiaca.entities.UtenteBadge;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.enums.TipoCondizione;
 import com.azoth.somniazodiaca.repositories.BadgeRepository;
-import com.azoth.somniazodiaca.repositories.InventarioCosmeticoRepository;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.LikePostRepository;
 import com.azoth.somniazodiaca.repositories.PostRepository;
@@ -29,7 +28,6 @@ public class BadgeService {
     private final InterpretazioneRepository interpretazioneRepository;
     private final PostRepository postRepository;
     private final LikePostRepository likePostRepository;
-    private final InventarioCosmeticoRepository inventarioCosmeticoRepository;
 
     public BadgeService(
             BadgeRepository badgeRepository,
@@ -38,8 +36,7 @@ public class BadgeService {
             SognoRepository sognoRepository,
             InterpretazioneRepository interpretazioneRepository,
             PostRepository postRepository,
-            LikePostRepository likePostRepository,
-            InventarioCosmeticoRepository inventarioCosmeticoRepository) {
+            LikePostRepository likePostRepository) {
 
         this.badgeRepository = badgeRepository;
         this.utenteBadgeRepository = utenteBadgeRepository;
@@ -48,7 +45,6 @@ public class BadgeService {
         this.interpretazioneRepository = interpretazioneRepository;
         this.postRepository = postRepository;
         this.likePostRepository = likePostRepository;
-        this.inventarioCosmeticoRepository = inventarioCosmeticoRepository;
     }
 
     @Transactional
@@ -77,22 +73,21 @@ public class BadgeService {
                 utente,
                 TipoCondizione.LIKE_RICEVUTI,
                 likePostRepository.countLikeRicevuti(utenteId));
-
-        verifica(
-                utente,
-                TipoCondizione.NUMERO_COSMETICI,
-                inventarioCosmeticoRepository.countByUtente_Id(utenteId));
-
+                
+        long giorniConsecutivi = utente.getGiorniConsecutivi() == null
+                ? 0
+                : utente.getGiorniConsecutivi();
+                
         verifica(
                 utente,
                 TipoCondizione.GIORNI_CONSECUTIVI,
-                utente.getGiorniConsecutivi());
-
-        if (utente.getRuolo() == Ruolo.PREMIUM) {
-            verifica(utente, TipoCondizione.UTENTE_PREMIUM, 1);
-        }
-    }
-
+                giorniConsecutivi);
+        
+                if (utente.getRuolo() == Ruolo.PREMIUM) {
+                    verifica(utente, TipoCondizione.UTENTE_PREMIUM, 1);
+                }
+            }
+    
     private void verifica(
             Utente utente,
             TipoCondizione tipoCondizione,

@@ -44,6 +44,8 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     private final TemaNataleRepository temaNataleRepository;
     private final InventarioCosmeticoRepository inventarioCosmeticoRepository;
     private final InterpretazioneRepository interpretazioneRepository;
+    private final BadgeService badgeService;
+    
 
     private static final SecureRandom RANDOM = new SecureRandom();
     private static final HexFormat HEX_FORMAT = HexFormat.of();
@@ -69,7 +71,8 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             SognoRepository sognoRepository,
             TemaNataleRepository temaNataleRepository,
             InventarioCosmeticoRepository inventarioCosmeticoRepository,
-            InterpretazioneRepository interpretazioneRepository) {
+            InterpretazioneRepository interpretazioneRepository,
+            BadgeService badgeService) {
 
         super(repository, converter);
         this.passwordEncoder = passwordEncoder;
@@ -78,6 +81,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         this.temaNataleRepository = temaNataleRepository;
         this.inventarioCosmeticoRepository = inventarioCosmeticoRepository;
         this.interpretazioneRepository = interpretazioneRepository;
+        this.badgeService = badgeService;
     }
 
     public Optional<UtenteDetail> findByUsername(String username) {
@@ -125,6 +129,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         utente.setUltimoAccesso(java.time.LocalDateTime.now());
 
         getRepository().save(utente);
+        badgeService.verificaBadge(username);
     }
 
     @Transactional

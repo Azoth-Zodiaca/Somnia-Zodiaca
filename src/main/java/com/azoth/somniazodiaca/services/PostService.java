@@ -25,6 +25,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
         private final InterpretazioneRepository interpretazioneRepository;
         private final LikePostRepository likePostRepository;
         private final UtenteFollowRepository utenteFollowRepository;
+        private final BadgeService badgeService;
 
         public PostService(
                         PostRepository repository,
@@ -32,13 +33,15 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                         UtenteRepository utenteRepository,
                         InterpretazioneRepository interpretazioneRepository,
                         LikePostRepository likePostRepository,
-                        UtenteFollowRepository utenteFollowRepository) {
+                        UtenteFollowRepository utenteFollowRepository,
+                        BadgeService badgeService) {
 
                 super(repository, converter);
                 this.utenteRepository = utenteRepository;
                 this.interpretazioneRepository = interpretazioneRepository;
                 this.likePostRepository = likePostRepository;
                 this.utenteFollowRepository = utenteFollowRepository;
+                this.badgeService = badgeService;
         }
 
         public List<PostDto> findByUtenteId(Long utenteId) {
@@ -80,6 +83,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                                 .build();
 
                 getRepository().save(post);
+                badgeService.verificaBadge(username);
         }
 
         @Transactional
@@ -93,19 +97,26 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                 var likeEsistente = likePostRepository
                                 .findByPostIdAndUtenteId(postId, utente.getId());
 
+                boolean likeAggiunto = false;
+
                 if (likeEsistente.isPresent()) {
                         likePostRepository.delete(likeEsistente.get());
                         post.setNumeroLike(Math.max(0, post.getNumeroLike() - 1));
                 } else {
-                        likePostRepository.save(LikePost.builder()
-                                        .post(post)
-                                        .utente(utente)
-                                        .build());
-
-                        post.setNumeroLike(post.getNumeroLike() + 1);
+                    likePostRepository.save(LikePost.builder()
+                            .post(post)
+                            .utente(utente)
+                            .build());
+                
+                    post.setNumeroLike(post.getNumeroLike() + 1);
+                    likeAggiunto = true;
                 }
 
                 getRepository().save(post);
+                if (likeAggiunto) {
+                    badgeService.verificaBadge(
+                            post.getUtente().getUsername());
+                }
         }
 
         @Transactional

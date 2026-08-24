@@ -53,15 +53,6 @@ public class BadgeInitializer {
                 100);
 
         creaBadge(
-                "COLLEZIONISTA",
-                "Collezionista",
-                "Possiedi 25 cosmetici.",
-                "💎",
-                TipoCondizione.NUMERO_COSMETICI,
-                25,
-                100);
-
-        creaBadge(
                 "COSTANZA",
                 "Costanza",
                 "Raggiungi una serie di 30 giorni consecutivi.",
