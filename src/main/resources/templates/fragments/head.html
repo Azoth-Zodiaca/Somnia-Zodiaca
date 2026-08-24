@@ -1,0 +1,12 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:fragment="head(title, responsive)">
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title th:text="${title}">Somnia Zodiaca</title>
+  <link rel="stylesheet" th:href="@{/css/style.css}" href="/css/style.css">
+  <link th:if="${responsive}" rel="stylesheet" th:href="@{/css/responsive.css}" href="/css/responsive.css">
+</head>
+
+</html>

@@ -59,6 +59,29 @@ body {
   height: 100%;
 }
 
+* {
+  scrollbar-width: thin;
+  scrollbar-color: rgba(139, 92, 246, 0.38) transparent;
+}
+
+*::-webkit-scrollbar {
+  width: 7px;
+  height: 7px;
+}
+
+*::-webkit-scrollbar-track {
+  background: transparent;
+}
+
+*::-webkit-scrollbar-thumb {
+  background: rgba(139, 92, 246, 0.38);
+  border-radius: var(--radius-full);
+}
+
+*::-webkit-scrollbar-thumb:hover {
+  background: rgba(236, 72, 153, 0.58);
+}
+
 body {
   background-color: var(--bg-body);
   color: var(--text-primary);
@@ -823,28 +846,6 @@ h4 {
   font-size: 13px;
   font-weight: 600;
   color: var(--accent-gold);
-}
-
-.icon-btn {
-  width: 36px;
-  height: 36px;
-  border-radius: 50%;
-  background: var(--bg-input);
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  position: relative;
-  font-size: 15px;
-}
-
-.icon-btn .dot {
-  position: absolute;
-  top: 6px;
-  right: 7px;
-  width: 8px;
-  height: 8px;
-  border-radius: 50%;
-  background: var(--accent-pink);
 }
 
 .app-content {

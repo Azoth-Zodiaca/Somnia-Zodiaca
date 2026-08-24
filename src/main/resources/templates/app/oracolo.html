@@ -1,13 +1,7 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <title>Oracolo - Somnia Zodiaca</title>
-  <link rel="stylesheet" th:href="@{/css/style.css}" href="../../static/css/style.css">
-  <link rel="stylesheet" th:href="@{/css/responsive.css}" href="../../static/css/responsive.css">
-</head>
+<head th:replace="~{fragments/head :: head(title='Oracolo - Somnia Zodiaca', responsive=true)}"></head>
 
 <body>
   <div class="app-layout">
@@ -122,7 +116,7 @@
                 </div>
 
                 <div class="oracolo-footer">
-                  <span>&#8505; Le interpretazioni restano 48 ore &middot; Salvarle costa 20 QI</span>
+                  <span>&#8505; Ogni interpretazione costa 20 QI. Senza salvataggio permanente resta disponibile per 48 ore.</span>
                   <div class="flex gap-8">
                     <button id="svuota-oracolo" type="button" class="btn btn-ghost btn-sm">
                       Svuota
@@ -143,7 +137,7 @@
               <p id="testo-interpretazione" class="text-muted"></p>
 
               <button id="salva-interpretazione" type="button" class="btn btn-primary btn-sm" hidden>
-                Salva interpretazione - 20 QI
+                Rendi permanente - 20 QI
               </button>
 
               <div id="condivisione-interpretazione" class="social-create-post is-hidden">

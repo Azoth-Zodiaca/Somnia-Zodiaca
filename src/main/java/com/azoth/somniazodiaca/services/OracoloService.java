@@ -92,7 +92,19 @@ public class OracoloService {
             throw new IllegalArgumentException("Interpretazione non autorizzata");
         }
 
+        if (interpretazione.getScadenzaCache() == null) {
+            return;
+        }
+
+        Utente utente = interpretazione.getSogno().getUtente();
+
+        if (utente.getQi() < COSTO_INTERPRETAZIONE) {
+            throw new IllegalStateException("QI insufficienti");
+        }
+
         interpretazione.setScadenzaCache(null);
+        utente.setQi(utente.getQi() - COSTO_INTERPRETAZIONE);
         interpretazioneRepository.save(interpretazione);
+        utenteRepository.save(utente);
     }
 }
