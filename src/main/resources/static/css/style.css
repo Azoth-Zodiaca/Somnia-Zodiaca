@@ -2485,3 +2485,185 @@ h4 {
 .oracolo-content>h2 {
   margin-top: 0;
 }
+
+@media (max-width: 900px) {
+  .oracolo-layout {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .oracolo-history,
+  .oracolo-content {
+    width: 100%;
+  }
+
+  .oracolo-content {
+    order: 1;
+  }
+
+  .oracolo-history {
+    order: 2;
+    position: static;
+    max-height: none;
+  }
+}
+
+@media (max-width: 760px) {
+  .natal-data-layout {
+    grid-template-columns: 1fr;
+  }
+}
+
+.natal-summary-grid {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(360px, 1.4fr);
+  gap: 18px;
+  margin-bottom: 20px;
+  align-items: start;
+}
+.natal-card-subtitle {
+  color: var(--text-muted);
+  font-size: 12px;
+  margin-top: -8px;
+  margin-bottom: 12px;
+}
+
+.natal-planets-card {
+  min-width: 0;
+}
+
+.natal-planet-name,
+.natal-planet-position {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.natal-planet-symbol {
+  width: 20px;
+  color: var(--accent-gold);
+  font-size: 17px;
+  text-align: center;
+}
+
+.natal-data-layout {
+  display: grid;
+  grid-template-columns: minmax(260px, 0.85fr) minmax(380px, 1.5fr);
+  gap: 18px;
+  align-items: start;
+  margin-bottom: 20px;
+}
+
+.natal-summary-column {
+  display: flex;
+  flex-direction: column;
+  gap: 18px;
+  min-width: 0;
+}
+
+.natal-birth-card,
+.natal-triad-card,
+.natal-planets-card {
+  min-width: 0;
+}
+
+.natal-planets-card .triad-item {
+  gap: 18px;
+}
+
+.natal-planet-name,
+.natal-planet-position {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+}
+
+.natal-planet-position {
+  text-align: right;
+}
+
+.planet-symbol,
+.sign-symbol {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 20px;
+  min-width: 20px;
+  font-family: "Segoe UI Symbol", "DejaVu Sans", sans-serif;
+  font-size: 16px;
+  line-height: 1;
+}
+
+.sun-symbol {
+  color: var(--accent-gold);
+}
+
+.moon-symbol {
+  color: #c7d2e3;
+}
+
+.sign-symbol {
+  color: #7772a8;
+  font-family: "Segoe UI Symbol", "Noto Sans Symbols 2", sans-serif;
+  font-variant-emoji: text;
+}
+
+/* .sign-symbol {
+  color: var(--accent-purple);
+} */
+
+@media (max-width: 760px) {
+  .natal-data-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .natal-planet-position {
+    text-align: right;
+  }
+}
+
+.planet-row {
+  display: grid;
+  grid-template-columns: minmax(130px, 1fr) minmax(150px, 1.2fr) 70px 90px 100px;
+  gap: 18px;
+  align-items: center;
+}
+
+.planet-angle,
+.planet-retrograde {
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.planet-sign {
+  color: var(--text-secondary);
+}
+
+.natal-data-layout {
+  display: grid;
+  grid-template-columns: minmax(280px, 0.85fr) minmax(480px, 1.5fr);
+  gap: 20px;
+  align-items: stretch;
+}
+
+.natal-summary-column {
+  display: grid;
+  grid-template-rows: auto 1fr;
+  gap: 18px;
+  min-width: 0;
+}
+
+.natal-planets-card {
+  min-width: 0;
+  height: 100%;
+}
+
+@media (max-width: 1000px) {
+  .natal-data-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .natal-planets-card {
+    height: auto;
+  }
+}

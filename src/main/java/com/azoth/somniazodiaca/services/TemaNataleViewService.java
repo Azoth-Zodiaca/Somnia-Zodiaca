@@ -42,19 +42,23 @@ public class TemaNataleViewService {
 
     private PianetaTemaView convertiPianeta(JsonNode pianeta, JsonNode houses) {
         double longitudine = pianeta.path("longitude").asDouble();
-        int indiceSegno = (int) (longitudine / 30.0);
-
-        String segno = NOMI_SEGNI[indiceSegno];
+        
+        String segno = segnoDaLongitudine(longitudine);
         int casa = casaDi(longitudine, houses);
 
+        String nome = nomeItaliano(pianeta.path("name").asText());
+
         return new PianetaTemaView(
-                nomeItaliano(pianeta.path("name").asText()),
+                nome,
+                simboloPianeta(nome),
                 segno,
+                simboloSegno(segno),
                 longitudine,
                 pianeta.path("isRetrograde").asBoolean(false),
                 elementoDi(segno),
                 modalitaDi(segno),
-                casa);
+                casa,
+                numeroRomano(casa));
     }
 
     private String nomeItaliano(String nome) {
@@ -98,30 +102,114 @@ public class TemaNataleViewService {
     }
 
     private int casaDi(double longitudine, JsonNode houses) {
+        JsonNode cuspsNode = houses.path("cusps");
+
+        if (!cuspsNode.isArray() || cuspsNode.size() != 12) {
+            return 0;
+        }
+
+        double longitudineNormalizzata = normalizzaLongitudine(longitudine);
         double[] cuspidi = new double[12];
 
         for (int i = 0; i < 12; i++) {
-            cuspidi[i] = houses.path("house" + (i + 1)).asDouble();
+            cuspidi[i] = normalizzaLongitudine(
+                    cuspsNode.get(i).asDouble());
         }
 
         for (int i = 0; i < 12; i++) {
-            double cuspide = cuspidi[i];
-            double next = cuspidi[(i + 1) % 12];
+            double inizioCasa = cuspidi[i];
+            double inizioCasaSuccessiva = cuspidi[(i + 1) % 12];
 
-            boolean inRange;
+            boolean dentroCasa;
 
-            if (cuspide < next) {
-                inRange = longitudine >= cuspide && longitudine < next;
+            if (inizioCasa < inizioCasaSuccessiva) {
+                dentroCasa = longitudineNormalizzata >= inizioCasa
+                        && longitudineNormalizzata < inizioCasaSuccessiva;
             } else {
-                inRange = longitudine >= cuspide || longitudine < next;
+                dentroCasa = longitudineNormalizzata >= inizioCasa
+                        || longitudineNormalizzata < inizioCasaSuccessiva;
             }
 
-            if (inRange) {
+            if (dentroCasa) {
                 return i + 1;
             }
         }
 
-        return 1;
+        return 0;
+    }
+
+    private double normalizzaLongitudine(double longitudine) {
+        double normalizzata = longitudine % 360.0;
+
+        if (normalizzata < 0) {
+            normalizzata += 360.0;
+        }
+
+        return normalizzata;
+    }
+
+    public String segnoDaLongitudine(double longitudine) {
+        int indice = (int) (normalizzaLongitudine(longitudine) / 30.0);
+        return NOMI_SEGNI[indice];
+    }
+
+    public String simboloDaSegno(String segno) {
+        return simboloSegno(segno);
+    }
+
+    private String simboloPianeta(String nome) {
+        return switch (nome) {
+            case "Sole" -> "\u2609";
+            case "Luna" -> "\u263D";
+            case "Mercurio" -> "\u263F";
+            case "Venere" -> "\u2640";
+            case "Marte" -> "\u2642";
+            case "Giove" -> "\u2643";
+            case "Saturno" -> "\u2644";
+            case "Urano" -> "\u2645";
+            case "Nettuno" -> "\u2646";
+            case "Plutone" -> "\u2647";
+            case "Nodo Nord" -> "\u260A";
+            case "Lilith" -> "\u26B8";
+            case "Chirone" -> "\u26B7";
+            default -> "";
+        };
+    }
+
+    private String simboloSegno(String segno) {
+        return switch (segno) {
+            case "Ariete" -> "\u2648";
+            case "Toro" -> "\u2649";
+            case "Gemelli" -> "\u264A";
+            case "Cancro" -> "\u264B";
+            case "Leone" -> "\u264C";
+            case "Vergine" -> "\u264D";
+            case "Bilancia" -> "\u264E";
+            case "Scorpione" -> "\u264F";
+            case "Sagittario" -> "\u2650";
+            case "Capricorno" -> "\u2651";
+            case "Acquario" -> "\u2652";
+            case "Pesci" -> "\u2653";
+            default -> "";
+        };
+    }
+
+    private String numeroRomano(int numero) {
+        return switch (numero) {
+            case 1 -> "I";
+            case 2 -> "II";
+            case 3 -> "III";
+            case 4 -> "IV";
+            case 5 -> "V";
+            case 6 -> "VI";
+            case 7 -> "VII";
+            case 8 -> "VIII";
+            case 9 -> "IX";
+            case 10 -> "X";
+            case 11 -> "XI";
+            case 12 -> "XII";
+            default -> "-";
+        };
     }
 
 }
