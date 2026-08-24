@@ -94,7 +94,7 @@
               <div class="triad-item triad-item-aligned">
                 <span class="triad-name">Luna</span>
 
-                <span th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Luna'}">
+                <span class="triad-value" th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Luna'}">
                   <span class="planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
                   <span class="sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
                   <span th:text="${pianeta.segno}">Capricorno</span>
@@ -179,78 +179,68 @@
 
               <!-- Distribuzione elementi -->
               <div class="card">
-                <div class="card-title"><span>Elementi</span></div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>&#128293; Fuoco</span><span>42%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill element-fire"></div>
+                <div class="card-title">Elementi</div>
+
+                <div class="element-bar-row" th:each="elemento : ${elementi}">
+                  <div class="element-label">
+                    <span th:text="${elemento.nome}">Fuoco</span>
+                    <span th:text="${elemento.percentuale + '%'}">40%</span>
                   </div>
-                </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>&#127793; Terra</span><span>22%</span></div>
+
                   <div class="progress-bar">
-                    <div class="progress-bar-fill element-earth"></div>
-                  </div>
-                </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>&#128168; Aria</span><span>26%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill element-air"></div>
-                  </div>
-                </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>&#128167; Acqua</span><span>18%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill element-water"></div>
+                    <div class="progress-bar-fill" th:classappend="${elemento.classeCss}"
+                      th:style="'width:' + ${elemento.percentuale} + '%'">
+                    </div>
                   </div>
                 </div>
               </div>
 
               <!-- Modalità: Cardinale / Fisso / Mobile -->
               <div class="card">
-                <div class="card-title"><span>Modalità</span></div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>Cardinale</span><span>38%</span></div>
+                <div class="card-title">Modalità</div>
+
+                <div class="element-bar-row" th:each="modalita : ${modalita}">
+                  <div class="element-label">
+                    <span th:text="${modalita.nome}">Cardinale</span>
+                    <span th:text="${modalita.percentuale + '%'}">40%</span>
+                  </div>
+
                   <div class="progress-bar">
-                    <div class="progress-bar-fill mode-cardinal"></div>
+                    <div class="progress-bar-fill" th:classappend="${modalita.classeCss}"
+                      th:attr="data-percentuale=${modalita.percentuale}">
+                    </div>
                   </div>
                 </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>Fisso</span><span>45%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill mode-fixed"></div>
-                  </div>
-                </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>Mobile</span><span>17%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill mode-mutable"></div>
-                  </div>
-                </div>
-                <p class="text-muted mt-10 natal-mode-description">"Natura stabile e tenace, con
-                  slanci d'iniziativa."</p>
+
+                <p class="text-muted mt-10 natal-mode-description">
+                  Distribuzione calcolata sui pianeti principali.
+                </p>
               </div>
 
             </div>
           </div>
 
-          <!-- Analisi AI in fondo alla pagina Riepilogo -->
-          <div class="card mt-20" th:if="${interpretazione != null}">
-            <div class="card-title">Interpretazione del tema</div>
-            <div class="ai-analysis-text" th:text="${interpretazione}"></div>
+          <div class="card natal-interpretation-card"
+            th:if="${temaNatale != null and temaNatale.interpretazioneAstroWay != null}">
+            <div class="card-title">Lettura del profilo</div>
+            <p class="text-muted">
+              L'esplorazione astrologica del tema natale non vuole essere una una valutazione scientifica,
+              quanto più uno strumento di confronto tra possibili profili caratteriali al fine di aumentarne la
+              conoscenza
+              e migliorare la comprensione delle loro interazioni.
+            </p>
+            <div th:text="${temaNatale.interpretazioneAstroWay}">
+            </div>
           </div>
         </div>
 
         <div id="tab-carta" class="js-tab-panel is-hidden">
           <p class="text-muted">Vista dettagliata della carta astrale.</p>
-          <!-- Grafico da implementare (es. SVG generato lato server o JS). -->
+
           <div class="card">
-            <div class="natal-wheel">Grafico carta astrale</div>
-            <div class="flex natal-actions">
-              <button class="btn btn-ghost btn-sm">&#128269;+</button>
-              <button class="btn btn-ghost btn-sm">&#128269;-</button>
-              <button class="btn btn-ghost btn-sm">&#8635; Reset</button>
-              <button class="btn btn-ghost btn-sm">&#8681; PNG</button>
+            <div id="natal-chart" th:if="${temaChart != null}" th:attr="
+           data-ascendant=${temaChart.get('houses').get('ascendant')},
+           data-mc=${temaChart.get('houses').get('mc')}">
             </div>
           </div>
         </div>
@@ -268,6 +258,7 @@
   </div>
 
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+  <script th:src="@{/js/natal-chart.js}"></script>
 </body>
 
 </html>

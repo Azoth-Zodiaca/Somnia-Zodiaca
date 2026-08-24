@@ -957,3 +957,8 @@ function initDeleteAccountConfirmation() {
     }
   });
 }
+
+document.querySelectorAll("[data-percentuale]").forEach(barra => {
+  barra.style.width =
+    `${barra.dataset.percentuale}%`;
+});

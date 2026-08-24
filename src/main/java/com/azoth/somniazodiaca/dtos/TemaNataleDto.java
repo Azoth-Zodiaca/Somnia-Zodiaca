@@ -5,8 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Lob;
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -40,7 +39,5 @@ public class TemaNataleDto implements GenericDto {
     private String timezone;
     private LocalDateTime dataCreazione;
 
-    @Lob
-    @Column(name = "interpretazione_astroway", columnDefinition = "LONGTEXT")
     private String interpretazioneAstroWay;
 }

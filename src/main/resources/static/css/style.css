@@ -2188,15 +2188,15 @@ h4 {
 }
 
 .mode-cardinal {
-  width: 38%;
+  background: var(--accent #8A3FFC);
 }
 
 .mode-fixed {
-  width: 45%;
+  background: var(--accent #2D4BFF);
 }
 
 .mode-mutable {
-  width: 17%;
+  background: var(--accent #4BC9FF);
 }
 
 .natal-mode-description,

@@ -83,6 +83,15 @@ public class TemaNataleController {
                         model.addAttribute(
                                         "pianeti",
                                         temaNataleViewService.estraiPianeti(datiTema));
+                        var pianeti = temaNataleViewService.estraiPianeti(datiTema);
+
+                        model.addAttribute("pianeti", pianeti);
+                        model.addAttribute(
+                                        "elementi",
+                                        temaNataleViewService.estraiElementi(pianeti));
+                        model.addAttribute(
+                                        "modalita",
+                                        temaNataleViewService.estraiModalita(pianeti));
                 }
 
                 return "app/tema-natale";

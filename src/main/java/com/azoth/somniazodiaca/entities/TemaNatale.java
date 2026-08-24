@@ -50,10 +50,14 @@ public class TemaNatale extends BaseEntity {
     @Column(name = "data_creazione", nullable = false)
     private LocalDateTime dataCreazione;
 
-    //AstroWay  Lob è Large Object
+    // AstroWay Lob è Large Object
     @Lob
     @Column(name = "risposta_astroway", columnDefinition = "LONGTEXT")
     private String rispostaAstroWay;
+
+    @Lob
+    @Column(name = "interpretazione_astroway", columnDefinition = "LONGTEXT")
+    private String interpretazioneAstroWay;
 
     @Column(name = "geoname_id")
     private Long geonameId;
