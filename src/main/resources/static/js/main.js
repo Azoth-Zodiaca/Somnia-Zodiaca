@@ -34,6 +34,12 @@ document.addEventListener("DOMContentLoaded", function () {
   initTemaNatalePremium();
 });
 
+function configurazioneOracolo() {
+  return window.somniaDomain && window.somniaDomain.oracolo
+    ? window.somniaDomain.oracolo
+    : {};
+}
+
 /* ---------------------------------------------------------
    AUTENTICAZIONE E PROFILO
 --------------------------------------------------------- */
@@ -275,7 +281,7 @@ function initOracoloCounter() {
   var counter = document.getElementById("dream-counter");
   if (!textarea || !counter) return;
 
-  var maxLength = 4000;
+  var maxLength = configurazioneOracolo().limiteSognoCaratteri;
   textarea.addEventListener("input", function () {
     counter.textContent = textarea.value.length + " / " + maxLength;
   });
@@ -293,7 +299,7 @@ function initSvuotaOracolo() {
 
 
     if (counter) {
-      counter.textContent = "0 / 4000";
+      counter.textContent = "0 / " + configurazioneOracolo().limiteSognoCaratteri;
     }
 
     resetRisultatoOracolo();
@@ -326,7 +332,8 @@ function resetRisultatoOracolo() {
     saveButton.classList.remove("btn-ghost");
     saveButton.classList.add("btn-primary");
     saveButton.disabled = false;
-    saveButton.textContent = "Salva interpretazione - 20 QI";
+    saveButton.textContent = "Salva interpretazione - " +
+      configurazioneOracolo().costoPermanenza + " QI";
   }
 
   if (shareBox) {
@@ -494,7 +501,8 @@ function aggiungiInterpretazioneAllaLista(
       textarea.value = testoSogno;
       var counter = document.getElementById("dream-counter");
       if (counter) {
-        counter.textContent = testoSogno.length + " / 4000";
+        counter.textContent = testoSogno.length + " / " +
+          configurazioneOracolo().limiteSognoCaratteri;
       }
     }
 
@@ -515,7 +523,8 @@ function aggiungiInterpretazioneAllaLista(
       saveButton.disabled = false;
       saveButton.textContent = permanente
         ? "Cancella interpretazione"
-        : "Salva interpretazione - 20 QI";
+        : "Salva interpretazione - " +
+          configurazioneOracolo().costoPermanenza + " QI";
       saveButton.dataset.action = permanente ? "delete" : "save";
       saveButton.classList.toggle("btn-ghost", permanente);
       saveButton.classList.toggle("btn-primary", !permanente);
@@ -657,7 +666,7 @@ function initOracoloForm() {
       resultBox.dataset.interpretazioneId = savedInterpretationId;
 
       var scadenza = new Date(
-        Date.now() + 48 * 60 * 60 * 1000
+        Date.now() + configurazioneOracolo().durataCacheOre * 60 * 60 * 1000
       ).toISOString();
 
       aggiungiInterpretazioneAllaLista(
@@ -856,7 +865,8 @@ function initHistoryButtons() {
         textarea.value = button.getAttribute("data-testo-sogno") || "";
         var counter = document.getElementById("dream-counter");
         if (counter) {
-          counter.textContent = textarea.value.length + " / 4000";
+          counter.textContent = textarea.value.length + " / " +
+            configurazioneOracolo().limiteSognoCaratteri;
         }
       }
 
@@ -878,7 +888,8 @@ function initHistoryButtons() {
         saveButton.classList.toggle("btn-primary", !permanente);
         saveButton.textContent = permanente
           ? "Cancella interpretazione"
-          : "Salva interpretazione - 20 QI";
+          : "Salva interpretazione - " +
+            configurazioneOracolo().costoPermanenza + " QI";
       }
 
       if (externalShareButton) {
@@ -1196,7 +1207,8 @@ function aggiornaDisponibilitaInterpretazione(submitButton) {
   var saldo = document.getElementById("saldo-qi");
 
   if (button && saldo) {
-    button.disabled = Number(saldo.textContent.trim()) < 20;
+    button.disabled = Number(saldo.textContent.trim()) <
+      configurazioneOracolo().costoInterpretazione;
   }
 }
 

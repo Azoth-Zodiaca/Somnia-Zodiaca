@@ -32,7 +32,7 @@
     <!-- Promozione visibile agli account Base e Admin. -->
     <div class="sidebar-promo" sec:authorize="hasAnyRole('BASE', 'ADMIN')">
       <span class="badge badge-premium">Premium</span>
-      <p>Custode del Cielo<br>+500 QI mensili e letture illimitate.</p>
+      <p>Custode del Cielo<br>+<span th:text="${appDomain.premium.qiMensili}">-</span> QI mensili e letture illimitate.</p>
       <a href="/app/impostazioni?sezione=premium">Scopri di più &rarr;</a>
     </div>
 

@@ -149,7 +149,7 @@
                 th:action="@{'/app/social/post/' + ${post.id} + '/commento'}"
                 th:attr="data-comment-endpoint=@{'/app/social/post/' + ${post.id} + '/commento/ajax'},data-post-id=${post.id}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
-                <textarea name="testoCommento" maxlength="500" rows="2" required
+                <textarea name="testoCommento" th:maxlength="${appDomain.contenuti.limiteCommentoCaratteri}" rows="2" required
                     placeholder="Scrivi un commento..."></textarea>
                 <button type="submit" class="btn btn-primary btn-sm">Pubblica</button>
             </form>

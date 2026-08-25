@@ -79,7 +79,7 @@
                   </div>
                   <div class="card plan-card featured">
                     <span class="text-muted">PREMIUM</span>
-                    <div class="plan-price">&euro;6,99<small>al mese &middot; disdici quando vuoi</small></div>
+                    <div class="plan-price">&euro;<span th:text="${#numbers.formatDecimal(appDomain.premium.prezzoMensile, 1, 2)}">-</span><small>al mese &middot; disdici quando vuoi</small></div>
                     <form th:action="@{/app/impostazioni/premium/attiva}" method="post">
                       <button type="submit" class="btn btn-gold btn-block mt-20">Attiva Premium</button>
                     </form>
@@ -110,10 +110,10 @@
                   </thead>
                   <tbody>
                     <tr><td>Tema natale interattivo</td><td class="yes">&#10003;</td><td class="yes">&#10003;</td></tr>
-                    <tr><td>Oracolo dei sogni</td><td>3/settimana</td><td class="yes">Illimitato</td></tr>
-                    <tr><td>Salvataggio sogni</td><td>20 QI</td><td class="yes">Gratis</td></tr>
-                    <tr><td>Rigenerazioni letture</td><td>10 QI</td><td class="yes">Illimitate</td></tr>
-                    <tr><td>QI mensili in regalo</td><td class="no">&#10005;</td><td class="yes">+500 QI/mese</td></tr>
+                    <tr><td>Oracolo dei sogni</td><td><span th:text="${appDomain.premium.interpretazioniFreeSettimana}">-</span>/settimana</td><td class="yes">Illimitato</td></tr>
+                    <tr><td>Salvataggio sogni</td><td><span th:text="${appDomain.oracolo.costoPermanenza}">-</span> QI</td><td class="yes">Gratis</td></tr>
+                    <tr><td>Rigenerazioni letture</td><td><span th:text="${appDomain.oracolo.costoRigenerazione}">-</span> QI</td><td class="yes">Illimitate</td></tr>
+                    <tr><td>QI mensili in regalo</td><td class="no">&#10005;</td><td class="yes">+<span th:text="${appDomain.premium.qiMensili}">-</span> QI/mese</td></tr>
                     <tr><td>Badge Premium</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
                     <tr><td>Priorità community</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
                   </tbody>

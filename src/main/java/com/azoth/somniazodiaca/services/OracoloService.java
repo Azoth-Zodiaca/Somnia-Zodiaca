@@ -6,6 +6,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
 import com.azoth.somniazodiaca.dtos.records.SalvaInterpretazioneRequest;
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.entities.Interpretazione;
 import com.azoth.somniazodiaca.entities.Sogno;
 import com.azoth.somniazodiaca.entities.Utente;
@@ -18,31 +19,31 @@ import com.azoth.somniazodiaca.repositories.UtenteRepository;
 @Service
 public class OracoloService {
 
-    private static final int COSTO_INTERPRETAZIONE = 20;
-    private static final long DURATA_INTERPRETAZIONE_ORE = 48;
-
     private final UtenteRepository utenteRepository;
     private final SognoRepository sognoRepository;
     private final InterpretazioneRepository interpretazioneRepository;
     private final BadgeService badgeService;
+    private final AppDomainProperties appDomainProperties;
 
     public OracoloService(
             UtenteRepository utenteRepository,
             SognoRepository sognoRepository,
             InterpretazioneRepository interpretazioneRepository,
-            BadgeService badgeService) {
+            BadgeService badgeService,
+            AppDomainProperties appDomainProperties) {
 
         this.utenteRepository = utenteRepository;
         this.sognoRepository = sognoRepository;
         this.interpretazioneRepository = interpretazioneRepository;
         this.badgeService = badgeService;
+        this.appDomainProperties = appDomainProperties;
     }
 
     public void verificaQiDisponibili(String username) {
         Utente utente = utenteRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
-        if (utente.getQi() < COSTO_INTERPRETAZIONE) {
+        if (utente.getQi() < appDomainProperties.getOracolo().getCostoInterpretazione()) {
             throw new IllegalStateException("QI insufficienti");
         }
     }
@@ -62,7 +63,7 @@ public class OracoloService {
         Utente utente = utenteRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
-        if (utente.getQi() < COSTO_INTERPRETAZIONE) {
+        if (utente.getQi() < appDomainProperties.getOracolo().getCostoInterpretazione()) {
             throw new IllegalStateException("QI insufficienti");
         }
 
@@ -79,12 +80,13 @@ public class OracoloService {
                 .testo(richiesta.interpretazione())
                 .umore(parseEnum(richiesta.umore(), UmoreEnum.class))
                 .stile(parseEnum(richiesta.stile(), StileEnum.class))
-                .scadenzaCache(LocalDateTime.now().plusHours(DURATA_INTERPRETAZIONE_ORE))
+                .scadenzaCache(LocalDateTime.now().plusHours(
+                    appDomainProperties.getOracolo().getDurataCacheOre()))
                 .build();
 
         Interpretazione salvata = interpretazioneRepository.save(interpretazione);
 
-        utente.setQi(utente.getQi() - COSTO_INTERPRETAZIONE);
+        utente.setQi(utente.getQi() - appDomainProperties.getOracolo().getCostoInterpretazione());
         utenteRepository.save(utente);
 
         badgeService.verificaBadge(username);
@@ -121,12 +123,12 @@ public class OracoloService {
 
         Utente utente = interpretazione.getSogno().getUtente();
 
-        if (utente.getQi() < COSTO_INTERPRETAZIONE) {
+        if (utente.getQi() < appDomainProperties.getOracolo().getCostoPermanenza()) {
             throw new IllegalStateException("QI insufficienti");
         }
 
         interpretazione.setScadenzaCache(null);
-        utente.setQi(utente.getQi() - COSTO_INTERPRETAZIONE);
+        utente.setQi(utente.getQi() - appDomainProperties.getOracolo().getCostoPermanenza());
         interpretazioneRepository.save(interpretazione);
         utenteRepository.save(utente);
     }

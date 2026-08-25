@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.services.UtenteService;
 
 /**
@@ -25,9 +26,18 @@ import com.azoth.somniazodiaca.services.UtenteService;
 public class SecurityModelAdvice {
 
     public final UtenteService utenteService;
+    private final AppDomainProperties appDomainProperties;
 
-    public SecurityModelAdvice(UtenteService utenteService) {
+    public SecurityModelAdvice(
+            UtenteService utenteService,
+            AppDomainProperties appDomainProperties) {
         this.utenteService = utenteService;
+        this.appDomainProperties = appDomainProperties;
+    }
+
+    @ModelAttribute("appDomain")
+    public AppDomainProperties appDomain() {
+        return appDomainProperties;
     }
 
     /**
