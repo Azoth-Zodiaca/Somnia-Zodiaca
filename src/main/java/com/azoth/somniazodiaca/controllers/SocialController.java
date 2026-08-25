@@ -7,6 +7,9 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
 
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.services.InterpretazioneService;
@@ -32,7 +35,7 @@ public class SocialController {
 
     @GetMapping("/social")
     public String redirectSocial() {
-        return "redirect:/app/social";
+                return "redirect:/app/social";
     }
 
     @GetMapping("/app/social")
@@ -66,6 +69,10 @@ public class SocialController {
                 postService.findFeedSeguiti(authentication.getName()));
 
         model.addAttribute(
+                "seguiti",
+                postService.findSeguiti(authentication.getName()));
+
+        model.addAttribute(
                 "currentUsername",
                 authentication.getName());
 
@@ -95,6 +102,35 @@ public class SocialController {
 
         return "redirect:/app/social";
     }
+
+        @PostMapping("/app/social/post/{postId}/commento")
+        public String aggiungiCommento(
+                        Authentication authentication,
+                        @PathVariable Long postId,
+                        @RequestParam String testoCommento) {
+
+                postService.aggiungiCommento(
+                                authentication.getName(),
+                                postId,
+                                testoCommento);
+
+                return "redirect:/app/social";
+        }
+
+        @PostMapping("/app/social/post/{postId}/like/toggle")
+        @ResponseBody
+        public Map<String, Object> toggleLikeJson(
+                        Authentication authentication,
+                        @PathVariable Long postId) {
+
+                PostService.LikeResult result = postService.toggleLike(
+                                authentication.getName(),
+                                postId);
+
+                return Map.of(
+                                "liked", result.liked(),
+                                "count", result.count());
+        }
 
     @PostMapping("/app/social/utente/{username}/follow")
     public String segui(

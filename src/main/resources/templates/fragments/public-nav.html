@@ -1,8 +1,4 @@
-<!--
-  FRAMMENTO: navbar dell'area pubblica del sito.
-  Si include in ogni pagina pubblica così:
-  <div th:replace="~{fragments/public-nav :: navbar}"></div>
--->
+<!-- Fragment condiviso della navigazione pubblica. -->
 <html xmlns:th="http://www.thymeleaf.org">
 <body>
   <header th:fragment="navbar" class="container public-navbar">
@@ -12,14 +8,26 @@
     </a>
     <nav>
       <a href="/">Home</a>
-      <a href="/oracolo-info">Oracolo</a>
       <a href="/enciclopedia">Enciclopedia</a>
-      <a href="/social-info">Community</a>
       <a href="/premium">Premium</a>
     </nav>
-    <div class="nav-actions">
+    <div class="nav-actions" th:if="${#strings.isEmpty(username)}">
       <a href="/login" class="btn btn-outline btn-sm">Accedi</a>
       <a href="/register" class="btn btn-primary btn-sm">Iscriviti</a>
+    </div>
+    <div th:unless="${#strings.isEmpty(username)}" class="public-user-actions">
+      <form method="post" action="/logout" class="public-logout-form">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit" class="public-logout-button" aria-label="Esci" title="Esci">Esci</button>
+      </form>
+      <a href="/app/dashboard" class="public-profile-link" aria-label="Apri la dashboard" title="Apri la dashboard">
+        <span class="public-profile-avatar avatar" th:classappend="${' ' + profiloColoreClasse}">
+          <img th:if="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:src="@{${avatarPath}}"
+            alt="Immagine profilo">
+          <span th:unless="${avatarPath != null and !#strings.isEmpty(avatarPath)}"
+            th:text="${username != null and !username.isEmpty() ? #strings.toUpperCase(#strings.substring(username, 0, 1)) : '?'}">U</span>
+        </span>
+      </a>
     </div>
   </header>
 </body>

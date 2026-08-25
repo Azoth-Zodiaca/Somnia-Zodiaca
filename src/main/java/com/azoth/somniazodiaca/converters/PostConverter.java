@@ -1,7 +1,10 @@
 package com.azoth.somniazodiaca.converters;
 
+import java.util.List;
+
 import org.springframework.stereotype.Service;
 
+import com.azoth.somniazodiaca.dtos.CommentoDto;
 import com.azoth.somniazodiaca.dtos.PostDto;
 import com.azoth.somniazodiaca.entities.Interpretazione;
 import com.azoth.somniazodiaca.entities.Post;
@@ -49,6 +52,7 @@ public class PostConverter implements GenericConverter<Post, PostDto> {
                 .numeroCommenti(e.getCommenti() != null
                         ? e.getCommenti().size()
                         : 0)
+                .commenti(convertiCommenti(e.getCommenti()))
                 .username(utente != null
                         ? utente.getUsername()
                         : "Utente")
@@ -77,6 +81,25 @@ public class PostConverter implements GenericConverter<Post, PostDto> {
                         : null)
                 .likedByCurrentUser(false)
                 .build();
+    }
+
+    private List<CommentoDto> convertiCommenti(
+            List<com.azoth.somniazodiaca.entities.Commento> commenti) {
+
+        if (commenti == null) {
+            return List.of();
+        }
+
+        return commenti.stream()
+                .<CommentoDto>map(commento -> CommentoDto.builder()
+                        .id(commento.getId())
+                        .username(commento.getUtente() != null
+                                ? commento.getUtente().getUsername()
+                                : "Utente")
+                        .testo(commento.getTesto())
+                        .dataCreazione(commento.getCreatedAt())
+                        .build())
+                .toList();
     }
 
     private String nomeSegno(SegnoZodiacale segno) {

@@ -54,8 +54,7 @@ public class TemaNataleController {
 
                 model.addAttribute("temaNatale", temaNatale);
 
-                if (temaNatale != null
-                                && temaNatale.getRispostaAstroWay() != null) {
+                if (temaNatale != null && temaNatale.getRispostaAstroWay() != null) {
 
                         JsonNode temaChart = astroWayService.parseChart(
                                         temaNatale.getRispostaAstroWay());
@@ -69,22 +68,30 @@ public class TemaNataleController {
 
                         JsonNode houses = datiTema.path("houses");
                         double ascendente = houses.path("ascendant").asDouble();
+                        
+                        String segnoAscendente = temaNataleViewService.segnoDaLongitudine(ascendente);
 
-                        model.addAttribute(
-                                        "ascendenteSegno",
-                                        temaNataleViewService.segnoDaLongitudine(ascendente));
-
+                        model.addAttribute("ascendenteSegno", segnoAscendente);
                         model.addAttribute(
                                         "ascendenteSimbolo",
-                                        temaNataleViewService.simboloDaSegno(
-                                                        temaNataleViewService.segnoDaLongitudine(ascendente)));
+                                        temaNataleViewService.simboloDaSegno(segnoAscendente));
 
-                        model.addAttribute("temaChart", datiTema);
+                        // CORREZIONE CRITICA: Passa il JSON come stringa a Thymeleaf per prevenire
+                        // l'errore del rendering interrotto
+                        model.addAttribute("temaChart", datiTema.toString());
+
+                        var pianeti = temaNataleViewService.estraiPianeti(datiTema);
+
+                        model.addAttribute("pianeti", pianeti);
                         model.addAttribute(
-                                        "pianeti",
-                                        temaNataleViewService.estraiPianeti(datiTema));
+                                        "elementi",
+                                        temaNataleViewService.estraiElementi(pianeti));
+                        model.addAttribute(
+                                        "modalita",
+                                        temaNataleViewService.estraiModalita(pianeti));
                 }
 
                 return "app/tema-natale";
         }
+
 }

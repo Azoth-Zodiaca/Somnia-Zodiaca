@@ -12,13 +12,14 @@
 
       <main class="app-content">
 
+        <!-- Intestazione del tema e dati di nascita. -->
         <div class="natal-header">
           <div>
             <h2 class="serif natal-title">Il tuo cielo di nascita</h2>
             <div class="subtitle" th:if="${temaNatale != null}">
-              <span th:text="${temaNatale.dataNascita}"></span>
+              <span th:text="${#temporals.format(temaNatale.dataNascita, 'dd/MM/yyyy')}"></span>
               <span> - </span>
-              <span th:text="${temaNatale.oraNascita}"></span>
+              <span th:text="${#temporals.format(temaNatale.oraNascita, 'HH:mm')}"></span>
               <span> - </span>
               <span th:text="${temaNatale.luogoNascita}"></span>
             </div>
@@ -39,6 +40,7 @@
           </p>
         </div>
 
+        <!-- Riepilogo dei dati anagrafici e della triade principale. -->
         <div class="natal-data-layout">
 
           <div class="natal-summary-column">
@@ -75,47 +77,52 @@
                 La tua firma stellare
               </p>
 
-              <div class="triad-item triad-item-aligned">
-                <span class="triad-name">Sole</span>
-
-                <span class="triad-value" th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Sole'}">
-                  <span class="planet-symbol sun-symbol" th:text="${pianeta.simbolo}">
-                    ☉
-                  </span>
-                  <span class="sign-symbol" th:text="${pianeta.simboloSegno}">
-                    ♏︎
-                  </span>
-                  <span th:text="${pianeta.segno}">Scorpione</span>
-                  <span>· </span>
-                  <span th:text="${pianeta.casaRomana}">VIII</span>
-                </span>
+              <!-- SOLE -->
+              <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
+                th:if="${pianeta.nome == 'Sole'}">
+                <div class="triad-label-group">
+                  <span class="col-symbol planet-symbol sun-symbol" th:text="${pianeta.simbolo}">☉</span>
+                  <span class="triad-name">SOLE</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♏︎</span>
+                  <span class="col-sign-name" th:text="${pianeta.segno}">Scorpione</span>
+                  <span class="col-separator">·</span>
+                  <span class="col-house" th:text="${pianeta.casaRomana}">VIII</span>
+                </div>
               </div>
 
-              <div class="triad-item triad-item-aligned">
-                <span class="triad-name">Luna</span>
-
-                <span th:each="pianeta : ${pianeti}" th:if="${pianeta.nome == 'Luna'}">
-                  <span class="planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
-                  <span class="sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
-                  <span th:text="${pianeta.segno}">Capricorno</span>
-                  <span>· </span>
-                  <span th:text="${pianeta.casaRomana}">X</span>
-                </span>
+              <!-- LUNA -->
+              <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
+                th:if="${pianeta.nome == 'Luna'}">
+                <div class="triad-label-group">
+                  <span class="col-symbol planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
+                  <span class="triad-name">LUNA</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
+                  <span class="col-sign-name" th:text="${pianeta.segno}">Capricorno</span>
+                  <span class="col-separator">·</span>
+                  <span class="col-house" th:text="${pianeta.casaRomana}">X</span>
+                </div>
               </div>
 
+              <!-- ASCENDENTE -->
               <div class="triad-item triad-item-aligned">
-                <span class="triad-name">Ascendente</span>
-
-                <span class="triad-value">
-                  <span class="sign-symbol" th:text="${ascendenteSimbolo}">
-                    ♑︎
-                  </span>
-                  <span th:text="${ascendenteSegno}">
-                    Capricorno
-                  </span>
-                </span>
+                <div class="triad-label-group">
+                  <!-- Colonna simbolo vuota per l'Ascendente per mantenere l'allineamento perfetto -->
+                  <span class="col-symbol ascendant-empty-symbol"></span>
+                  <span class="triad-name">ASCENDENTE</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${ascendenteSimbolo}">♑︎</span>
+                  <span class="col-sign-name" th:text="${ascendenteSegno}">Capricorno</span>
+                  <span class="col-separator"></span>
+                  <span class="col-house"></span>
+                </div>
               </div>
             </div>
+
 
           </div>
 
@@ -164,7 +171,7 @@
         </div>
 
 
-        <!-- Tab interne: Riepilogo / Carta / Pianeti / Case -->
+        <!-- Viste del tema: riepilogo, carta, pianeti e case. -->
         <div class="tab-row" data-tab-group="natale-tabs">
           <a href="#" class="js-tab active" data-target="tab-riepilogo">Riepilogo</a>
           <a href="#" class="js-tab" data-target="tab-carta">Carta</a>
@@ -177,83 +184,82 @@
 
             <div class="dashboard-col">
 
-              <!-- Distribuzione elementi -->
+              <!-- Distribuzione dei quattro elementi. -->
               <div class="card">
-                <div class="card-title"><span>Elementi</span></div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>&#128293; Fuoco</span><span>42%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill element-fire"></div>
+                <div class="card-title">Elementi</div>
+
+                <div class="element-bar-row" th:each="elemento : ${elementi}">
+                  <div class="element-label">
+                    <span th:text="${elemento.nome}">Fuoco</span>
+                    <span th:text="${elemento.percentuale + '%'}">40%</span>
                   </div>
-                </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>&#127793; Terra</span><span>22%</span></div>
+
                   <div class="progress-bar">
-                    <div class="progress-bar-fill element-earth"></div>
-                  </div>
-                </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>&#128168; Aria</span><span>26%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill element-air"></div>
-                  </div>
-                </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>&#128167; Acqua</span><span>18%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill element-water"></div>
+                    <div class="progress-bar-fill" th:classappend="${elemento.classeCss}"
+                      th:style="'width:' + ${elemento.percentuale} + '%'">
+                    </div>
                   </div>
                 </div>
               </div>
 
-              <!-- Modalità: Cardinale / Fisso / Mobile -->
+              <!-- Distribuzione delle modalità astrologiche. -->
               <div class="card">
-                <div class="card-title"><span>Modalità</span></div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>Cardinale</span><span>38%</span></div>
+                <div class="card-title">Modalità</div>
+
+                <div class="element-bar-row" th:each="modalita : ${modalita}">
+                  <div class="element-label">
+                    <span th:text="${modalita.nome}">Cardinale</span>
+                    <span th:text="${modalita.percentuale + '%'}">40%</span>
+                  </div>
+
                   <div class="progress-bar">
-                    <div class="progress-bar-fill mode-cardinal"></div>
+                    <div class="progress-bar-fill" th:classappend="${modalita.classeCss}"
+                      th:attr="data-percentuale=${modalita.percentuale}">
+                    </div>
                   </div>
                 </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>Fisso</span><span>45%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill mode-fixed"></div>
-                  </div>
-                </div>
-                <div class="element-bar-row">
-                  <div class="element-label"><span>Mobile</span><span>17%</span></div>
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill mode-mutable"></div>
-                  </div>
-                </div>
-                <p class="text-muted mt-10 natal-mode-description">"Natura stabile e tenace, con
-                  slanci d'iniziativa."</p>
+
+                <p class="text-muted mt-10 natal-mode-description">
+                  Distribuzione calcolata sui pianeti principali.
+                </p>
               </div>
 
             </div>
-          </div>
 
-          <!-- Analisi AI in fondo alla pagina Riepilogo -->
-          <div class="card mt-20" th:if="${interpretazione != null}">
-            <div class="card-title">Interpretazione del tema</div>
-            <div class="ai-analysis-text" th:text="${interpretazione}"></div>
+            <!-- Modificato th:if per mostrare la card se il tema esiste, usando un fallback se il testo è vuoto -->
+            <div class="card natal-interpretation-card" th:if="${temaNatale != null}">
+              <div class="card-title">Lettura del profilo</div>
+              <p class="text-muted">
+                L'esplorazione astrologica del tema natale non vuole essere una valutazione scientifica,
+                quanto più uno strumento di confronto tra possibili profili caratteriali al fine di aumentarne la
+                conoscenza e migliorare la comprensione delle loro interazioni.
+              </p>
+
+              <!-- Mostra il testo se presente, altrimenti mostra un messaggio di caricamento -->
+              <div th:if="${temaNatale.interpretazioneAstroWay != null}"
+                th:utext="${temaNatale.interpretazioneAstroWay}"></div>
+              <div th:unless="${temaNatale.interpretazioneAstroWay != null}" class="text-muted italic">
+                <p>Interpretazione in fase di elaborazione o non disponibile per questo profilo.</p>
+              </div>
+            </div>
+
           </div>
         </div>
 
         <div id="tab-carta" class="js-tab-panel is-hidden">
           <p class="text-muted">Vista dettagliata della carta astrale.</p>
-          <!-- Grafico da implementare (es. SVG generato lato server o JS). -->
+
           <div class="card">
-            <div class="natal-wheel">Grafico carta astrale</div>
-            <div class="flex natal-actions">
-              <button class="btn btn-ghost btn-sm">&#128269;+</button>
-              <button class="btn btn-ghost btn-sm">&#128269;-</button>
-              <button class="btn btn-ghost btn-sm">&#8635; Reset</button>
-              <button class="btn btn-ghost btn-sm">&#8681; PNG</button>
-            </div>
+            <!-- Contenitore pulito per il grafico SVG -->
+            <div id="natal-chart" th:if="${temaChart != null}"></div>
           </div>
+
+          <!-- MODIFICATO: Sfrutta l'inlining nativo di Thymeleaf sicuro per gli oggetti/mappe -->
+          <script type="application/json" id="tema-chart-data" th:if="${temaChart != null}" th:inline="javascript">
+            [# th:utext="${temaChart}" /]
+          </script>
         </div>
+
 
         <div id="tab-pianeti" class="js-tab-panel is-hidden">
           <p class="text-muted">Spiegazione di ogni pianeta e sua possibile interpretazione</p>
@@ -268,6 +274,7 @@
   </div>
 
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+  <script th:src="@{/js/natal-chart.js}"></script>
 </body>
 
 </html>

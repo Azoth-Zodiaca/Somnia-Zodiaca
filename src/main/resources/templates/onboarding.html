@@ -9,16 +9,14 @@
     <a href="/" class="brand onboarding-brand"><span class="brand-dot"></span> Somnia
       Zodiaca</a>
 
-    <!-- Indicatore dei 3 passaggi. Il passo attivo/completato riceve
-         classe "active"/"done": qui sono statici, in produzione andrebbero
-         calcolati in base a un parametro "step" passato dal controller. -->
+    <!-- Indicatore dei passaggi della configurazione iniziale. -->
     <div class="onboarding-steps">
       <div class="step-dot done"></div>
       <div class="step-dot active"></div>
       <div class="step-dot"></div>
     </div>
 
-    <!-- STEP 2  data di nascita + conferma segno.-->
+    <!-- Raccolta dei dati di nascita e calcolo del segno solare. -->
     <div class="card">
       <h2 class="serif onboarding-title">Quando sei nato/a?</h2>
       <p class="text-muted onboarding-description">Ci serve per calcolare con precisione il tuo tema natale.</p>
@@ -30,9 +28,9 @@
         </div>
         <div class="field">
           <label for="ora-nascita">Ora di nascita (se la conosci)</label>
-          <input type="time" id="ora-nascita" name="oraNascita" required>
+          <input type="time" id="ora-nascita" name="oraNascita" value="12:00">
           <span class="field-hint">
-            Per una fotografia dettagliata del tuo cielo, l'orario esatto è essenziale.
+            Per una fotografia dettagliata del tuo cielo, l'orario esatto è caldamente consigliata.
           </span>
         </div>
         <div class="field">
@@ -49,8 +47,7 @@
         <input type="hidden" id="timezone" name="timezone">
         <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
 
-        <!-- Segno zodiacale calcolato automaticamente lato server dalla data
-             di nascita: qui mostrato come testo segnaposto -->
+        <!-- Segno solare associato alla data inserita. -->
         <div class="card onboarding-zodiac-card">
           <span class="text-muted">SEGNO SOLARE RILEVATO</span>
           <div id="segno-solare" class="onboarding-zodiac-value">
@@ -63,16 +60,14 @@
     </div>
   </div>
 
-  <!-- STEP 3: schermata di caricamento con animazione, mostrata dopo
-       l'invio del form. In produzione sarebbe una pagina a parte
-       (es. /onboarding/calcolo) raggiunta dopo il redirect del form. -->
+  <!-- Stato di caricamento mostrato durante il calcolo del tema. -->
   <div class="onboarding-page onboarding-loading" id="loading-step">
     <div class="spinner"></div>
     <h3 class="serif onboarding-loading-title">
       Stiamo leggendo il tuo cielo...
     </h3>
 
-    <p class="text-muted onboarding-loading-description mt-10"> //merge creativo
+    <p class="text-muted onboarding-loading-description mt-10">
       Posizioniamo pianeti, case e aspetti astrali.
     </p>
   </div>

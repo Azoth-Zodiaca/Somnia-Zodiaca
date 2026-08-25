@@ -13,7 +13,7 @@
       <main class="app-content">
         <h2 class="serif wallet-title">Wallet QI</h2>
 
-        <!-- Saldo attuale -->
+        <!-- Saldo QI disponibile. -->
         <div class="card wallet-balance">
           <div class="label">Saldo attuale</div>
           <div class="amount">
@@ -22,7 +22,7 @@
           <div class="sub">QI &middot; Quicksilver Ingots</div>
         </div>
 
-        <!-- Pacchetti di ricarica: in Spring th:each="pacchetto : ${pacchettiRicarica}" -->
+        <!-- Pacchetti per acquistare QI. -->
         <div class="recharge-grid">
           <div class="card recharge-card">
             <div class="text-muted wallet-package-label">STELLA</div>
@@ -71,35 +71,35 @@
           </div>
         </div>
 
-        <!-- Ricompensa giornaliera: 7 giorni, oggi evidenziato -->
+        <!-- Progressione delle ricompense giornaliere e riscatto odierno. -->
         <div class="card">
           <div class="card-title">
             <span>Ricompensa giornaliera</span>
-            <span class="text-muted" th:text="${utente.giorniConsecutivi + ' giorni consecutivi'}">
-              0 giorni consecutivi
+            <span class="text-muted" th:text="${'Giorno ' + giorniRicompense + ' di 7'}">
+              Giorno 0 di 7
             </span>
           </div>
           <div class="daily-rewards">
-            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 1 ? 'claimed' : 'available'}">
-              +10
+            <div class="daily-reward" th:classappend="${giorniRicompense >= 1 ? 'claimed' : (giornoRicompensa == 1 ? 'available' : 'locked')}">
+              +10 QI
             </div>
-            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 2 ? 'claimed' : 'locked'}">
-              +15
+            <div class="daily-reward" th:classappend="${giorniRicompense >= 2 ? 'claimed' : (giornoRicompensa == 2 ? 'available' : 'locked')}">
+              +20 QI
             </div>
-            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 3 ? 'claimed' : 'locked'}">
-              +20
+            <div class="daily-reward" th:classappend="${giorniRicompense >= 3 ? 'claimed' : (giornoRicompensa == 3 ? 'available' : 'locked')}">
+              +40 QI
             </div>
-            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 4 ? 'claimed' : 'locked'}">
-              +25
+            <div class="daily-reward" th:classappend="${giorniRicompense >= 4 ? 'claimed' : (giornoRicompensa == 4 ? 'available' : 'locked')}">
+              +70 QI
             </div>
-            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 5 ? 'claimed' : 'locked'}">
-              +30
+            <div class="daily-reward" th:classappend="${giorniRicompense >= 5 ? 'claimed' : (giornoRicompensa == 5 ? 'available' : 'locked')}">
+              +110 QI
             </div>
-            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 6 ? 'claimed' : 'locked'}">
-              +40
+            <div class="daily-reward" th:classappend="${giorniRicompense >= 6 ? 'claimed' : (giornoRicompensa == 6 ? 'available' : 'locked')}">
+              +150 QI
             </div>
-            <div class="daily-reward" th:classappend="${utente.giorniConsecutivi >= 7 ? 'claimed' : 'locked'}">
-              &#127873;
+            <div class="daily-reward" th:classappend="${giorniRicompense >= 7 ? 'claimed' : (giornoRicompensa == 7 ? 'available' : 'locked')}">
+              +200 QI
             </div>
           </div>
           <form th:if="${!ricompensaRiscossa}" th:action="@{/app/wallet/ricompensa}" method="post">

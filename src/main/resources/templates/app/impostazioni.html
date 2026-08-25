@@ -15,8 +15,7 @@
 
         <div class="settings-layout">
 
-          <!-- Menu laterale interno: mostra/nasconde le sezioni a destra
-               tramite main.js -> initSettingsMenu() -->
+          <!-- Menu interno per cambiare sezione senza cambiare pagina. -->
           <nav class="settings-menu">
             <a href="#" class="active" data-target="sezione-account">Account</a>
             <a href="#" data-target="sezione-sicurezza">Sicurezza</a>
@@ -25,7 +24,7 @@
           </nav>
 
           <div>
-            <!-- Sezione Account -->
+            <!-- Dati identificativi e contatti dell'account. -->
             <div id="sezione-account" class="card settings-section">
               <h3>Account</h3>
               <form th:action="@{/app/impostazioni/account}" method="post" action="#">
@@ -41,6 +40,7 @@
               </form>
             </div>
 
+            <!-- Credenziali e cambio password. -->
             <div id="sezione-sicurezza" class="card settings-section is-hidden">
               <h3>Sicurezza</h3>
 
@@ -66,14 +66,62 @@
               </form>
             </div>
 
-            <!-- Sezione Premium: stato abbonamento -->
+            <!-- Stato Premium, gestione abbonamento e confronto piani. -->
             <div id="sezione-premium" class="card settings-section premium-section is-hidden">
               <h3>Premium</h3>
-              <p class="text-muted">Sei attualmente su Premium &middot; rinnovo il 12 agosto 2026.</p>
-              <a href="/premium" class="btn btn-outline">Gestisci abbonamento</a>
+              <div th:if="${ruolo.name() == 'BASE'}">
+                <p class="text-muted">Sei sul piano Base. Scegli Premium per sbloccare tutti i vantaggi.</p>
+                <div class="pricing-plans settings-pricing-plans">
+                  <div class="card plan-card">
+                    <span class="text-muted">BASE</span>
+                    <div class="plan-price">&euro;0<small>per sempre</small></div>
+                    <button class="btn btn-outline btn-block mt-20" disabled>Piano attuale</button>
+                  </div>
+                  <div class="card plan-card featured">
+                    <span class="text-muted">PREMIUM</span>
+                    <div class="plan-price">&euro;6,99<small>al mese &middot; disdici quando vuoi</small></div>
+                    <form th:action="@{/app/impostazioni/premium/attiva}" method="post">
+                      <button type="submit" class="btn btn-gold btn-block mt-20">Attiva Premium</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <div th:if="${ruolo.name() == 'PREMIUM'}">
+                <p class="text-muted">Sei attualmente su Premium.</p>
+                <form class="premium-cancellation-form" th:action="@{/app/impostazioni/premium/cancella}" method="post">
+                  <button type="submit" class="btn btn-outline">Cancella abbonamento</button>
+                </form>
+              </div>
+
+              <div th:if="${ruolo.name() == 'ADMIN'}">
+                <p class="text-muted">Sei connesso come amministratore. L'attivazione Premium è disponibile per gli account Base.</p>
+              </div>
+
+              <div class="settings-comparison" th:if="${ruolo.name() == 'BASE'}">
+                <h4>Confronta i piani</h4>
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Funzionalità</th>
+                      <th>Base</th>
+                      <th>Premium</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr><td>Tema natale interattivo</td><td class="yes">&#10003;</td><td class="yes">&#10003;</td></tr>
+                    <tr><td>Oracolo dei sogni</td><td>3/settimana</td><td class="yes">Illimitato</td></tr>
+                    <tr><td>Salvataggio sogni</td><td>20 QI</td><td class="yes">Gratis</td></tr>
+                    <tr><td>Rigenerazioni letture</td><td>10 QI</td><td class="yes">Illimitate</td></tr>
+                    <tr><td>QI mensili in regalo</td><td class="no">&#10005;</td><td class="yes">+500 QI/mese</td></tr>
+                    <tr><td>Badge Premium</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
+                    <tr><td>Priorità community</td><td class="no">&#10005;</td><td class="yes">&#10003;</td></tr>
+                  </tbody>
+                </table>
+              </div>
             </div>
 
-            <!-- Zona pericolo -->
+            <!-- Operazioni irreversibili sull'account. -->
             <div id="sezione-danger" class="card settings-section danger-zone is-hidden">
               <h3>Zona pericolo</h3>
               <p>Eliminando l'account rimuoverai permanentemente sogni, post e QI.</p>

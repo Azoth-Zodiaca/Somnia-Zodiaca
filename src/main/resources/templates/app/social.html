@@ -10,39 +10,74 @@
     <div class="app-main">
       <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Community')}"></div>
 
-      <main class="app-content">
-        <h2 class="serif social-title">Social</h2>
+      <main class="app-content social-page">
+        <div class="social-layout">
+          <!-- Pannello richiudibile dei profili seguiti. -->
+          <button type="button" class="btn btn-ghost social-following-toggle" id="social-following-toggle"
+            aria-controls="social-following-panel" aria-expanded="false">
+            Profili seguiti
+          </button>
 
-        <div class="social-tabs" data-tab-group="social-tabs">
-          <a href="#" class="js-tab active" data-target="feed-tutti">
-            Tutti
-          </a>
+          <button type="button" class="social-following-backdrop" id="social-following-backdrop"
+            aria-label="Chiudi profili seguiti"></button>
 
-          <a href="#" class="js-tab" data-target="feed-mio-segno">
-            Il mio segno
-          </a>
+          <aside class="social-following card" id="social-following-panel">
+            <div class="social-following-heading">
+              <h3 class="social-following-title">Profili seguiti</h3>
+              <button type="button" class="social-following-close" id="social-following-close"
+                aria-label="Chiudi profili seguiti">Chiudi</button>
+            </div>
 
-          <a href="#" class="js-tab" data-target="feed-seguiti">
-            Seguiti
-          </a>
-        </div>
+            <p th:if="${#lists.isEmpty(seguiti)}" class="text-muted social-following-empty">
+              Non segui ancora nessun profilo.
+            </p>
 
-        <div id="feed-tutti" class="js-tab-panel" th:insert="~{fragments/social-fragments :: social-post-list(
+            <div th:unless="${#lists.isEmpty(seguiti)}" class="social-following-list">
+              <div th:each="seguito : ${seguiti}" class="social-following-item">
+                <a class="social-following-profile" th:href="@{/app/social}">
+                  <div class="avatar social-avatar"
+                    th:classappend="${seguito.profiloColore != null ? ' ' + seguito.profiloColore : ''}">
+                    <img th:if="${seguito.avatarPath != null}" th:src="@{${seguito.avatarPath}}" alt="Avatar">
+                    <span th:unless="${seguito.avatarPath != null}"
+                      th:text="${#strings.toUpperCase(#strings.substring(seguito.username, 0, 1))}">U</span>
+                  </div>
+                  <span class="social-following-username" th:text="${'@' + seguito.username}">@utente</span>
+                </a>
+
+                <form method="post" th:action="@{'/app/social/utente/' + ${seguito.username} + '/unfollow'}">
+                  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                  <button type="submit" class="btn btn-ghost btn-sm" title="Smetti di seguire"
+                    aria-label="Smetti di seguire" data-follow-action="unfollow">&times;</button>
+                </form>
+              </div>
+            </div>
+          </aside>
+
+          <!-- Feed filtrabile della community. -->
+          <section class="social-feed-column">
+            <h2 class="serif social-title">Social</h2>
+
+            <div class="social-tabs" data-tab-group="social-tabs">
+              <a href="#" class="js-tab active" data-target="feed-tutti">Tutti</a>
+              <a href="#" class="js-tab" data-target="feed-mio-segno">Il mio segno</a>
+              <a href="#" class="js-tab" data-target="feed-seguiti">Seguiti</a>
+            </div>
+
+            <div id="feed-tutti" class="js-tab-panel" th:insert="~{fragments/social-fragments :: social-post-list(
                posts=${feed}, currentUsername=${currentUsername},
-               emptyMessage='Non ci sono ancora post da mostrare.'
-             )}">
-        </div>
+              emptyMessage='Non ci sono ancora post da mostrare.', panelPrefix='tutti'
+             )}"></div>
 
-        <div id="feed-mio-segno" class="js-tab-panel is-hidden" th:insert="~{fragments/social-fragments :: social-post-list(
+            <div id="feed-mio-segno" class="js-tab-panel is-hidden" th:insert="~{fragments/social-fragments :: social-post-list(
                posts=${feedMioSegno}, currentUsername=${currentUsername},
-               emptyMessage='Non ci sono ancora post del tuo stesso segno.'
-             )}">
-        </div>
+              emptyMessage='Non ci sono ancora post del tuo stesso segno.', panelPrefix='segno'
+             )}"></div>
 
-        <div id="feed-seguiti" class="js-tab-panel is-hidden" th:insert="~{fragments/social-fragments :: social-post-list(
+            <div id="feed-seguiti" class="js-tab-panel is-hidden" th:insert="~{fragments/social-fragments :: social-post-list(
               posts=${feedSeguiti}, currentUsername=${currentUsername},
-              emptyMessage='Non segui ancora nessun utente o non ci sono post.'
-            )}">
+              emptyMessage='Non segui ancora nessun utente o non ci sono post.', panelPrefix='seguiti'
+            )}"></div>
+          </section>
         </div>
       </main>
     </div>

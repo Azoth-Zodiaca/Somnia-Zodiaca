@@ -2,11 +2,13 @@
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
 <head th:replace="~{fragments/head :: head(title='Accedi - Somnia Zodiaca', responsive=false)}"></head>
 <body>
+  <!-- Accesso all'area riservata. -->
   <div class="auth-page login-page">
     <div class="auth-form-panel">
       <a href="/" class="brand"><span class="brand-dot"></span> Somnia Zodiaca</a>
       <h2>Bentornato</h2>
 
+      <!-- Credenziali di accesso. -->
       <form th:action="@{/login}" method="post" action="#">
         <div class="field">
           <label for="usernameOrEmail">Username o email</label>

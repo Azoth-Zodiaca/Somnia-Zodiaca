@@ -66,6 +66,10 @@ public class Utente extends BaseEntity {
     @Builder.Default
     private Integer giorniConsecutivi = 0;
 
+    @Column(name = "giorni_ricompensa_giornaliera", nullable = false)
+    @Builder.Default
+    private Integer giorniRicompensaGiornaliera = 0;
+
     @Column(name = "ultima_ricompensa_giornaliera")
     private LocalDate ultimaRicompensaGiornaliera;
 

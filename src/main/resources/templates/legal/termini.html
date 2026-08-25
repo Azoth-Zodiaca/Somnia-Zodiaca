@@ -1,13 +1,53 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: head(title='Termini e Condizioni - Quicksilver', responsive=false)}"></head>
+<head th:replace="~{fragments/head :: head(title='Termini e Condizioni - Somnia Zodiaca', responsive=true)}"></head>
 <body>
+  <!-- Navigazione pubblica condivisa. -->
   <div th:replace="~{fragments/public-nav :: navbar}"></div>
-  <section class="container" style="max-width:760px;padding:60px 24px;">
-    <h1 class="serif" style="font-weight:500;margin-bottom:20px;">Termini e Condizioni</h1>
-    <p class="text-muted mt-10">Qui vanno inserite le condizioni d'uso del servizio: abbonamento Premium,
-      valuta virtuale QI (non rimborsabile, senza valore monetario reale), regole della community, ecc.</p>
+  <!-- Regole del servizio, dell'account e della community. -->
+  <section class="container legal-page">
+    <div class="legal-header">
+      <span class="eyebrow">Regole del servizio</span>
+      <h1 class="serif">Termini e Condizioni</h1>
+      <p class="text-muted">Le regole essenziali per usare Somnia Zodiaca con consapevolezza e rispetto.</p>
+    </div>
+
+    <div class="legal-content">
+      <p class="legal-notice"><strong>Nota importante:</strong> questo testo è un fac-simile informativo e deve essere verificato e adattato prima della pubblicazione definitiva.</p>
+
+      <h2>1. Il servizio</h2>
+      <p>Somnia Zodiaca offre strumenti digitali per esplorare astrologia, sogni e interessi condivisi. Il servizio include tema natale, Oracolo dei sogni, funzioni social, progressi e strumenti di personalizzazione.</p>
+      <p>Le letture dell'Oracolo e le informazioni astrologiche hanno finalità creative e di intrattenimento. Non costituiscono diagnosi, terapia, consulenza medica, psicologica, finanziaria o professionale e non sostituiscono il parere di una persona qualificata.</p>
+
+      <h2>2. Account e utilizzo</h2>
+      <p>Per usare le funzioni riservate devi creare un account e fornire informazioni corrette. Sei responsabile della riservatezza delle credenziali e delle attività svolte dal tuo account. Devi informarci tempestivamente se sospetti un accesso non autorizzato.</p>
+      <p>L'account è personale e non può essere ceduto, venduto o utilizzato per aggirare limitazioni del servizio.</p>
+
+      <h2>3. Oracolo dei sogni</h2>
+      <p>Puoi inserire sogni e ricevere interpretazioni generate dagli strumenti del servizio. Le risposte sono suggerimenti di riflessione: non sono predizioni certe e non devono essere usate per prendere decisioni che richiedono competenze professionali.</p>
+
+      <h2>4. Community e contenuti</h2>
+      <p>Se pubblichi un post, un commento o un'immagine, mantieni i diritti necessari per farlo e concedi al servizio una licenza limitata, non esclusiva e necessaria a mostrare e distribuire quel contenuto all'interno delle sue funzioni.</p>
+      <p>Non sono consentiti contenuti illegali, minacciosi, discriminatori, molesti, ingannevoli, lesivi della privacy, pornografici, o che violino diritti di altre persone. Non usare la Community per spam, truffe, raccolta abusiva di dati o promozioni non autorizzate.</p>
+
+      <h2>5. QI e Premium</h2>
+      <p>I QI sono crediti virtuali interni al servizio: non sono denaro, non hanno valore monetario autonomo, non possono essere convertiti in valuta reale e non possono essere trasferiti o rivenduti, salvo funzioni espressamente previste.</p>
+      <p>Il piano Premium abilita le funzioni indicate nella pagina di acquisto per il periodo previsto. Le modalità di pagamento, rinnovo, recesso e disdetta dipendono dal canale di acquisto e dalle regole applicabili.</p>
+
+      <h2>6. Sospensione e chiusura</h2>
+      <p>Possiamo limitare o sospendere un account in caso di violazione di questi termini, uso fraudolento, rischio per altri utenti o rischio tecnico per il servizio. Puoi smettere di usare il servizio e chiedere la cancellazione dell'account secondo le funzioni disponibili.</p>
+
+      <h2>7. Disponibilità e responsabilità</h2>
+      <p>Il servizio può essere modificato, sospeso o reso temporaneamente indisponibile per manutenzione, sicurezza o cause fuori dal nostro controllo. Nei limiti consentiti dalla legge, il servizio viene fornito senza garanzia di disponibilità continua o di adeguatezza a uno scopo specifico.</p>
+
+      <h2>8. Proprietà intellettuale</h2>
+      <p>Marchi, interfaccia, codice, testi e componenti del servizio appartengono ai rispettivi titolari e non possono essere copiati, distribuiti o utilizzati al di fuori degli usi consentiti senza autorizzazione.</p>
+
+      <h2>9. Modifiche</h2>
+      <p>Possiamo aggiornare questi termini per motivi tecnici, organizzativi o normativi. Le modifiche vengono pubblicate in questa pagina e diventano applicabili dal momento indicato nella versione aggiornata.</p>
+    </div>
   </section>
+  <div th:replace="~{fragments/public-footer :: footer}"></div>
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
 </html>

@@ -40,6 +40,23 @@ public class AstroWayService {
         this.apiKey = apiKey;
     }
 
+    public String getInterpretation(String rawChartResponse) {
+        try {
+            // Endpoint corretto ricavato dalla documentazione ufficiale https://api.astroway.info/it/credits/
+            return restClient.post()
+                    .uri("/v1/interpret/natal")
+                    .header("X-Api-Key", apiKey)
+                    .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
+                    .body(rawChartResponse)
+                    .retrieve()
+                    .body(String.class);
+
+        } catch (ResourceAccessException exception) {
+            throw new AstroWayUnavailableException(
+                    "Impossibile raggiungere AstroWay per l'interpretazione del carattere", exception);
+        }
+    }
+
     public String calculateChart(AstroWayChartRequest request) {
         try {
             return restClient.post()

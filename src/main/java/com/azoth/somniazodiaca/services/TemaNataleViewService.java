@@ -1,9 +1,12 @@
 package com.azoth.somniazodiaca.services;
 
 import java.util.List;
+import java.util.Map;
+import java.util.function.Function;
 
 import org.springframework.stereotype.Service;
 
+import com.azoth.somniazodiaca.dtos.records.PercentualeTemaView;
 import com.azoth.somniazodiaca.dtos.records.PianetaTemaView;
 import com.fasterxml.jackson.databind.JsonNode;
 
@@ -209,6 +212,74 @@ public class TemaNataleViewService {
             case 11 -> "XI";
             case 12 -> "XII";
             default -> "-";
+        };
+    }
+
+    public List<PercentualeTemaView> estraiElementi(
+            List<PianetaTemaView> pianeti) {
+
+        return percentuali(
+                pianeti,
+                PianetaTemaView::elemento,
+                Map.of(
+                        "Fuoco", "element-fire",
+                        "Terra", "element-earth",
+                        "Aria", "element-air",
+                        "Acqua", "element-water"));
+    }
+
+    public List<PercentualeTemaView> estraiModalita(
+            List<PianetaTemaView> pianeti) {
+
+        return percentuali(
+                pianeti,
+                PianetaTemaView::modalita,
+                Map.of(
+                        "Cardinale", "mode-cardinal",
+                        "Fisso", "mode-fixed",
+                        "Mobile", "mode-mutable"));
+    }
+
+    private List<PercentualeTemaView> percentuali(
+            List<PianetaTemaView> pianeti,
+            Function<PianetaTemaView, String> classificatore,
+            Map<String, String> classiCss) {
+
+        List<PianetaTemaView> principali = pianeti.stream()
+                .filter(this::ePianetaPrincipale)
+                .toList();
+
+        int totale = principali.size();
+
+        if (totale == 0) {
+            return List.of();
+        }
+
+        return classiCss.entrySet()
+                .stream()
+                .map(entry -> {
+                    long conteggio = principali.stream()
+                            .filter(pianeta -> entry.getKey().equals(
+                                    classificatore.apply(pianeta)))
+                            .count();
+
+                    int percentuale = (int) Math.round(
+                            conteggio * 100.0 / totale);
+
+                    return new PercentualeTemaView(
+                            entry.getKey(),
+                            percentuale,
+                            entry.getValue());
+                })
+                .toList();
+    }
+
+    private boolean ePianetaPrincipale(PianetaTemaView pianeta) {
+        return switch (pianeta.nome()) {
+            case "Sole", "Luna", "Mercurio", "Venere", "Marte",
+                    "Giove", "Saturno", "Urano", "Nettuno", "Plutone" ->
+                true;
+            default -> false;
         };
     }
 

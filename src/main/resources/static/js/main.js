@@ -1,18 +1,25 @@
 /* =========================================================
-   QUICKSILVER - JAVASCRIPT PRINCIPALE
-   File unico e commentato, diviso in piccole funzioni.
-   Ogni funzione controlla da sola se gli elementi che le
-   servono esistono nella pagina corrente, quindi puoi
-   includere questo file in TUTTE le pagine senza errori.
-   ========================================================= */
+  SOMNIA ZODIACA - SCRIPT CONDIVISO
+  Funzioni organizzate per area funzionale. Gli inizializzatori
+  verificano autonomamente se gli elementi necessari esistono,
+  così questo file puo essere incluso in tutte le pagine.
+  ========================================================= */
 
+/* ---------------------------------------------------------
+  AVVIO
+  Registra tutti i comportamenti condivisi dopo il caricamento
+  del DOM. Le dichiarazioni di funzione sono hoisted, quindi
+  l'ordine di questo elenco resta esplicito e leggibile.
+--------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", function () {
   initSidebarToggle();
+  initSocialFollowing();
   initTabs();
   initChipSelectors();
   initOracoloCounter();
   initOracoloForm();
   initLikeButtons();
+  initComments();
   initSettingsMenu();
   initDeleteAccountConfirmation();
   initHistoryButtons();
@@ -23,7 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
   initInterpretationExpanders();
 });
 
-// controllo della forza della password nella pagina di registrazione
+/* ---------------------------------------------------------
+   AUTENTICAZIONE E PROFILO
+--------------------------------------------------------- */
+
+// Controlla la complessita minima della password e aggiorna l'indicatore.
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("register-form");
   const password = document.getElementById("password");
@@ -75,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// profilo
+// Mostra o nasconde il form per cambiare l'immagine del profilo.
 function initUploadProfilo() {
   var editButton = document.getElementById("mostra-upload-profilo");
   var uploadForm = document.getElementById("upload-profilo-form");
@@ -90,10 +101,10 @@ function initUploadProfilo() {
 }
 
 /* ---------------------------------------------------------
-   1) Apertura/chiusura della sidebar su schermi piccoli.
-   Serve un bottone con id="sidebar-toggle" (non presente
-   in ogni pagina: se manca, la funzione non fa nulla).
+  NAVIGAZIONE E CONTROLLI GENERALI
 --------------------------------------------------------- */
+
+// Apre e chiude la sidebar mobile, inclusi backdrop, Escape e resize.
 function initSidebarToggle() {
   var toggleBtn = document.getElementById("sidebar-toggle");
   var sidebar = document.getElementById("sidebar");
@@ -149,7 +160,7 @@ function initSidebarToggle() {
   });
 }
 
-// Saluto in base all'orario (Buongiorno / Buon pomeriggio / Buona sera) nella topbar
+// Personalizza il saluto della topbar in base all'ora locale.
 document.addEventListener('DOMContentLoaded', () => {
   const elementoSaluto = document.getElementById('saluto-orario');
 
@@ -168,12 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-/* ---------------------------------------------------------
-   2) Tab generiche (es. Riepilogo / Carta / Pianeti / Case
-   nel Tema Natale, oppure Popolari / Recenti nel Social).
-   Basta dare a ogni link classe "js-tab" e un attributo
-   data-target che punta all'id del contenuto da mostrare.
---------------------------------------------------------- */
+// Gestisce le tab collegate a pannelli tramite data-target.
 function initTabs() {
   var tabs = document.querySelectorAll(".js-tab");
   if (tabs.length === 0) return;
@@ -204,12 +210,7 @@ function initTabs() {
   });
 }
 
-/* ---------------------------------------------------------
-   3) Selettori a "chip" (es. Umore e Stile nella pagina
-   Oracolo). Ogni bottone con classe "chip" e attributo
-   data-group diventa selezionabile; solo uno per gruppo
-   può essere attivo alla volta.
---------------------------------------------------------- */
+// Mantiene una sola scelta attiva per ogni gruppo di chip.
 function initChipSelectors() {
   var chips = document.querySelectorAll(".chip");
   if (chips.length === 0) return;
@@ -236,10 +237,10 @@ function initChipSelectors() {
 }
 
 /* ---------------------------------------------------------
-   5) Contatore caratteri nel form "Racconta il tuo sogno"
-   della pagina Oracolo. Richiede una textarea con
-   id="dream-text" e un elemento con id="dream-counter".
+  ORACOLO
 --------------------------------------------------------- */
+
+// Aggiorna il numero di caratteri inseriti nel sogno.
 function initOracoloCounter() {
   var textarea = document.getElementById("dream-text");
   var counter = document.getElementById("dream-counter");
@@ -294,6 +295,7 @@ function initSvuotaOracolo() {
   });
 }
 
+// Converte una scadenza ISO nel testo mostrato nella cronologia.
 function testoScadenza(scadenza) {
   var differenza =
     new Date(scadenza).getTime() - Date.now();
@@ -385,7 +387,7 @@ function aggiungiInterpretazioneAllaLista(
     resultBox.hidden = false;
     resultBox.dataset.interpretazioneId = interpretazioneId;
 
-    mostraFormCondivisione(interpretazioneId);
+    mostraFormCondivisione(interpretazioneId, false);
 
     resultText.innerHTML = DOMPurify.sanitize(
       marked.parse(testoInterpretazione)
@@ -519,7 +521,7 @@ function initOracoloForm() {
       savedInterpretationId = Number(saveData.id);
       aggiornaSaldoQi(saveData.qi);
 
-      mostraFormCondivisione(savedInterpretationId);
+      mostraFormCondivisione(savedInterpretationId, false);
 
       resultBox.dataset.interpretazioneId = savedInterpretationId;
 
@@ -582,6 +584,11 @@ function initOracoloForm() {
         saveButton.disabled = true;
         saveButton.hidden = true;
         saveButton.classList.add("is-hidden");
+
+        var publishButton = document.getElementById("pubblica-interpretazione");
+        if (publishButton) {
+          publishButton.disabled = false;
+        }
 
         var historyItem = document.querySelector(
           '.history-item[data-interpretazione-id="' +
@@ -652,7 +659,7 @@ function initHistoryButtons() {
       resultBox.hidden = false;
       resultBox.dataset.interpretazioneId = interpretationId;
 
-      mostraFormCondivisione(interpretationId);
+      mostraFormCondivisione(interpretationId, permanente);
 
       var saveButton = document.getElementById("salva-interpretazione");
 
@@ -680,12 +687,13 @@ function initHistoryButtons() {
   });
 }
 
-function mostraFormCondivisione(interpretazioneId) {
+function mostraFormCondivisione(interpretazioneId, permanente) {
   var formBox = document.getElementById("condivisione-interpretazione");
   var hiddenId = document.getElementById(
     "condivisione-interpretazione-id"
   );
   var testoPost = document.getElementById("testo-post");
+  var publishButton = document.getElementById("pubblica-interpretazione");
 
   if (!formBox || !hiddenId) {
     return;
@@ -693,6 +701,13 @@ function mostraFormCondivisione(interpretazioneId) {
 
   hiddenId.value = interpretazioneId;
   formBox.classList.remove("is-hidden");
+
+  if (publishButton) {
+    publishButton.disabled = !permanente;
+    publishButton.title = permanente
+      ? "Pubblica nella community"
+      : "Rendi permanente l'interpretazione prima di pubblicarla";
+  }
 
   if (testoPost) {
     testoPost.value = "";
@@ -708,19 +723,158 @@ function aggiornaSaldoQi(qi) {
 }
 
 /* ---------------------------------------------------------
-   6) Bottone "like" nei post del Social. Cambia stile e
-   incrementa/decrementa il numero visualizzato.
-   Richiede: <button class="like-btn" data-liked="false">
-             <span class="like-count">24</span></button>
+  SOCIAL
 --------------------------------------------------------- */
-function initLikeButtons() {
-  var likeButtons = document.querySelectorAll(".like-btn");
 
-  likeButtons.forEach(function (btn) {
-    btn.addEventListener("click", function () {
-      btn.disabled = true;
+// Apre e chiude il pannello degli utenti seguiti.
+function initSocialFollowing() {
+  var toggleBtn = document.getElementById("social-following-toggle");
+  var panel = document.getElementById("social-following-panel");
+  var closeBtn = document.getElementById("social-following-close");
+  var backdrop = document.getElementById("social-following-backdrop");
+
+  if (!toggleBtn || !panel) return;
+
+  function setPanelState(isOpen) {
+    panel.classList.toggle("is-open", isOpen);
+    if (backdrop) backdrop.classList.toggle("is-open", isOpen);
+    document.body.classList.toggle("social-following-open", isOpen);
+    toggleBtn.setAttribute("aria-expanded", String(isOpen));
+  }
+
+  toggleBtn.addEventListener("click", function () {
+    setPanelState(!panel.classList.contains("is-open"));
+  });
+
+  if (closeBtn) closeBtn.addEventListener("click", function () {
+    setPanelState(false);
+  });
+
+  if (backdrop) backdrop.addEventListener("click", function () {
+    setPanelState(false);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && panel.classList.contains("is-open")) {
+      setPanelState(false);
+    }
+  });
+}
+
+// Invia il like in AJAX e sincronizza tutte le copie dello stesso post.
+function initLikeButtons() {
+  var likeForms = document.querySelectorAll("form[data-like-endpoint]");
+
+  likeForms.forEach(function (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+
+      var button = form.querySelector(".like-btn");
+      var endpoint = form.dataset.likeEndpoint;
+
+      if (!button || !endpoint) return;
+
+      button.disabled = true;
+
+      fetch(endpoint, {
+        method: "POST",
+        headers: {
+          "X-Requested-With": "XMLHttpRequest"
+        },
+        body: new FormData(form)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Like request failed");
+          return response.json();
+        })
+        .then(function (data) {
+          var postId = button.getAttribute("data-post-id");
+          var matchingButtons = document.querySelectorAll(
+            '.like-btn[data-post-id="' + postId + '"]'
+          );
+
+          matchingButtons.forEach(function (matchingButton) {
+            var icon = matchingButton.querySelector(".like-icon");
+            var count = matchingButton.querySelector(".like-count");
+
+            matchingButton.classList.toggle("liked", data.liked);
+            matchingButton.setAttribute("aria-pressed", String(data.liked));
+            if (icon) icon.textContent = data.liked ? "♥" : "♡";
+            if (count) count.textContent = data.count;
+          });
+        })
+        .catch(function () {
+          form.submit();
+        })
+        .finally(function () {
+          button.disabled = false;
+        });
     });
   });
+}
+
+function initComments() {
+  var buttons = document.querySelectorAll(".js-comments-toggle");
+  var panels = document.querySelectorAll(".social-comments-panel");
+  var commentForms = document.querySelectorAll(".social-comment-form");
+
+  commentForms.forEach(function (form) {
+    form.addEventListener("submit", function () {
+      sessionStorage.setItem("social-comment-scroll", String(window.scrollY));
+
+      var commentPanel = form.closest(".social-comments-panel");
+      if (commentPanel) {
+        sessionStorage.setItem("social-comment-panel", commentPanel.id);
+      }
+    });
+  });
+
+  buttons.forEach(function (button) {
+    button.addEventListener("click", function () {
+      var targetId = button.getAttribute("data-comments-target");
+      var target = document.getElementById(targetId);
+      var isOpen = target && !target.classList.contains("is-hidden");
+
+      panels.forEach(function (panel) {
+        panel.classList.add("is-hidden");
+      });
+      buttons.forEach(function (otherButton) {
+        otherButton.setAttribute("aria-expanded", "false");
+      });
+
+      if (!isOpen && target) {
+        target.classList.remove("is-hidden");
+        button.setAttribute("aria-expanded", "true");
+      }
+    });
+  });
+
+  var initialTargetId = window.location.hash.substring(1);
+  var savedPanelId = sessionStorage.getItem("social-comment-panel");
+  if (!initialTargetId && savedPanelId) {
+    initialTargetId = savedPanelId;
+  }
+
+  var initialTarget = document.getElementById(initialTargetId);
+  var initialButton = document.querySelector(
+    '[data-comments-target="' + initialTargetId + '"]'
+  );
+
+  if (initialTarget && initialButton) {
+    initialTarget.classList.remove("is-hidden");
+    initialButton.setAttribute("aria-expanded", "true");
+  }
+
+  var savedScroll = sessionStorage.getItem("social-comment-scroll");
+  if (savedScroll !== null) {
+    sessionStorage.removeItem("social-comment-scroll");
+    sessionStorage.removeItem("social-comment-panel");
+    window.requestAnimationFrame(function () {
+      window.requestAnimationFrame(function () {
+        window.scrollTo(0, Number(savedScroll));
+      });
+    });
+  }
 }
 
 function initInterpretationExpanders() {
@@ -754,9 +908,10 @@ function initInterpretationExpanders() {
 }
 
 /* ---------------------------------------------------------
-   8) Menu laterale della pagina Impostazioni: mostra solo
-   la sezione scelta ed evidenzia la voce di menu attiva.
+  IMPOSTAZIONI E ACCOUNT
 --------------------------------------------------------- */
+
+// Mostra la sola sezione impostazioni richiesta e aggiorna il menu attivo.
 function initSettingsMenu() {
   var links = document.querySelectorAll(".settings-menu a");
   var sections = document.querySelectorAll(".settings-section");
@@ -767,6 +922,19 @@ function initSettingsMenu() {
   var activeTargetId = activeLink
     ? activeLink.getAttribute("data-target")
     : null;
+
+  var requestedSection = new URLSearchParams(window.location.search).get("sezione");
+  var requestedLink = requestedSection
+    ? document.querySelector('.settings-menu a[data-target="sezione-' + requestedSection + '"]')
+    : null;
+
+  if (requestedLink) {
+    activeLink = requestedLink;
+    activeTargetId = requestedLink.getAttribute("data-target");
+    links.forEach(function (item) {
+      item.classList.toggle("active", item === requestedLink);
+    });
+  }
 
   sections.forEach(function (section) {
     section.classList.toggle("is-hidden", section.id !== activeTargetId);
@@ -792,7 +960,7 @@ function initSettingsMenu() {
 }
 
 
-// pop up per eliminazione account in impostazioni
+// Chiede conferma prima dell'eliminazione definitiva dell'account.
 function initDeleteAccountConfirmation() {
   var form = document.querySelector("form[action*='/account/elimina']");
   if (!form) return;
@@ -803,3 +971,13 @@ function initDeleteAccountConfirmation() {
     }
   });
 }
+
+/* ---------------------------------------------------------
+  COMPONENTI VISIVI
+--------------------------------------------------------- */
+
+// Applica alle barre la percentuale fornita dall'attributo data-percentuale.
+document.querySelectorAll("[data-percentuale]").forEach(barra => {
+  barra.style.width =
+    `${barra.dataset.percentuale}%`;
+});
