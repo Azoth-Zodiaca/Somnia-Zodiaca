@@ -1,5 +1,7 @@
 package com.azoth.somniazodiaca.security;
 
+import java.time.LocalDate;
+
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.GrantedAuthority;
@@ -125,6 +127,7 @@ public class SecurityModelAdvice {
 
             model.addAttribute("username", "");
             model.addAttribute("saldoQi", 0);
+            model.addAttribute("ricompensaRiscossa", false);
             model.addAttribute("segnoZodiacale", null);
             model.addAttribute("segnoZodiacaleAbbreviato", null);
             model.addAttribute("segnoZodiacaleSimbolo", null);
@@ -145,6 +148,9 @@ public class SecurityModelAdvice {
 
         model.addAttribute("username", utente.getUsername());
         model.addAttribute("saldoQi", utente.getQi());
+        model.addAttribute(
+            "ricompensaRiscossa",
+            LocalDate.now().equals(utente.getUltimaRicompensaGiornaliera()));
         model.addAttribute("avatarPath", utente.getAvatarPath());
 
         String colore = utente.getProfiloColore() != null

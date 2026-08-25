@@ -9,7 +9,8 @@ import com.azoth.somniazodiaca.dtos.records.SalvaInterpretazioneRequest;
 import com.azoth.somniazodiaca.entities.Interpretazione;
 import com.azoth.somniazodiaca.entities.Sogno;
 import com.azoth.somniazodiaca.entities.Utente;
-import com.azoth.somniazodiaca.enums.InterpretazioneEnum;
+import com.azoth.somniazodiaca.enums.StileEnum;
+import com.azoth.somniazodiaca.enums.UmoreEnum;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
@@ -35,6 +36,15 @@ public class OracoloService {
         this.sognoRepository = sognoRepository;
         this.interpretazioneRepository = interpretazioneRepository;
         this.badgeService = badgeService;
+    }
+
+    public void verificaQiDisponibili(String username) {
+        Utente utente = utenteRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        if (utente.getQi() < COSTO_INTERPRETAZIONE) {
+            throw new IllegalStateException("QI insufficienti");
+        }
     }
 
     @Transactional
@@ -67,7 +77,8 @@ public class OracoloService {
                 .sogno(sogno)
                 .prompt(richiesta.prompt())
                 .testo(richiesta.interpretazione())
-                .interpretazioneEnum(InterpretazioneEnum.JUNGIANA)
+                .umore(parseEnum(richiesta.umore(), UmoreEnum.class))
+                .stile(parseEnum(richiesta.stile(), StileEnum.class))
                 .scadenzaCache(LocalDateTime.now().plusHours(DURATA_INTERPRETAZIONE_ORE))
                 .build();
 
@@ -79,6 +90,18 @@ public class OracoloService {
         badgeService.verificaBadge(username);
 
         return salvata.getId();
+    }
+
+    private <T extends Enum<T>> T parseEnum(String value, Class<T> enumType) {
+        if (value == null || value.isBlank()) {
+            throw new IllegalArgumentException("Umore e stile sono obbligatori");
+        }
+
+        try {
+            return Enum.valueOf(enumType, value.toUpperCase());
+        } catch (IllegalArgumentException exception) {
+            throw new IllegalArgumentException("Valore non valido: " + value, exception);
+        }
     }
 
     @Transactional
@@ -106,5 +129,20 @@ public class OracoloService {
         utente.setQi(utente.getQi() - COSTO_INTERPRETAZIONE);
         interpretazioneRepository.save(interpretazione);
         utenteRepository.save(utente);
+    }
+
+    @Transactional
+    public void cancellaInterpretazione(String username, Long interpretazioneId) {
+        Interpretazione interpretazione = interpretazioneRepository
+                .findById(interpretazioneId)
+                .orElseThrow(() -> new IllegalArgumentException(
+                        "Interpretazione non trovata"));
+
+        if (!interpretazione.getSogno().getUtente().getUsername().equals(username)) {
+            throw new IllegalArgumentException("Interpretazione non autorizzata");
+        }
+
+        interpretazione.setScadenzaCache(LocalDateTime.now());
+        interpretazioneRepository.save(interpretazione);
     }
 }
