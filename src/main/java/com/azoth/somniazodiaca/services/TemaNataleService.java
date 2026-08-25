@@ -67,9 +67,17 @@ public class TemaNataleService
                 //                         "Il calcolo del tema natale richiede Premium");
                 // }
 
-                TemaNatale temaNatale = getRepository()
-                                .findByUtenteId(utente.getId())
-                                .orElseGet(TemaNatale::new);
+                Optional<TemaNatale> temaEsistente = getRepository()
+                                .findByUtenteId(utente.getId());
+
+                if (temaEsistente.isPresent()
+                                && utente.getRuolo() != Ruolo.PREMIUM
+                                && utente.getRuolo() != Ruolo.ADMIN) {
+                        throw new IllegalStateException(
+                                        "La modifica del tema natale richiede Premium");
+                }
+
+                TemaNatale temaNatale = temaEsistente.orElseGet(TemaNatale::new);
 
                 temaNatale.setUtente(utente);
                 temaNatale.setDataNascita(dataNascita);
@@ -106,12 +114,6 @@ public class TemaNataleService
 
                 utente.setSegnoZodiacale(segnoSolareEntity);
                 utente.setAscendente(ascendenteEntity);
-
-                double longitudineSole = datiTema.path("planets")
-                                .elements()
-                                .next()
-                                .path("longitude")
-                                .asDouble();
 
                 getRepository().save(temaNatale);
                 utenteRepository.save(utente);

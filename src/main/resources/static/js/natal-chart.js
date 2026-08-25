@@ -1,85 +1,115 @@
 document.addEventListener("DOMContentLoaded", () => {
     const chartContainer = document.querySelector("#natal-chart");
-    const dataScript = document.querySelector("#tema-chart-data");
 
-    if (!chartContainer || !dataScript) return;
+    if (!chartContainer) {
+        return;
+    }
+
+    renderChart(chartContainer, parseChartData(chartContainer.dataset.chart));
+});
+
+const zodiacSymbols = [
+    "\u2648", "\u2649", "\u264a", "\u264b", "\u264c", "\u264d",
+    "\u264e", "\u264f", "\u2650", "\u2651", "\u2652", "\u2653"
+];
+
+const planetSymbols = {
+    Sun: "\u2609", Moon: "\u263d", Mercury: "\u263f", Venus: "\u2640",
+    Mars: "\u2642", Jupiter: "\u2643", Saturn: "\u2644", Uranus: "\u2645",
+    Neptune: "\u2646", Pluto: "\u2647", Sole: "\u2609", Luna: "\u263d",
+    Mercurio: "\u263f", Venere: "\u2640", Marte: "\u2642", Giove: "\u2643",
+    Saturno: "\u2644", Urano: "\u2645", Nettuno: "\u2646", Plutone: "\u2647"
+};
+
+function parseChartData(rawData) {
+    if (!rawData) {
+        return demoChartData();
+    }
 
     try {
-        const temaData = JSON.parse(dataScript.textContent);
-
-        // Configurazione dimensioni SVG
-        const size = 500;
-        const center = size / 2;
-        const radius = size / 2 - 40;
-
-        // Estrazione dati di base dalle cuspi delle case di AstroWay
-        const houses = temaData.houses || {};
-        const ascendant = parseFloat(houses.ascendant) || 0;
-        const mc = parseFloat(houses.mc) || 0;
-
-        // Creazione elemento SVG principale
-        let svgHtml = `<svg viewBox="0 0 ${size} ${size}" class="astrology-chart-svg">`;
-
-        // 1. Cerchio Zodiacale Esterno e Interno
-        svgHtml += `<circle cx="${center}" cy="${center}" r="${radius}" class="chart-border-outer" />`;
-        svgHtml += `<circle cx="${center}" cy="${center}" r="${radius - 35}" class="chart-border-inner" />`;
-
-        // Funzione di utilità per convertire i gradi in coordinate cartesiane (invertendo l'asse Y di default dei cerchi)
-        // Sottraiamo l'ascendente per ruotare la carta e posizionare l'Ascendente sempre a sinistra (0° geometrici a sinistra)
-        const getCoordinates = (degrees, currentRadius) => {
-            const angleInRadians = ((degrees - ascendant + 180) * Math.PI) / 180;
-            return {
-                x: center + currentRadius * Math.cos(angleInRadians),
-                y: center + currentRadius * Math.sin(angleInRadians)
-            };
-        };
-
-        // 2. Disegno dei 12 Settori dei Segni (30° ciascuno)
-        for (let i = 0; i < 12; i++) {
-            const startDeg = i * 30;
-            const p1 = getCoordinates(startDeg, radius);
-            const p2 = getCoordinates(startDeg, radius - 35);
-            svgHtml += `<line x1="${p1.x}" y1="${p1.y}" x2="${p2.x}" y2="${p2.y}" class="zodiac-division" />`;
-        }
-
-        // 3. Disegno delle 12 Case Astrologiche
-        if (houses.cusps && Array.isArray(houses.cusps)) {
-            houses.cusps.forEach((cusp, index) => {
-                const pStart = getCoordinates(cusp, radius - 35);
-                const pEnd = getCoordinates(cusp, 60); // Arriva vicino al centro vuoto
-
-                // Evidenzia le linee dell'Ascendente (Casa 1) e del Medio Cielo (Casa 10)
-                let lineClass = "house-division";
-                if (index === 0) lineClass = "house-division axis-ascendant";
-                if (index === 9) lineClass = "house-division axis-mc";
-
-                svgHtml += `<line x1="${pStart.x}" y1="${pStart.y}" x2="${pEnd.x}" y2="${pEnd.y}" class="${lineClass}" />`;
-            });
-        }
-
-        // 4. Posizionamento dei Simboli dei Pianeti
-        // AstroWay restituisce i pianeti tipicamente in una struttura ad oggetto o lista sotto 'planets' o 'points'
-        const planets = temaData.planets || temaData.points || {};
-        Object.entries(planets).forEach(([name, data]) => {
-            if (data && data.longitude !== undefined) {
-                const coords = getCoordinates(data.longitude, radius - 55);
-                const symbol = data.simbolo || name.substring(0, 2); // Fallback alle prime due lettere se manca il glifo
-
-                svgHtml += `
-                    <g class="chart-planet-glyph" data-name="${name}" data-deg="${data.longitude}">
-                        <text x="${coords.x}" y="${coords.y}" text-anchor="middle" dominant-baseline="central" class="planet-glyph-text">${symbol}</text>
-                        <title>${name}: ${data.longitude.toFixed(2)}°</title>
-                    </g>
-                `;
-            }
-        });
-
-        // Chiude il tag SVG e lo inietta nel contenitore
-        svgHtml += `</svg>`;
-        chartContainer.innerHTML = svgHtml;
-
-    } catch (e) {
-        console.error("Errore nel parsing o rendering dei dati del grafico natale:", e);
-        chartContainer.textContent = "Impossibile caricare il grafico interattivo.";
+        return JSON.parse(rawData);
+    } catch (error) {
+        console.error("Dati della carta natale non validi", error);
+        return demoChartData();
     }
-});
+}
+
+function demoChartData() {
+    return {
+        houses: {
+            ascendant: 119.52,
+            mc: 10.72,
+            cusps: Array.from({ length: 12 }, (_, index) => (119.52 + index * 30) % 360)
+        },
+        planets: [
+            { name: "Sole", longitude: 228.77 },
+            { name: "Luna", longitude: 285.4 },
+            { name: "Mercurio", longitude: 214.2 },
+            { name: "Venere", longitude: 198.1 },
+            { name: "Marte", longitude: 72.8 },
+            { name: "Giove", longitude: 342.6 },
+            { name: "Saturno", longitude: 16.4 }
+        ]
+    };
+}
+
+function renderChart(container, chartData) {
+    const size = 560;
+    const center = size / 2;
+    const outerRadius = 238;
+    const innerRadius = 188;
+    const houses = chartData.houses || {};
+    const ascendant = numberOr(houses.ascendant, 119.52);
+    const mc = numberOr(houses.mc, 10.72);
+    const cusps = Array.isArray(houses.cusps) ? houses.cusps : [];
+    const planets = Array.isArray(chartData.planets)
+        ? chartData.planets
+        : Object.entries(chartData.planets || {}).map(([name, value]) => ({ name, ...value }));
+
+    const point = (longitude, radius) => {
+        const radians = ((longitude - ascendant + 180) * Math.PI) / 180;
+        return { x: center + radius * Math.cos(radians), y: center + radius * Math.sin(radians) };
+    };
+
+    let svg = `<svg viewBox="0 0 ${size} ${size}" class="astrology-chart-svg" role="img" aria-label="Carta astrale">`;
+    svg += `<circle cx="${center}" cy="${center}" r="${outerRadius}" class="chart-border-outer"/>`;
+    svg += `<circle cx="${center}" cy="${center}" r="${innerRadius}" class="chart-border-inner"/>`;
+    svg += `<circle cx="${center}" cy="${center}" r="70" class="chart-core"/>`;
+
+    zodiacSymbols.forEach((symbol, index) => {
+        const label = point(index * 30 + 15, 214);
+        const start = point(index * 30, outerRadius);
+        const end = point(index * 30, innerRadius);
+        svg += `<line x1="${start.x}" y1="${start.y}" x2="${end.x}" y2="${end.y}" class="zodiac-division"/>`;
+        svg += `<text x="${label.x}" y="${label.y}" class="zodiac-glyph" text-anchor="middle" dominant-baseline="central">${symbol}</text>`;
+    });
+
+    cusps.forEach((cusp, index) => {
+        const start = point(Number(cusp), innerRadius);
+        const end = point(Number(cusp), 70);
+        const axisClass = index === 0 ? " axis-ascendant" : index === 9 ? " axis-mc" : "";
+        svg += `<line x1="${start.x}" y1="${start.y}" x2="${end.x}" y2="${end.y}" class="house-division${axisClass}"/>`;
+    });
+
+    planets.forEach(planet => {
+        const longitude = Number(planet.longitude);
+        if (!Number.isFinite(longitude)) {
+            return;
+        }
+        const position = point(longitude, 145);
+        const name = planet.name || planet.nome || "Pianeta";
+        const symbol = planet.symbol || planet.simbolo || planetSymbols[name] || "*";
+        svg += `<g class="chart-planet-glyph" data-name="${name}"><text x="${position.x}" y="${position.y}" class="planet-glyph-text" text-anchor="middle" dominant-baseline="central">${symbol}</text><title>${name}: ${longitude.toFixed(2)}°</title></g>`;
+    });
+
+    const ascendantPoint = point(ascendant, outerRadius);
+    const mcPoint = point(mc, outerRadius);
+    svg += `<text x="${ascendantPoint.x}" y="${ascendantPoint.y}" class="chart-axis-label" text-anchor="middle">ASC</text>`;
+    svg += `<text x="${mcPoint.x}" y="${mcPoint.y}" class="chart-axis-label" text-anchor="middle">MC</text></svg>`;
+    container.innerHTML = svg;
+}
+
+function numberOr(value, fallback) {
+    const number = Number(value);
+    return Number.isFinite(number) ? number : fallback;
+}

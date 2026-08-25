@@ -51,136 +51,134 @@
           </a>
         </div>
 
-        <div class="natal-protected-summary" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
-          <!-- Riepilogo dei dati anagrafici e della triade principale. -->
-          <div class="natal-data-layout">
+        <!-- Riepilogo dei dati anagrafici e della triade principale. -->
+        <div class="natal-data-layout natal-protected-summary" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
 
-            <div class="natal-summary-column">
+          <div class="natal-summary-column">
 
-              <div class="card natal-birth-card" th:if="${temaNatale != null}">
-                <div class="card-title">Dati di nascita</div>
+            <div class="card natal-birth-card" th:if="${temaNatale != null}">
+              <div class="card-title">Dati di nascita</div>
 
-                <p>
-                  <strong>Luogo:</strong>
-                  <span th:text="${temaNatale.luogoNascita}">Napoli</span>
-                </p>
+              <p>
+                <strong>Luogo:</strong>
+                <span th:text="${temaNatale.luogoNascita}">Napoli</span>
+              </p>
 
-                <p>
-                  <strong>Latitudine:</strong>
-                  <span th:text="${temaNatale.latitudine}">40.8518</span>
-                </p>
+              <p>
+                <strong>Latitudine:</strong>
+                <span th:text="${temaNatale.latitudine}">40.8518</span>
+              </p>
 
-                <p>
-                  <strong>Longitudine:</strong>
-                  <span th:text="${temaNatale.longitudine}">14.2681</span>
-                </p>
+              <p>
+                <strong>Longitudine:</strong>
+                <span th:text="${temaNatale.longitudine}">14.2681</span>
+              </p>
 
-                <p>
-                  <strong>Fuso orario:</strong>
-                  <span th:text="${temaNatale.timezone}">Europe/Rome</span>
-                </p>
-              </div>
-
-              <div class="card natal-triad-card" th:if="${pianeti != null}">
-                <div class="card-title">
-                  <span>Triade principale</span>
-                </div>
-                <p class="natal-card-subtitle">
-                  La tua firma stellare
-                </p>
-
-                <!-- SOLE -->
-                <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
-                  th:if="${pianeta.nome == 'Sole'}">
-                  <div class="triad-label-group">
-                    <span class="col-symbol planet-symbol sun-symbol" th:text="${pianeta.simbolo}">☉</span>
-                    <span class="triad-name">SOLE</span>
-                  </div>
-                  <div class="triad-value">
-                    <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♏︎</span>
-                    <span class="col-sign-name" th:text="${pianeta.segno}">Scorpione</span>
-                    <span class="col-separator">·</span>
-                    <span class="col-house" th:text="${pianeta.casaRomana}">VIII</span>
-                  </div>
-                </div>
-
-                <!-- LUNA -->
-                <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
-                  th:if="${pianeta.nome == 'Luna'}">
-                  <div class="triad-label-group">
-                    <span class="col-symbol planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
-                    <span class="triad-name">LUNA</span>
-                  </div>
-                  <div class="triad-value">
-                    <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
-                    <span class="col-sign-name" th:text="${pianeta.segno}">Capricorno</span>
-                    <span class="col-separator">·</span>
-                    <span class="col-house" th:text="${pianeta.casaRomana}">X</span>
-                  </div>
-                </div>
-
-                <!-- ASCENDENTE -->
-                <div class="triad-item triad-item-aligned">
-                  <div class="triad-label-group">
-                    <!-- Colonna simbolo vuota per l'Ascendente per mantenere l'allineamento perfetto -->
-                    <span class="col-symbol ascendant-empty-symbol"></span>
-                    <span class="triad-name">ASCENDENTE</span>
-                  </div>
-                  <div class="triad-value">
-                    <span class="col-sign-symbol sign-symbol" th:text="${ascendenteSimbolo}">♑︎</span>
-                    <span class="col-sign-name" th:text="${ascendenteSegno}">Capricorno</span>
-                    <span class="col-separator"></span>
-                    <span class="col-house"></span>
-                  </div>
-                </div>
-              </div>
-
-
+              <p>
+                <strong>Fuso orario:</strong>
+                <span th:text="${temaNatale.timezone}">Europe/Rome</span>
+              </p>
             </div>
 
-            <div class="card natal-planets-card" th:if="${pianeti != null}">
-              <div class="planet-row planet-row-header">
-                <span>Pianeta</span>
-                <span>Segno</span>
-                <span>Casa</span>
-                <span>Angolo</span>
-                <span>Stato</span>
+            <div class="card natal-triad-card" th:if="${pianeti != null}">
+              <div class="card-title">
+                <span>Triade principale</span>
+              </div>
+              <p class="natal-card-subtitle">
+                La tua firma stellare
+              </p>
+
+              <!-- SOLE -->
+              <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
+                th:if="${pianeta.nome == 'Sole'}">
+                <div class="triad-label-group">
+                  <span class="col-symbol planet-symbol sun-symbol" th:text="${pianeta.simbolo}">☉</span>
+                  <span class="triad-name">SOLE</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♏︎</span>
+                  <span class="col-sign-name" th:text="${pianeta.segno}">Scorpione</span>
+                  <span class="col-separator">·</span>
+                  <span class="col-house" th:text="${pianeta.casaRomana}">VIII</span>
+                </div>
               </div>
 
-              <div class="planet-row" th:each="pianeta : ${pianeti}">
-                <span class="natal-planet-name">
-                  <span class="planet-symbol" th:text="${pianeta.simbolo}">
-                    ☉
-                  </span>
-                  <span th:text="${pianeta.nome}">Sole</span>
-                </span>
+              <!-- LUNA -->
+              <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
+                th:if="${pianeta.nome == 'Luna'}">
+                <div class="triad-label-group">
+                  <span class="col-symbol planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
+                  <span class="triad-name">LUNA</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
+                  <span class="col-sign-name" th:text="${pianeta.segno}">Capricorno</span>
+                  <span class="col-separator">·</span>
+                  <span class="col-house" th:text="${pianeta.casaRomana}">X</span>
+                </div>
+              </div>
 
-                <span class="planet-sign">
-                  <span class="sign-symbol" th:text="${pianeta.simboloSegno}">
-                    ♏︎
-                  </span>
-                  <span th:text="${pianeta.segno}">Scorpione</span>
-                </span>
-
-                <span class="planet-house" th:text="${pianeta.casaRomana}">
-                  VIII
-                </span>
-
-                <span class="planet-angle">
-                  <span th:text="${#numbers.formatDecimal(pianeta.longitudine, 1, 2)}">
-                    228.77
-                  </span>
-                  °
-                </span>
-
-                <span class="planet-retrograde">
-                  <span th:if="${pianeta.retrogrado}">Retrogrado</span>
-                  <span th:unless="${pianeta.retrogrado}">Diretto</span>
-                </span>
+              <!-- ASCENDENTE -->
+              <div class="triad-item triad-item-aligned">
+                <div class="triad-label-group">
+                  <!-- Colonna simbolo vuota per l'Ascendente per mantenere l'allineamento perfetto -->
+                  <span class="col-symbol ascendant-empty-symbol"></span>
+                  <span class="triad-name">ASCENDENTE</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${ascendenteSimbolo}">♑︎</span>
+                  <span class="col-sign-name" th:text="${ascendenteSegno}">Capricorno</span>
+                  <span class="col-separator"></span>
+                  <span class="col-house"></span>
+                </div>
               </div>
             </div>
+
 
           </div>
+
+          <div class="card natal-planets-card" th:if="${pianeti != null}">
+            <div class="planet-row planet-row-header">
+              <span>Pianeta</span>
+              <span>Segno</span>
+              <span>Casa</span>
+              <span>Angolo</span>
+              <span>Stato</span>
+            </div>
+
+            <div class="planet-row" th:each="pianeta : ${pianeti}">
+              <span class="natal-planet-name">
+                <span class="planet-symbol" th:text="${pianeta.simbolo}">
+                  ☉
+                </span>
+                <span th:text="${pianeta.nome}">Sole</span>
+              </span>
+
+              <span class="planet-sign">
+                <span class="sign-symbol" th:text="${pianeta.simboloSegno}">
+                  ♏︎
+                </span>
+                <span th:text="${pianeta.segno}">Scorpione</span>
+              </span>
+
+              <span class="planet-house" th:text="${pianeta.casaRomana}">
+                VIII
+              </span>
+
+              <span class="planet-angle">
+                <span th:text="${#numbers.formatDecimal(pianeta.longitudine, 1, 2)}">
+                  228.77
+                </span>
+                °
+              </span>
+
+              <span class="planet-retrograde">
+                <span th:if="${pianeta.retrogrado}">Retrogrado</span>
+                <span th:unless="${pianeta.retrogrado}">Diretto</span>
+              </span>
+            </div>
+          </div>
+
           <div th:if="${!temaSbloccato}" class="natal-inline-paywall">
             <div class="natal-paywall-box">
               <span class="badge badge-premium">Premium</span>
@@ -300,13 +298,14 @@
           <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
 
             <div class="natal-tab-content natal-chart-content">
-              <div id="natal-chart" th:attr="
-             data-ascendant=${temaChart != null
-               ? temaChart.get('houses').get('ascendant')
-               : 119.52},
-             data-mc=${temaChart != null
-               ? temaChart.get('houses').get('mc')
-               : 10.72}">
+              <div id="natal-chart" th:attr="data-chart=${temaChartJson}">
+                data-ascendant=${temaChart != null
+                ? temaChart.get('houses').get('ascendant')
+                : 119.52},
+                data-mc=${temaChart != null
+                ? temaChart.get('houses').get('mc')
+                : 10.72},
+                data-chart=${temaChart != null ? temaChart : ''}>
               </div>
             </div>
 

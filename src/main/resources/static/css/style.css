@@ -2062,6 +2062,136 @@ h4 {
   align-self: flex-start;
 }
 
+.oracolo-share-actions,
+.external-share-actions {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 8px;
+}
+
+.external-share-dialog {
+  width: min(620px, calc(100% - 32px));
+  max-width: none;
+  margin: auto;
+  padding: 0;
+  border: 1px solid var(--border-color);
+  border-radius: 8px;
+  color: var(--text-primary);
+  background: var(--bg-card);
+  box-shadow: 0 18px 50px rgba(0, 0, 0, 0.4);
+}
+
+.external-share-dialog::backdrop {
+  background: rgba(5, 5, 12, 0.78);
+}
+
+.external-share-dialog-content {
+  display: grid;
+  gap: 16px;
+  padding: 24px;
+}
+
+.external-share-dialog-header {
+  display: flex;
+  align-items: flex-start;
+  justify-content: space-between;
+  gap: 16px;
+}
+
+.external-share-dialog h3 {
+  margin: 4px 0 0;
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 23px;
+}
+
+.external-share-eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.08em;
+}
+
+.dialog-close {
+  width: 32px;
+  height: 32px;
+  padding: 0;
+  border-radius: 50%;
+  color: var(--text-secondary);
+  background: var(--bg-input);
+  font-size: 24px;
+  line-height: 1;
+}
+
+.external-share-preview {
+  margin: 0;
+  padding: 20px;
+  background: #171827;
+}
+
+.external-share-preview-user {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 16px;
+}
+
+.external-share-preview-user .avatar {
+  flex: 0 0 auto;
+}
+
+.external-share-description,
+.external-share-interpretation {
+  line-height: 1.6;
+}
+
+.external-share-description {
+  margin-bottom: 14px;
+}
+
+.external-share-section-label {
+  margin-bottom: 6px;
+  color: var(--accent-gold);
+  font-size: 11px;
+  font-weight: 700;
+  letter-spacing: 0.08em;
+}
+
+.external-share-description.is-empty {
+  color: var(--text-muted);
+  font-style: italic;
+}
+
+.external-share-interpretation {
+  max-height: 220px;
+  overflow: auto;
+  padding: 14px;
+  border-left: 2px solid var(--accent-gold);
+  background: rgba(255, 255, 255, 0.035);
+  color: var(--text-secondary);
+}
+
+.external-share-interpretation p {
+  margin: 0 0 10px;
+}
+
+.external-share-interpretation p:last-child {
+  margin-bottom: 0;
+}
+
+.external-share-brand {
+  margin-top: 16px;
+  color: var(--text-muted);
+  font-size: 12px;
+}
+
+.external-share-brand span {
+  color: var(--accent-gold);
+}
+
+.external-share-status {
+  min-height: 18px;
+  margin: 0;
+  font-size: 12px;
+}
+
 .social-interpretation-text {
   display: -webkit-box;
   -webkit-box-orient: vertical;
@@ -3528,84 +3658,20 @@ h4 {
   width: 100%;
 }
 
-.natal-paywall-page,
-.natal-chart-paywall-wrapper {
-  position: relative;
-  overflow: hidden;
-}
-
-.natal-paywall-page .natal-paywall-content {
-  filter: blur(7px);
-  opacity: 0.72;
-  pointer-events: none;
-  user-select: none;
-}
-
-.natal-paywall-overlay,
-.natal-chart-paywall-overlay {
-  position: absolute;
-  inset: 0;
-  z-index: 2;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  padding: 28px;
-  background: rgba(12, 14, 24, 0.35);
-}
-
-.natal-paywall-box {
-  width: min(100%, 390px);
-  padding: 28px;
-  text-align: center;
-  background: rgba(22, 25, 40, 0.94);
-  border: 1px solid var(--accent-gold);
-  border-radius: var(--radius-sm);
-  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
-}
-
-.natal-paywall-box h3 {
-  margin: 14px 0 8px;
-  color: var(--text-primary);
-  font-family: Georgia, serif;
-  font-size: 24px;
-}
-
-.natal-paywall-box p {
-  margin-bottom: 18px;
-  color: var(--text-secondary);
-  line-height: 1.6;
-}
-
-.natal-chart-paywall-wrapper {
-  min-height: 540px;
-  padding: 24px;
-  border: 1px solid var(--border-color);
-  border-radius: var(--radius-sm);
-  background: var(--bg-panel);
-}
-
-.natal-chart-paywall-wrapper.is-locked #natal-chart {
-  filter: blur(8px);
-  opacity: 0.7;
-  pointer-events: none;
-}
-
-.natal-chart-paywall-wrapper #natal-chart {
-  min-height: 490px;
-}
-
 .natal-protected-summary,
 .natal-tab-protected {
   position: relative;
   min-width: 0;
-  overflow: hidden;
+  overflow: visible;
 }
 
-.natal-protected-summary.is-locked>.natal-data-layout,
-.natal-tab-protected.is-locked>.natal-tab-content {
+.natal-protected-summary.is-locked > .natal-summary-column,
+.natal-protected-summary.is-locked > .natal-planets-card,
+.natal-tab-protected.is-locked > .natal-tab-content {
   filter: blur(7px);
   opacity: 0.68;
   user-select: none;
+  pointer-events: none;
 }
 
 .natal-inline-paywall,
@@ -3617,7 +3683,12 @@ h4 {
   align-items: center;
   justify-content: center;
   padding: 24px;
-  background: rgba(12, 14, 24, 0.32);
+  background: rgba(12, 14, 24, 0.18);
+  border-radius: var(--radius-sm);
+}
+
+.natal-protected-summary.is-locked {
+  overflow: visible;
 }
 
 .natal-tab-protected {
@@ -3629,7 +3700,7 @@ h4 {
   padding: 24px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
-  background: var(--bg-panel);
+  background: transparent;
 }
 
 .natal-chart-content #natal-chart {
@@ -3640,9 +3711,9 @@ h4 {
   width: min(100%, 390px);
   padding: 28px;
   text-align: center;
-  background: rgba(22, 25, 40, 0.96);
+  background: var(--bg-card);
   border: 1px solid var(--accent-gold);
-  border-radius: var(--radius-sm);
+  border-radius: var(--radius-md);
   box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
 }
 
