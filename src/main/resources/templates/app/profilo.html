@@ -114,33 +114,37 @@
               </div>
             
               <div class="info-row">
-                <span class="label">Elemento</span>
-                <span th:if="${profiloSegnoZodiacale != null}"
-                      th:text="${profiloSegnoZodiacale.segnoZodiacale.elemento.nome}">
+                <span th:if="${elementoProfilo != null}"
+                      th:text="${#strings.capitalize(
+                        #strings.toLowerCase(elementoProfilo.elemento.name())
+                      )}">
                   Non impostato
                 </span>
               </div>
             
               <div class="info-row">
-                <span class="label">Modalità</span>
                 <span th:if="${profiloSegnoZodiacale != null}"
-                      th:text="${profiloSegnoZodiacale.segnoZodiacale.modalita}">
+                      th:text="${#strings.capitalize(
+                        #strings.toLowerCase(profiloSegnoZodiacale.modalita.name())
+                      )}">
                   Non impostata
                 </span>
               </div>
             
               <div class="info-row">
-                <span class="label">Pianeta</span>
-                <span th:if="${profiloSegnoZodiacale != null}"
-                      th:text="${profiloSegnoZodiacale.segnoZodiacale.pianeta.nome}">
+                <span th:if="${pianetaProfilo != null}"
+                      th:text="${#strings.capitalize(
+                        #strings.toLowerCase(pianetaProfilo.pianeta.name())
+                      )}">
                   Non impostato
                 </span>
               </div>
             
               <div class="info-row">
-                <span class="label">Metallo</span>
-                <span th:if="${profiloSegnoZodiacale != null}"
-                      th:text="${profiloSegnoZodiacale.segnoZodiacale.metallo.nome}">
+                <span th:if="${metalloProfilo != null}"
+                      th:text="${#strings.capitalize(
+                        #strings.toLowerCase(metalloProfilo.metallo.name())
+                      )}">
                   Non impostato
                 </span>
               </div>
