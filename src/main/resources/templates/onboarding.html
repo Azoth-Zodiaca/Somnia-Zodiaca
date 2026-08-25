@@ -13,7 +13,6 @@
     <div class="onboarding-steps">
       <div class="step-dot done"></div>
       <div class="step-dot active"></div>
-      <div class="step-dot"></div>
     </div>
 
     <!-- Raccolta dei dati di nascita e calcolo del segno solare. -->
@@ -54,7 +53,15 @@
             Inserisci la data di nascita
           </div>
         </div>
+        <button type="submit" formaction="/onboarding/salta" formmethod="post" formnovalidate
+          class="btn btn-outline btn-block mt-10">
+          Salta per ora
+        </button>
 
+        <p class="field-hint">
+          Potrai inserire i dati in seguito. La modifica dei dati del tema sarà disponibile
+          solo con Premium.
+        </p>
         <button type="submit" class="btn btn-primary btn-block mt-20">Calcola il mio tema natale</button>
       </form>
     </div>

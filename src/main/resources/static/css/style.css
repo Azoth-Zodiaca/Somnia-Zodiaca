@@ -571,7 +571,7 @@ h4 {
   font-weight: 500;
 }
 
-.feature-panel > p {
+.feature-panel>p {
   max-width: 440px;
 }
 
@@ -3656,4 +3656,76 @@ h4 {
   text-align: right !important;
   /* Spinge la casa contro il bordo finale destro */
   width: 100%;
+}
+
+.natal-protected-summary,
+.natal-tab-protected {
+  position: relative;
+  min-width: 0;
+  overflow: visible;
+}
+
+.natal-protected-summary.is-locked > .natal-summary-column,
+.natal-protected-summary.is-locked > .natal-planets-card,
+.natal-tab-protected.is-locked > .natal-tab-content {
+  filter: blur(7px);
+  opacity: 0.68;
+  user-select: none;
+  pointer-events: none;
+}
+
+.natal-inline-paywall,
+.natal-tab-paywall {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(12, 14, 24, 0.18);
+  border-radius: var(--radius-sm);
+}
+
+.natal-protected-summary.is-locked {
+  overflow: visible;
+}
+
+.natal-tab-protected {
+  min-height: 280px;
+}
+
+.natal-chart-content {
+  min-height: 540px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: transparent;
+}
+
+.natal-chart-content #natal-chart {
+  min-height: 490px;
+}
+
+.natal-paywall-box {
+  width: min(100%, 390px);
+  padding: 28px;
+  text-align: center;
+  background: var(--bg-card);
+  border: 1px solid var(--accent-gold);
+  border-radius: var(--radius-md);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+}
+
+.natal-paywall-box h3 {
+  margin: 14px 0 8px;
+  color: var(--text-primary);
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+
+.natal-paywall-box p {
+  margin-bottom: 18px;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
