@@ -3868,6 +3868,56 @@ h4 {
   font-size: 11px;
 }
 
+.natal-wiki-list #sun-color {
+  color: #FFD700;
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#moon-color {
+  color: #C0C0C0;
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#mercurio-color {
+  color: var(--accent-grey);
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#venere-color {
+  color: #D35400;
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#marte-color {
+  color: #C0392B;
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#giove-color {
+  color: #2980B9;
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#saturno-color {
+  color: #7F8C8D;
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#urano-color {
+  color: #1ABC9C;
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#nettuno-color {
+  color: #3498DB;
+  margin-right: 8px;
+}
+
+.natal-wiki-list h3#plutone-color {
+  color: #2C3E50;
+  margin-right: 8px;
+}
+
 .natal-chart-legend {
   display: flex;
   flex-wrap: wrap;
