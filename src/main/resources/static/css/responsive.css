@@ -255,13 +255,18 @@ button {
     .natal-grid,
     .natal-data-layout,
     .settings-layout,
-    .settings-row {
+    .settings-row,
+    .profile-overview-grid {
         grid-template-columns: 1fr;
     }
 
     .badge-grid {
         grid-template-columns: repeat(4, minmax(0, 1fr));
         gap: 10px;
+    }
+
+    .profile-overview-grid .badge-grid {
+        grid-template-columns: repeat(3, minmax(0, 1fr));
     }
 
     .zodiac-grid {

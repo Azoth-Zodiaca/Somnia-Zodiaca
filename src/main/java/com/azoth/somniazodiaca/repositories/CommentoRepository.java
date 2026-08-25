@@ -11,4 +11,6 @@ public interface CommentoRepository extends JpaRepository<Commento, Long> {
 
     @EntityGraph(attributePaths = "utente")
     List<Commento> findByPostIdOrderByCreatedAtAsc(Long postId);
+
+    long countByUtente_Id(Long utenteId);
 }

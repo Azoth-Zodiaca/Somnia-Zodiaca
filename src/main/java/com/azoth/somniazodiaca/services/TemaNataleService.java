@@ -30,19 +30,23 @@ public class TemaNataleService
         private final AstroWayService astroWayService;
         private final TemaNataleViewService temaNataleViewService;
         private final UtenteRepository utenteRepository;
+        private final BadgeService badgeService;
 
         public TemaNataleService(
                         TemaNataleRepository repository,
                         TemaNataleConverter converter,
                         SegnoZodiacaleRepository segnoZodiacaleRepository,
                         AstroWayService astroWayService,
-                        TemaNataleViewService temaNataleViewService, UtenteRepository utenteRepository) {
+                        TemaNataleViewService temaNataleViewService,
+                        UtenteRepository utenteRepository,
+                        BadgeService badgeService) {
 
                 super(repository, converter);
                 this.segnoZodiacaleRepository = segnoZodiacaleRepository;
                 this.astroWayService = astroWayService;
                 this.temaNataleViewService = temaNataleViewService;
                 this.utenteRepository = utenteRepository;
+                this.badgeService = badgeService;
         }
 
         public Optional<TemaNataleDto> findByUtenteId(Long utenteId) {
@@ -117,6 +121,7 @@ public class TemaNataleService
 
                 getRepository().save(temaNatale);
                 utenteRepository.save(utente);
+                badgeService.verificaBadge(utente.getUsername());
         }
 
         private SegnoZodiacaleEnum segnoSole(JsonNode datiTema) {

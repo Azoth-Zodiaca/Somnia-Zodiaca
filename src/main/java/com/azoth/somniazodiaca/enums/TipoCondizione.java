@@ -6,5 +6,7 @@ public enum TipoCondizione {
     NUMERO_POST,
     LIKE_RICEVUTI,
     GIORNI_CONSECUTIVI,
-    UTENTE_PREMIUM
+    UTENTE_PREMIUM,
+    MAPPA_NATALE,
+    NUMERO_COMMENTI
 }

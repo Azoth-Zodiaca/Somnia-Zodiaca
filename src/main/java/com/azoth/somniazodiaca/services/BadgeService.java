@@ -14,10 +14,12 @@ import com.azoth.somniazodiaca.entities.UtenteBadge;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.enums.TipoCondizione;
 import com.azoth.somniazodiaca.repositories.BadgeRepository;
+import com.azoth.somniazodiaca.repositories.CommentoRepository;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.LikePostRepository;
 import com.azoth.somniazodiaca.repositories.PostRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
+import com.azoth.somniazodiaca.repositories.TemaNataleRepository;
 import com.azoth.somniazodiaca.repositories.UtenteBadgeRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.azoth.somniazodiaca.dtos.BadgeViewDto;
@@ -32,6 +34,8 @@ public class BadgeService {
     private final InterpretazioneRepository interpretazioneRepository;
     private final PostRepository postRepository;
     private final LikePostRepository likePostRepository;
+        private final CommentoRepository commentoRepository;
+        private final TemaNataleRepository temaNataleRepository;
 
     public BadgeService(
             BadgeRepository badgeRepository,
@@ -40,7 +44,9 @@ public class BadgeService {
             SognoRepository sognoRepository,
             InterpretazioneRepository interpretazioneRepository,
             PostRepository postRepository,
-            LikePostRepository likePostRepository) {
+            LikePostRepository likePostRepository,
+            CommentoRepository commentoRepository,
+            TemaNataleRepository temaNataleRepository) {
 
         this.badgeRepository = badgeRepository;
         this.utenteBadgeRepository = utenteBadgeRepository;
@@ -49,6 +55,8 @@ public class BadgeService {
         this.interpretazioneRepository = interpretazioneRepository;
         this.postRepository = postRepository;
         this.likePostRepository = likePostRepository;
+        this.commentoRepository = commentoRepository;
+        this.temaNataleRepository = temaNataleRepository;
     }
 
     @Transactional(readOnly = true)
@@ -124,10 +132,20 @@ public class BadgeService {
                 TipoCondizione.GIORNI_CONSECUTIVI,
                 giorniConsecutivi);
 
-                if (utente.getRuolo() == Ruolo.PREMIUM) {
-                    verifica(utente, TipoCondizione.UTENTE_PREMIUM, 1);
-                }
-            }
+        verifica(
+                utente,
+                TipoCondizione.MAPPA_NATALE,
+                temaNataleRepository.findByUtenteId(utenteId).isPresent() ? 1 : 0);
+
+        verifica(
+                utente,
+                TipoCondizione.NUMERO_COMMENTI,
+                commentoRepository.countByUtente_Id(utenteId));
+
+        if (utente.getRuolo() == Ruolo.PREMIUM) {
+            verifica(utente, TipoCondizione.UTENTE_PREMIUM, 1);
+        }
+    }
 
     private void verifica(
             Utente utente,
@@ -195,6 +213,12 @@ public class BadgeService {
 
             case UTENTE_PREMIUM ->
                 utente.getRuolo() == Ruolo.PREMIUM ? 1 : 0;
+
+            case MAPPA_NATALE ->
+                temaNataleRepository.findByUtenteId(utenteId).isPresent() ? 1 : 0;
+
+            case NUMERO_COMMENTI ->
+                commentoRepository.countByUtente_Id(utenteId);
         };
     }
 

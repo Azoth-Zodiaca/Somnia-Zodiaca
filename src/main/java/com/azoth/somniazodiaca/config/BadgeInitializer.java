@@ -79,6 +79,24 @@ public class BadgeInitializer {
                 null,
                 0);
 
+        creaBadge(
+                "MAPPA_DEL_CIELO",
+                "Carta del Cielo",
+                "Ottieni la tua prima mappa natale.",
+                "🌌",
+                TipoCondizione.MAPPA_NATALE,
+                1,
+                25);
+
+        creaBadge(
+                "VOCE_DELLO_ZODIACO",
+                "Voce dello Zodiaco",
+                "Pubblica 20 commenti.",
+                "🗣️",
+                TipoCondizione.NUMERO_COMMENTI,
+                20,
+                100);
+
         System.out.println("Badge verificati.");
     }
 

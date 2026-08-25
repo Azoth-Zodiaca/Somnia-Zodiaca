@@ -2435,6 +2435,17 @@ h4 {
   margin-top: 14px;
 }
 
+.profile-overview-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 20px;
+  align-items: start;
+}
+
+.profile-overview-grid .badge-grid {
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+}
+
 .badge-slot {
   text-align: center;
 }

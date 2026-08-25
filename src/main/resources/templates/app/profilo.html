@@ -94,7 +94,7 @@
             Post
           </a>
         </div>
-        <div id="tab-panoramica" class="js-tab-panel">
+        <div id="tab-panoramica" class="js-tab-panel profile-overview-grid">
           <div class="card">
             <div class="card-title">
               <span>Identità astrale</span>
@@ -173,7 +173,8 @@
             <div class="badge-grid">
               <div th:each="badge : ${badges}"
                    class="badge-slot"
-                   th:classappend="${badge.sbloccato} ? ' unlocked' : ''">
+                 th:classappend="${badge.sbloccato} ? ' unlocked' : ''"
+                 th:title="${badge.descrizione}">
                 <div class="badge-icon"
                      th:text="${badge.sbloccato ? badge.icona : '?'}">
                   ?

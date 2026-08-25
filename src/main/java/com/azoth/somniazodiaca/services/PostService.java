@@ -152,6 +152,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                                 .build();
 
                 commentoRepository.save(commento);
+                badgeService.verificaBadge(username);
         }
 
         public record LikeResult(boolean liked, int count) {
