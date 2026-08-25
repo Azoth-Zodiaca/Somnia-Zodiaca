@@ -59,6 +59,10 @@ public class TemaNatale extends BaseEntity {
     @Column(name = "interpretazione_astroway", columnDefinition = "LONGTEXT")
     private String interpretazioneAstroWay;
 
+    @Lob
+    @Column(name = "analisi_gemini", columnDefinition = "LONGTEXT")
+    private String analisiGemini;
+
     @Column(name = "geoname_id")
     private Long geonameId;
 }

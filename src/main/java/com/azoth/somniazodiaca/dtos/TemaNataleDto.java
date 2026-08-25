@@ -40,4 +40,6 @@ public class TemaNataleDto implements GenericDto {
     private LocalDateTime dataCreazione;
 
     private String interpretazioneAstroWay;
+
+    private String analisiGemini;
 }

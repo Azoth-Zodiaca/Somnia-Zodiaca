@@ -17,6 +17,11 @@
 
       <!-- Dati account, password e accettazione delle condizioni. -->
       <form th:action="@{/register}" method="post" id="register-form">
+
+        <div th:if="${errorMessage}" class="alert alert-danger">
+          <p th:text="${errorMessage}"></p>
+        </div>
+
         <div class="field">
           <label for="username">Username</label>
           <input type="text" id="username" name="username" placeholder="lunadark" required>
@@ -54,7 +59,7 @@
         <a href="/login" class="register-login-link">Accedi</a>
       </div>
 
-  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+      <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
 
 </html>

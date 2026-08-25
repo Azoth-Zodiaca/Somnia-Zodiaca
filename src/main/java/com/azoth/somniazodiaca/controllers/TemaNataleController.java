@@ -61,6 +61,13 @@ public class TemaNataleController {
 
                 model.addAttribute("temaNatale", temaNatale);
 
+                JsonNode analisiGemini = null;
+                if (temaNatale != null && temaNatale.getAnalisiGemini() != null
+                                && !temaNatale.getAnalisiGemini().isBlank()) {
+                        analisiGemini = astroWayService.parseChart(temaNatale.getAnalisiGemini());
+                }
+                model.addAttribute("analisiGemini", analisiGemini);
+
                 if (temaNatale != null && temaNatale.getRispostaAstroWay() != null) {
 
                         JsonNode temaChart = astroWayService.parseChart(
