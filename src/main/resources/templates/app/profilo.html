@@ -13,13 +13,13 @@
       <main class="app-content">
 
         <!-- Immagini del profilo e form di caricamento. -->
-        <div class="profile-banner" th:classappend="${' ' + profiloColoreClasse}">
+        <div class="profile-banner">
           <img th:if="${bannerPath != null}" class="profile-banner-image" th:src="@{${bannerPath}}"
             alt="Immagine banner">
           <button type="button" class="btn btn-ghost btn-sm profile-edit-button" id="mostra-upload-profilo">
             &#9998; Modifica
           </button>
-          <div class="profile-avatar-lg" th:classappend="${' ' + profiloColoreClasse}">
+          <div class="profile-avatar-lg">
             <img th:if="${avatarPath != null}" th:src="@{${avatarPath}}" alt="Immagine profilo">
             <span th:unless="${avatarPath != null}" th:text="${username != null and !username.isEmpty()
           ? #strings.toUpperCase(#strings.substring(username, 0, 1))

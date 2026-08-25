@@ -1646,6 +1646,17 @@ button {
 
 @media (max-width: 760px) {
 
+    .natal-summary-top,
+    .natal-wiki-layout,
+    .natal-triad-reading-grid,
+    .natal-analysis-columns {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
+    .natal-wiki-list {
+        grid-template-columns: minmax(0, 1fr);
+    }
+
     .natal-inline-paywall,
     .natal-tab-paywall {
         padding: 14px;

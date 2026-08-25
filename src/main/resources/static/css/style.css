@@ -1,5 +1,5 @@
 /* =========================================================
-   QUICKSILVER - FOGLIO DI STILE PRINCIPALE
+   Somnia Zodiaca - FOGLIO DI STILE PRINCIPALE
    File unico e commentato per facilitare le modifiche.
    Organizzato in sezioni:
    1. Variabili (colori, spaziature)
@@ -1412,10 +1412,7 @@ h4 {
 .profile-banner {
   height: 160px;
   border-radius: var(--radius-md);
-  background:
-    linear-gradient(115deg,
-      color-mix(in srgb, var(--profile-color) 65%, white),
-      var(--profile-color));
+  background: var(--bg-panel);
   position: relative;
   margin-bottom: 54px;
 }
@@ -1425,7 +1422,7 @@ h4 {
   height: 92px;
   border-radius: 50%;
   overflow: hidden;
-  background-color: var(--profile-color);
+  background-color: var(--bg-panel);
   border: 4px solid var(--bg-body);
   position: absolute;
   left: 24px;
@@ -1438,34 +1435,9 @@ h4 {
   color: #1a1205;
 }
 
-.profile-color-orange {
-  --profile-color: #f97316;
-  --profile-color-light: #fbbf24;
-}
-
-.profile-color-red {
-  --profile-color: #e11d48;
-  --profile-color-light: #fb7185;
-}
-
-.profile-color-green {
-  --profile-color: #16a34a;
-  --profile-color-light: #4ade80;
-}
-
-.profile-color-blue {
-  --profile-color: #2563eb;
-  --profile-color-light: #60a5fa;
-}
-
-.profile-color-purple {
-  --profile-color: #9333ea;
-  --profile-color-light: #c084fc;
-}
-
 .avatar,
 .profile-avatar-lg {
-  background-color: var(--profile-color);
+  background-color: var(--bg-panel);
 }
 
 .profile-avatar-lg {
@@ -1491,9 +1463,7 @@ h4 {
   position: relative;
   margin-bottom: 54px;
   overflow: visible;
-  background: linear-gradient(115deg,
-      var(--profile-color-light),
-      var(--profile-color));
+  background: var(--bg-panel);
 }
 
 .profile-banner-image {
@@ -3676,9 +3646,9 @@ h4 {
   overflow: visible;
 }
 
-.natal-protected-summary.is-locked > .natal-summary-column,
-.natal-protected-summary.is-locked > .natal-planets-card,
-.natal-tab-protected.is-locked > .natal-tab-content {
+.natal-protected-summary.is-locked>.natal-summary-column,
+.natal-protected-summary.is-locked>.natal-planets-card,
+.natal-tab-protected.is-locked>.natal-tab-content {
   filter: blur(7px);
   opacity: 0.68;
   user-select: none;
@@ -3739,4 +3709,199 @@ h4 {
   margin-bottom: 18px;
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+.natal-summary-grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr);
+  gap: 18px;
+}
+
+.natal-summary-top {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.natal-interpretation-wide {
+  width: 100%;
+}
+
+.natal-analysis-content {
+  color: var(--text-secondary);
+  line-height: 1.65;
+}
+
+.natal-analysis-content h3 {
+  margin: 20px 0 8px;
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+.natal-analysis-content h3:first-child {
+  margin-top: 0;
+}
+
+.natal-analysis-content p {
+  margin-bottom: 12px;
+}
+
+.natal-analysis-content ul {
+  margin: 0 0 14px 18px;
+  list-style: disc;
+}
+
+.natal-triad-reading-grid,
+.natal-analysis-columns {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 18px;
+}
+
+.natal-analysis-columns {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+}
+
+.natal-triad-reading-grid > div,
+.natal-analysis-columns > div {
+  padding: 14px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: rgba(27, 27, 41, 0.55);
+}
+
+.natal-triad-reading-grid strong {
+  color: var(--accent-gold);
+}
+
+.natal-wiki-layout {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  gap: 18px;
+}
+
+.natal-wiki-card,
+.natal-specific-card {
+  min-width: 0;
+}
+
+.natal-wiki-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 12px;
+}
+
+.natal-wiki-list article,
+.natal-specific-card article {
+  padding: 12px;
+  border-top: 1px solid var(--border-color);
+}
+
+.natal-wiki-list h3,
+.natal-specific-card h3 {
+  margin-bottom: 4px;
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-size: 16px;
+  font-weight: 500;
+}
+
+.natal-wiki-list p,
+.natal-specific-card p {
+  color: var(--text-secondary);
+  font-size: 13px;
+}
+
+.natal-wiki-list span {
+  color: var(--accent-gold);
+  font-size: 11px;
+}
+
+.natal-chart-legend {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: center;
+  gap: 8px 18px;
+  margin: 8px auto 0;
+  max-width: 620px;
+  color: var(--text-muted);
+  font-size: 11px;
+}
+
+.natal-chart-legend b {
+  color: var(--text-secondary);
+}
+
+.natal-interpretation-text {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.natal-interpretation-text h1,
+.natal-interpretation-text h2,
+.natal-interpretation-text h3,
+.natal-interpretation-text h4 {
+  margin: 22px 0 10px;
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.natal-interpretation-text h1:first-child,
+.natal-interpretation-text h2:first-child,
+.natal-interpretation-text h3:first-child {
+  margin-top: 0;
+}
+
+.natal-interpretation-text p {
+  margin: 0 0 14px;
+}
+
+.natal-interpretation-text ul,
+.natal-interpretation-text ol {
+  margin: 8px 0 16px 22px;
+  padding: 0;
+}
+
+.natal-interpretation-text li {
+  margin-bottom: 6px;
+}
+
+.natal-interpretation-text strong {
+  color: var(--text-primary);
+}
+
+.natal-interpretation-text hr {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.natal-interpretation-text table {
+  width: 100%;
+  margin: 14px 0 20px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.natal-interpretation-text th,
+.natal-interpretation-text td {
+  padding: 9px 10px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  vertical-align: top;
+}
+
+.natal-interpretation-text th {
+  color: var(--text-primary);
+  background: var(--bg-input);
+  font-weight: 600;
+}
+
+.natal-interpretation-text td {
+  color: var(--text-secondary);
 }

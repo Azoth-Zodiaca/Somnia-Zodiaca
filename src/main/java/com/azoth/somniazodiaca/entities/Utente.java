@@ -73,9 +73,6 @@ public class Utente extends BaseEntity {
     @Column(name = "ultima_ricompensa_giornaliera")
     private LocalDate ultimaRicompensaGiornaliera;
 
-    @Column(name = "profilo_colore", nullable = false, length = 7)
-    private String profiloColore;
-
     @Column(name = "avatar_path", length = 255)
     private String avatarPath;
 

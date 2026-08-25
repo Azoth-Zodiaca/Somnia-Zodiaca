@@ -1,19 +1,28 @@
 package com.azoth.somniazodiaca.services;
 
 import java.io.IOException;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -22,16 +31,20 @@ import com.azoth.somniazodiaca.converters.UtenteConverter;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.dtos.records.Registrazione;
 import com.azoth.somniazodiaca.entities.Utente;
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.exceptions.EmailAlreadyExistsException;
 import com.azoth.somniazodiaca.exceptions.UsernameAlreadyExistsException;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.InventarioCosmeticoRepository;
+import com.azoth.somniazodiaca.repositories.CommentoRepository;
+import com.azoth.somniazodiaca.repositories.LikePostRepository;
 import com.azoth.somniazodiaca.repositories.PostRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
 import com.azoth.somniazodiaca.repositories.TemaNataleRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.azoth.somniazodiaca.repositories.UtenteBadgeRepository;
+import com.azoth.somniazodiaca.repositories.UtenteFollowRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -47,13 +60,26 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     private final InterpretazioneRepository interpretazioneRepository;
     private final BadgeService badgeService;
     private final UtenteBadgeRepository utenteBadgeRepository;
+    private final CommentoRepository commentoRepository;
+    private final LikePostRepository likePostRepository;
+    private final UtenteFollowRepository utenteFollowRepository;
+    private final AppDomainProperties appDomainProperties;
     
 
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final HexFormat HEX_FORMAT = HexFormat.of();
+        private static final List<Color> COLORI_AVATAR = List.of(
+            Color.decode("#F97316"),
+            Color.decode("#E11D48"),
+            Color.decode("#16A34A"),
+            Color.decode("#2563EB"),
+            Color.decode("#9333EA"));
+
+        private static final int DIMENSIONE_AVATAR_GENERATO = 256;
+        private static final int LARGHEZZA_BANNER_GENERATO = 1200;
+        private static final int ALTEZZA_BANNER_GENERATO = 320;
 
     private static final Pattern PASSWORD_FORTE = Pattern.compile(
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$");
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).+$");
 
     private static final long DIMENSIONE_MASSIMA_IMMAGINE = 5 * 1024 * 1024;
 
@@ -75,7 +101,11 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             InventarioCosmeticoRepository inventarioCosmeticoRepository,
             InterpretazioneRepository interpretazioneRepository,
             BadgeService badgeService,
-            UtenteBadgeRepository utenteBadgeRepository) {
+            UtenteBadgeRepository utenteBadgeRepository,
+            CommentoRepository commentoRepository,
+            LikePostRepository likePostRepository,
+            UtenteFollowRepository utenteFollowRepository,
+            AppDomainProperties appDomainProperties) {
 
         super(repository, converter);
         this.passwordEncoder = passwordEncoder;
@@ -86,6 +116,10 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         this.interpretazioneRepository = interpretazioneRepository;
         this.badgeService = badgeService;
         this.utenteBadgeRepository = utenteBadgeRepository;
+        this.commentoRepository = commentoRepository;
+        this.likePostRepository = likePostRepository;
+        this.utenteFollowRepository = utenteFollowRepository;
+        this.appDomainProperties = appDomainProperties;
     }
 
     public Optional<UtenteDetail> findByUsername(String username) {
@@ -183,18 +217,22 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             utente.setGiorniRicompensaGiornaliera(0);
         }
 
-        int[] ricompense = { 10, 20, 40, 70, 110, 150, 200 };
+        java.util.List<Integer> ricompense = appDomainProperties.getWallet().getRicompenseGiornaliere();
+
+        if (ricompense.isEmpty()) {
+            throw new IllegalStateException("Nessuna ricompensa giornaliera configurata");
+        }
 
         int giorno = Math.min(
             Math.max(0, utente.getGiorniRicompensaGiornaliera() == null
                 ? 0
                 : utente.getGiorniRicompensaGiornaliera()) + 1,
-            ricompense.length);
-        int indice = Math.min(giorno, ricompense.length) - 1;
-        int quantitaQi = ricompense[indice];
+            ricompense.size());
+        int indice = Math.min(giorno, ricompense.size()) - 1;
+        int quantitaQi = ricompense.get(indice);
 
         utente.setQi(utente.getQi() + quantitaQi);
-        utente.setGiorniRicompensaGiornaliera(giorno == ricompense.length ? 0 : giorno);
+        utente.setGiorniRicompensaGiornaliera(giorno == ricompense.size() ? 0 : giorno);
         utente.setUltimaRicompensaGiornaliera(oggi);
 
         getRepository().save(utente);
@@ -245,9 +283,9 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
                     "La conferma della nuova password non coincide");
         }
 
-        if (nuovaPassword.length() < 8) {
+        if (nuovaPassword.length() < appDomainProperties.getContenuti().getLimitePasswordCaratteri()) {
             throw new IllegalArgumentException(
-                    "La nuova password deve contenere almeno 8 caratteri");
+                "La nuova password non rispetta il limite configurato");
         }
 
         Utente utente = getRepository().findByUsername(username)
@@ -267,6 +305,12 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
                 .findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
+        likePostRepository.deleteByUtente(utente);
+        likePostRepository.deleteByPost_Utente(utente);
+        commentoRepository.deleteByUtente(utente);
+        commentoRepository.deleteByPost_Utente(utente);
+        utenteFollowRepository.deleteByFollower(utente);
+        utenteFollowRepository.deleteBySeguito(utente);
         temaNataleRepository.deleteByUtente(utente);
         inventarioCosmeticoRepository.deleteByUtente(utente);
         postRepository.deleteByUtente(utente);
@@ -300,27 +344,95 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             throw new EmailAlreadyExistsException("L'email esiste già");
         }
 
-        if (!PASSWORD_FORTE.matcher(registrazione.password()).matches()) {
+        if (registrazione.password().length()
+            < appDomainProperties.getContenuti().getLimitePasswordCaratteri()
+            || !PASSWORD_FORTE.matcher(registrazione.password()).matches()) {
             throw new IllegalArgumentException(
                     "La password deve essere forte.");
         }
 
+        Color coloreAvatar = scegliColoreAvatar();
         Utente utente = Utente.builder()
                 .username(registrazione.username())
                 .email(registrazione.email())
                 .passwordHash(passwordEncoder.encode(registrazione.password()))
                 .ruolo(Ruolo.BASE)
-                .profiloColore(generaColoreProfilo())
+            .avatarPath(generaAvatar(registrazione.username(), coloreAvatar))
+            .bannerPath(generaBanner(coloreAvatar))
                 .build();
 
         return getRepository().save(utente);
     }
 
-    private String generaColoreProfilo() {
-        byte[] colore = new byte[3];
-        RANDOM.nextBytes(colore);
+        private Color scegliColoreAvatar() {
+            return COLORI_AVATAR.get(RANDOM.nextInt(COLORI_AVATAR.size()));
+        }
 
-        return "#" + HEX_FORMAT.formatHex(colore).toUpperCase();
+        private String generaAvatar(String username, Color colore) {
+        BufferedImage immagine = new BufferedImage(
+            DIMENSIONE_AVATAR_GENERATO,
+            DIMENSIONE_AVATAR_GENERATO,
+            BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D graphics = immagine.createGraphics();
+        try {
+            graphics.setColor(colore);
+            graphics.fillRect(0, 0, DIMENSIONE_AVATAR_GENERATO, DIMENSIONE_AVATAR_GENERATO);
+            graphics.setColor(Color.WHITE);
+            graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 128));
+            graphics.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            String iniziale = username == null || username.isBlank()
+                ? "?"
+                : username.substring(0, 1).toUpperCase();
+            FontMetrics metrics = graphics.getFontMetrics();
+            int x = (DIMENSIONE_AVATAR_GENERATO - metrics.stringWidth(iniziale)) / 2;
+            int y = (DIMENSIONE_AVATAR_GENERATO - metrics.getHeight()) / 2
+                + metrics.getAscent();
+            graphics.drawString(iniziale, x, y);
+        } finally {
+            graphics.dispose();
+        }
+
+        return salvaImmagine(immagine, "avatar");
+    }
+
+    private String generaBanner(Color colore) {
+        BufferedImage immagine = new BufferedImage(
+                LARGHEZZA_BANNER_GENERATO,
+                ALTEZZA_BANNER_GENERATO,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = immagine.createGraphics();
+        try {
+            graphics.setColor(colore);
+            graphics.fillRect(0, 0, LARGHEZZA_BANNER_GENERATO, ALTEZZA_BANNER_GENERATO);
+        } finally {
+            graphics.dispose();
+        }
+
+        return salvaImmagine(immagine, "banner");
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
+        public void completaAvatarEsistenti() {
+        List<Utente> utentiDaAggiornare = getRepository().findAll().stream()
+            .filter(utente -> utente.getAvatarPath() == null
+                || utente.getAvatarPath().isBlank())
+                .peek(utente -> {
+                    Color colore = scegliColoreAvatar();
+                    utente.setAvatarPath(generaAvatar(utente.getUsername(), colore));
+                    if (utente.getBannerPath() == null || utente.getBannerPath().isBlank()) {
+                        utente.setBannerPath(generaBanner(colore));
+                    }
+                })
+                .toList();
+
+        if (!utentiDaAggiornare.isEmpty()) {
+            getRepository().saveAll(utentiDaAggiornare);
+        }
     }
 
     @Transactional
@@ -387,6 +499,24 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         } catch (IOException e) {
             throw new IllegalStateException(
                     "Impossibile salvare l'immagine", e);
+        }
+    }
+
+    private String salvaImmagine(BufferedImage immagine, String prefisso) {
+        try {
+            Path directory = Paths.get(uploadDir);
+            Files.createDirectories(directory);
+
+            String nomeFile = prefisso + "-"
+                    + UUID.randomUUID()
+                    + ".png";
+            Path destinazione = directory.resolve(nomeFile);
+            ImageIO.write(immagine, "png", destinazione.toFile());
+
+            return "/uploads/profiles/" + nomeFile;
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "Impossibile salvare l'avatar generato", e);
         }
     }
 

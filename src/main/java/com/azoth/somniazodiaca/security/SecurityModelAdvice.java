@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ModelAttribute;
 
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.services.UtenteService;
 
 /**
@@ -25,9 +26,18 @@ import com.azoth.somniazodiaca.services.UtenteService;
 public class SecurityModelAdvice {
 
     public final UtenteService utenteService;
+    private final AppDomainProperties appDomainProperties;
 
-    public SecurityModelAdvice(UtenteService utenteService) {
+    public SecurityModelAdvice(
+            UtenteService utenteService,
+            AppDomainProperties appDomainProperties) {
         this.utenteService = utenteService;
+        this.appDomainProperties = appDomainProperties;
+    }
+
+    @ModelAttribute("appDomain")
+    public AppDomainProperties appDomain() {
+        return appDomainProperties;
     }
 
     /**
@@ -105,17 +115,6 @@ public class SecurityModelAdvice {
         };
     }
 
-    private String classeColore(String colore) {
-        return switch (colore) {
-            case "#F97316" -> "profile-color-orange";
-            case "#E11D48" -> "profile-color-red";
-            case "#16A34A" -> "profile-color-green";
-            case "#2563EB" -> "profile-color-blue";
-            case "#9333EA" -> "profile-color-purple";
-            default -> "profile-color-orange";
-        };
-    }
-
     @ModelAttribute
     public void sidebarAttributes(
             Authentication authentication,
@@ -133,10 +132,6 @@ public class SecurityModelAdvice {
             model.addAttribute("segnoZodiacaleSimbolo", null);
             model.addAttribute("ascendenteSimbolo", null);
             model.addAttribute("avatarPath", null);
-            model.addAttribute("profiloColore", "#F97316");
-            model.addAttribute(
-                    "profiloColoreClasse",
-                    "profile-color-orange");
 
             return;
         }
@@ -152,15 +147,6 @@ public class SecurityModelAdvice {
             "ricompensaRiscossa",
             LocalDate.now().equals(utente.getUltimaRicompensaGiornaliera()));
         model.addAttribute("avatarPath", utente.getAvatarPath());
-
-        String colore = utente.getProfiloColore() != null
-                ? utente.getProfiloColore()
-                : "#F97316";
-
-        model.addAttribute("profiloColore", colore);
-        model.addAttribute(
-                "profiloColoreClasse",
-                classeColore(colore));
 
         if (utente.getSegnoZodiacale() == null) {
             model.addAttribute("segnoZodiacale", null);

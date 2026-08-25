@@ -10,15 +10,20 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.services.UtenteService;
 
 @Controller
 public class WalletController {
 
     private final UtenteService utenteService;
+    private final AppDomainProperties appDomainProperties;
 
-    public WalletController(UtenteService utenteService) {
+    public WalletController(
+            UtenteService utenteService,
+            AppDomainProperties appDomainProperties) {
         this.utenteService = utenteService;
+        this.appDomainProperties = appDomainProperties;
     }
 
     @GetMapping("/wallet")
@@ -36,7 +41,10 @@ public class WalletController {
                 ? 0
                 : utente.getGiorniRicompensaGiornaliera();
         model.addAttribute("giorniRicompense", giorniRicompense);
-        model.addAttribute("giornoRicompensa", Math.min(giorniRicompense + 1, 7));
+        model.addAttribute("giornoRicompensa", Math.min(
+            giorniRicompense + 1,
+            appDomainProperties.getWallet().getRicompenseGiornaliere().size()));
+        model.addAttribute("pacchettiQi", appDomainProperties.getWallet().getPacchetti());
         model.addAttribute(
                 "ricompensaRiscossa",
                 LocalDate.now().equals(
@@ -47,7 +55,15 @@ public class WalletController {
     @PostMapping("/app/wallet/ricarica")
     public String ricarica(Authentication authentication,
             @RequestParam int quantitaQi) {
-        utenteService.addQi(authentication.getName(), quantitaQi);
+        AppDomainProperties.WalletPackage pacchetto = appDomainProperties.getWallet().getPacchetti()
+            .stream()
+            .filter(value -> value.getQuantitaQi() == quantitaQi)
+            .findFirst()
+            .orElseThrow(() -> new IllegalArgumentException("Pacchetto QI non valido"));
+
+        utenteService.addQi(
+            authentication.getName(),
+            pacchetto.getQuantitaQi() + pacchetto.getBonusQi());
         return "redirect:/app/wallet";
     }
 

@@ -25,6 +25,7 @@ public class TemaNataleConverter implements GenericConverter<TemaNatale, TemaNat
                 .dataCreazione(d.getDataCreazione())
                 .rispostaAstroWay(d.getRispostaAstroWay())
                 .interpretazioneAstroWay(d.getInterpretazioneAstroWay())
+                .analisiGemini(d.getAnalisiGemini())
                 .build();
 
         if (d.getUtenteId() != null) {
@@ -49,6 +50,7 @@ public class TemaNataleConverter implements GenericConverter<TemaNatale, TemaNat
                 .dataCreazione(e.getDataCreazione())
                 .rispostaAstroWay(e.getRispostaAstroWay())
                 .interpretazioneAstroWay(e.getInterpretazioneAstroWay())
+                .analisiGemini(e.getAnalisiGemini())
                 .build();
     }
 

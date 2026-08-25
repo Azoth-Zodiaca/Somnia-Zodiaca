@@ -20,7 +20,9 @@ document.addEventListener("DOMContentLoaded", function () {
   initOracoloForm();
   initLikeButtons();
   initComments();
+  initSocialActions();
   initSocialMarkdown();
+  initNatalMarkdown();
   initSettingsMenu();
   initDeleteAccountConfirmation();
   initHistoryButtons();
@@ -31,6 +33,12 @@ document.addEventListener("DOMContentLoaded", function () {
   initInterpretationExpanders();
   initTemaNatalePremium();
 });
+
+function configurazioneOracolo() {
+  return window.somniaDomain && window.somniaDomain.oracolo
+    ? window.somniaDomain.oracolo
+    : {};
+}
 
 /* ---------------------------------------------------------
    AUTENTICAZIONE E PROFILO
@@ -273,7 +281,7 @@ function initOracoloCounter() {
   var counter = document.getElementById("dream-counter");
   if (!textarea || !counter) return;
 
-  var maxLength = 4000;
+  var maxLength = configurazioneOracolo().limiteSognoCaratteri;
   textarea.addEventListener("input", function () {
     counter.textContent = textarea.value.length + " / " + maxLength;
   });
@@ -291,7 +299,7 @@ function initSvuotaOracolo() {
 
 
     if (counter) {
-      counter.textContent = "0 / 4000";
+      counter.textContent = "0 / " + configurazioneOracolo().limiteSognoCaratteri;
     }
 
     resetRisultatoOracolo();
@@ -324,7 +332,8 @@ function resetRisultatoOracolo() {
     saveButton.classList.remove("btn-ghost");
     saveButton.classList.add("btn-primary");
     saveButton.disabled = false;
-    saveButton.textContent = "Salva interpretazione - 20 QI";
+    saveButton.textContent = "Salva interpretazione - " +
+      configurazioneOracolo().costoPermanenza + " QI";
   }
 
   if (shareBox) {
@@ -492,7 +501,8 @@ function aggiungiInterpretazioneAllaLista(
       textarea.value = testoSogno;
       var counter = document.getElementById("dream-counter");
       if (counter) {
-        counter.textContent = testoSogno.length + " / 4000";
+        counter.textContent = testoSogno.length + " / " +
+          configurazioneOracolo().limiteSognoCaratteri;
       }
     }
 
@@ -513,7 +523,8 @@ function aggiungiInterpretazioneAllaLista(
       saveButton.disabled = false;
       saveButton.textContent = permanente
         ? "Cancella interpretazione"
-        : "Salva interpretazione - 20 QI";
+        : "Salva interpretazione - " +
+          configurazioneOracolo().costoPermanenza + " QI";
       saveButton.dataset.action = permanente ? "delete" : "save";
       saveButton.classList.toggle("btn-ghost", permanente);
       saveButton.classList.toggle("btn-primary", !permanente);
@@ -655,7 +666,7 @@ function initOracoloForm() {
       resultBox.dataset.interpretazioneId = savedInterpretationId;
 
       var scadenza = new Date(
-        Date.now() + 48 * 60 * 60 * 1000
+        Date.now() + configurazioneOracolo().durataCacheOre * 60 * 60 * 1000
       ).toISOString();
 
       aggiungiInterpretazioneAllaLista(
@@ -854,7 +865,8 @@ function initHistoryButtons() {
         textarea.value = button.getAttribute("data-testo-sogno") || "";
         var counter = document.getElementById("dream-counter");
         if (counter) {
-          counter.textContent = textarea.value.length + " / 4000";
+          counter.textContent = textarea.value.length + " / " +
+            configurazioneOracolo().limiteSognoCaratteri;
         }
       }
 
@@ -876,7 +888,8 @@ function initHistoryButtons() {
         saveButton.classList.toggle("btn-primary", !permanente);
         saveButton.textContent = permanente
           ? "Cancella interpretazione"
-          : "Salva interpretazione - 20 QI";
+          : "Salva interpretazione - " +
+            configurazioneOracolo().costoPermanenza + " QI";
       }
 
       if (externalShareButton) {
@@ -1016,6 +1029,31 @@ async function creaImmagineDaAnteprima(preview) {
   clone.style.maxWidth = "none";
   clone.style.maxHeight = "none";
   clone.style.margin = "0";
+
+  var sourceImages = Array.from(preview.querySelectorAll("img"));
+  var clonedImages = Array.from(clone.querySelectorAll("img"));
+  await Promise.all(clonedImages.map(async function (image, index) {
+    var sourceImage = sourceImages[index];
+    var sourceUrl = sourceImage && (sourceImage.currentSrc || sourceImage.src);
+
+    if (!sourceUrl || sourceUrl.startsWith("data:")) {
+      return;
+    }
+
+    try {
+      var response = await fetch(sourceUrl, { credentials: "include" });
+      if (!response.ok) return;
+      var blob = await response.blob();
+      image.src = await new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function () { resolve(reader.result); };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      image.src = sourceUrl;
+    }
+  }));
 
   function copyComputedStyles(source, target) {
     var computed = window.getComputedStyle(source);
@@ -1169,20 +1207,38 @@ function aggiornaDisponibilitaInterpretazione(submitButton) {
   var saldo = document.getElementById("saldo-qi");
 
   if (button && saldo) {
-    button.disabled = Number(saldo.textContent.trim()) < 20;
+    button.disabled = Number(saldo.textContent.trim()) <
+      configurazioneOracolo().costoInterpretazione;
   }
 }
 
 /* ---------------------------------------------------------
   SOCIAL
 --------------------------------------------------------- */
+function initNatalMarkdown() {
+  const elements = document.querySelectorAll(".natal-interpretation-text");
+
+  if (elements.length === 0 ||
+    typeof marked === "undefined" ||
+    typeof DOMPurify === "undefined") {
+    return;
+  }
+
+  elements.forEach(element => {
+    const markdown = element.textContent.trim();
+
+    element.innerHTML = DOMPurify.sanitize(
+      marked.parse(markdown)
+    );
+  });
+}
 
 function initSocialMarkdown() {
   var markdownElements = document.querySelectorAll(".js-markdown-content");
 
   if (markdownElements.length === 0 ||
-      typeof marked === "undefined" ||
-      typeof DOMPurify === "undefined") {
+    typeof marked === "undefined" ||
+    typeof DOMPurify === "undefined") {
     return;
   }
 
@@ -1284,13 +1340,45 @@ function initComments() {
   var commentForms = document.querySelectorAll(".social-comment-form");
 
   commentForms.forEach(function (form) {
-    form.addEventListener("submit", function () {
-      sessionStorage.setItem("social-comment-scroll", String(window.scrollY));
+    form.addEventListener("submit", function (event) {
+      var endpoint = form.dataset.commentEndpoint;
+      if (!endpoint) return;
 
-      var commentPanel = form.closest(".social-comments-panel");
-      if (commentPanel) {
-        sessionStorage.setItem("social-comment-panel", commentPanel.id);
-      }
+      event.preventDefault();
+      var submitButton = form.querySelector("button[type='submit']");
+      if (submitButton) submitButton.disabled = true;
+
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        body: new FormData(form)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Comment request failed");
+          return response.json();
+        })
+        .then(function (data) {
+          var panel = form.closest(".social-comments-panel");
+          var list = panel && panel.querySelector(".social-comments-list");
+          if (!list) return;
+          var emptyMessage = list.querySelector(".social-comments-empty");
+          if (emptyMessage) emptyMessage.remove();
+          list.insertAdjacentHTML("beforeend",
+            "<div class='social-comment'><strong>@" + escapeHtml(data.username) +
+            "</strong><p>" + escapeHtml(data.testo) + "</p></div>");
+          form.reset();
+          var postId = form.dataset.postId;
+          document.querySelectorAll("[data-comments-target]").forEach(function (button) {
+            if (button.dataset.commentsTarget.endsWith("-" + postId)) {
+              var count = button.querySelector("span:last-child");
+              if (count) count.textContent = data.count;
+            }
+          });
+        })
+        .catch(function () { form.submit(); })
+        .finally(function () {
+          if (submitButton) submitButton.disabled = false;
+        });
     });
   });
 
@@ -1340,6 +1428,50 @@ function initComments() {
       });
     });
   }
+}
+
+function initSocialActions() {
+  document.querySelectorAll("form[data-follow-action]").forEach(function (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var username = form.dataset.followUsername;
+      var action = form.dataset.followAction;
+      var endpoint = form.action + "/ajax";
+      var button = form.querySelector("button");
+      if (!username || !button) return;
+
+      button.disabled = true;
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        body: new FormData(form)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Follow request failed");
+          return response.json();
+        })
+        .then(function () {
+          document.querySelectorAll("form[data-follow-username='" + username + "']").forEach(function (matchingForm) {
+            var matchingButton = matchingForm.querySelector("button");
+            if (!matchingButton) return;
+            var following = action === "follow";
+            matchingForm.dataset.followAction = following ? "unfollow" : "follow";
+            matchingForm.action = matchingForm.action.replace(/\/(?:un)?follow(?:\/ajax)?$/, following ? "/unfollow" : "/follow");
+            matchingButton.textContent = following ? "Smetti di seguire" : "Segui";
+            matchingButton.classList.toggle("btn-primary", !following);
+            matchingButton.classList.toggle("btn-ghost", following);
+          });
+        })
+        .catch(function () { form.submit(); })
+        .finally(function () { button.disabled = false; });
+    });
+  });
+}
+
+function escapeHtml(value) {
+  var div = document.createElement("div");
+  div.textContent = value;
+  return div.innerHTML;
 }
 
 function initInterpretationExpanders() {

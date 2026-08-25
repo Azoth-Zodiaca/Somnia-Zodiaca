@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
 import com.azoth.somniazodiaca.entities.LikePost;
+import com.azoth.somniazodiaca.entities.Utente;
 
 public interface LikePostRepository extends JpaRepository<LikePost, Long> {
 
@@ -15,6 +16,10 @@ public interface LikePostRepository extends JpaRepository<LikePost, Long> {
     boolean existsByPostIdAndUtenteId(Long postId, Long utenteId);
 
     long countByPostId(Long postId);
+
+    void deleteByUtente(Utente utente);
+
+    void deleteByPost_Utente(Utente utente);
 
     @Query("""
         SELECT COUNT(l)

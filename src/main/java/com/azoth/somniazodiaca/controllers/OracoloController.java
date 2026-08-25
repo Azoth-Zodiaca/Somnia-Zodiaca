@@ -13,6 +13,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.azoth.somniazodiaca.dtos.RichiestaInterpretazioneDto;
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.dtos.records.InterpretazioneRequest;
@@ -31,17 +32,20 @@ public class OracoloController {
         private final UtenteService utenteService;
         private final InterpretazioneService interpretazioneService;
         private final OracoloService oracoloService;
+        private final AppDomainProperties appDomainProperties;
 
         public OracoloController(
                         GeminiService geminiService,
                         UtenteService utenteService,
                         InterpretazioneService interpretazioneService,
-                        OracoloService oracoloService) {
+                        OracoloService oracoloService,
+                        AppDomainProperties appDomainProperties) {
 
                 this.geminiService = geminiService;
                 this.utenteService = utenteService;
                 this.interpretazioneService = interpretazioneService;
                 this.oracoloService = oracoloService;
+                this.appDomainProperties = appDomainProperties;
         }
 
         @GetMapping("/oracolo")
@@ -79,6 +83,10 @@ public class OracoloController {
                         throw new IllegalArgumentException("Il testo del sogno è obbligatorio");
                 }
 
+                if (richiesta.testoSogno().length() > appDomainProperties.getOracolo().getLimiteSognoCaratteri()) {
+                        throw new IllegalArgumentException("Il testo del sogno supera il limite configurato");
+                }
+
                 oracoloService.verificaQiDisponibili(authentication.getName());
 
                 StringBuilder prompt = new StringBuilder();
@@ -111,10 +119,9 @@ public class OracoloController {
                         aggiungiTemaNatale(prompt, utente.getTemaNatale());
                 }
 
-                prompt.append("""
-
-                                Limita la risposta a un massimo di 1000 caratteri.
-                                """);
+                prompt.append("\n\nLimita la risposta a un massimo di ")
+                                .append(appDomainProperties.getOracolo().getLimiteInterpretazioneCaratteri())
+                                .append(" caratteri.\n");
 
                 return geminiService.askGemini(prompt.toString());
         }

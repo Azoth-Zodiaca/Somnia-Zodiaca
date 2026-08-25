@@ -4,6 +4,7 @@ import java.util.List;
 
 import org.springframework.stereotype.Service;
 
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.converters.PostConverter;
 import com.azoth.somniazodiaca.dtos.PostDto;
 import com.azoth.somniazodiaca.entities.Commento;
@@ -29,6 +30,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
         private final UtenteFollowRepository utenteFollowRepository;
         private final CommentoRepository commentoRepository;
         private final BadgeService badgeService;
+        private final AppDomainProperties appDomainProperties;
 
         public PostService(
                         PostRepository repository,
@@ -38,7 +40,8 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                         LikePostRepository likePostRepository,
                         UtenteFollowRepository utenteFollowRepository,
                         CommentoRepository commentoRepository,
-                        BadgeService badgeService) {
+                        BadgeService badgeService,
+                        AppDomainProperties appDomainProperties) {
 
                 super(repository, converter);
                 this.utenteRepository = utenteRepository;
@@ -47,6 +50,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                 this.utenteFollowRepository = utenteFollowRepository;
                 this.commentoRepository = commentoRepository;
                 this.badgeService = badgeService;
+                this.appDomainProperties = appDomainProperties;
         }
 
         public List<PostDto> findByUtenteId(Long utenteId) {
@@ -64,8 +68,8 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                 }
 
                 String testo = testoVisibile.trim();
-                if (testo.length() > 1000) {
-                        throw new IllegalArgumentException("Il testo del post non può superare 1000 caratteri");
+                if (testo.length() > appDomainProperties.getContenuti().getLimitePostCaratteri()) {
+                        throw new IllegalArgumentException("Il testo del post supera il limite configurato");
                 }
 
                 var utente = utenteRepository.findByUsername(username)
@@ -134,25 +138,31 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
         }
 
         @Transactional
-        public void aggiungiCommento(String username, Long postId, String testo) {
+        public CommentResult aggiungiCommento(String username, Long postId, String testo) {
                 if (testo == null || testo.isBlank()) {
                         throw new IllegalArgumentException("Il commento non può essere vuoto");
                 }
 
                 String testoPulito = testo.trim();
-                if (testoPulito.length() > 500) {
-                        throw new IllegalArgumentException("Il commento non può superare 500 caratteri");
+                if (testoPulito.length() > appDomainProperties.getContenuti().getLimiteCommentoCaratteri()) {
+                        throw new IllegalArgumentException("Il commento supera il limite configurato");
                 }
 
+                Post post = getRepository().findById(postId)
+                                .orElseThrow(() -> new IllegalArgumentException("Post non trovato"));
+                Utente utente = trovaUtente(username);
                 Commento commento = Commento.builder()
-                                .post(getRepository().findById(postId)
-                                                .orElseThrow(() -> new IllegalArgumentException("Post non trovato")))
-                                .utente(trovaUtente(username))
+                                .post(post)
+                                .utente(utente)
                                 .testo(testoPulito)
                                 .build();
 
                 commentoRepository.save(commento);
                 badgeService.verificaBadge(username);
+                return new CommentResult(utente.getUsername(), testoPulito, post.getCommenti().size());
+        }
+
+        public record CommentResult(String username, String testo, int count) {
         }
 
         public record LikeResult(boolean liked, int count) {

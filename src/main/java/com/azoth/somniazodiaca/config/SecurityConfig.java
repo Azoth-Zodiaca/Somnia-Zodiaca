@@ -100,7 +100,7 @@ public class SecurityConfig {
                                                         
                                                 .requestMatchers("/onboarding/**").authenticated()
 
-                                                // TO DO DA PROTEGGERE CON RATE LIMITING
+                                                // TODO DA PROTEGGERE CON RATE LIMITING
                                                 .requestMatchers("/api/geocoding/**").permitAll()
 
                                                 // Qualsiasi altro endpoint richiede autenticazione

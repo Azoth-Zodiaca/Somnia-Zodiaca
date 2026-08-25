@@ -4,6 +4,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
 import com.azoth.somniazodiaca.entities.Utente;
@@ -60,6 +61,13 @@ public class TemaNataleController {
 
                 model.addAttribute("temaNatale", temaNatale);
 
+                JsonNode analisiGemini = null;
+                if (temaNatale != null && temaNatale.getAnalisiGemini() != null
+                                && !temaNatale.getAnalisiGemini().isBlank()) {
+                        analisiGemini = astroWayService.parseChart(temaNatale.getAnalisiGemini());
+                }
+                model.addAttribute("analisiGemini", analisiGemini);
+
                 if (temaNatale != null && temaNatale.getRispostaAstroWay() != null) {
 
                         JsonNode temaChart = astroWayService.parseChart(
@@ -110,6 +118,16 @@ public class TemaNataleController {
 
                 model.addAttribute("temaNatale", temaNatale);
                 return "app/tema-natale-modifica";
+        }
+
+        @PostMapping("/app/tema-natale/interpretazione")
+        public String generaInterpretazione(Authentication authentication) {
+                Utente utente = utenteRepository
+                                .findByUsername(authentication.getName())
+                                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+                temaNataleService.generaInterpretazione(utente);
+                return "redirect:/app/tema-natale";
         }
 
 }

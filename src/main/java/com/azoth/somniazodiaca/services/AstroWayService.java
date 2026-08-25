@@ -4,14 +4,21 @@ import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.client.SimpleClientHttpRequestFactory;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Service;
+import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
 
 import com.azoth.somniazodiaca.dtos.records.AstroWayChartRequest;
+import com.azoth.somniazodiaca.dtos.records.AstroWayInterpretationRequest;
 import com.azoth.somniazodiaca.exceptions.AstroWayUnavailableException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
 
 @Service
 public class AstroWayService {
@@ -40,20 +47,21 @@ public class AstroWayService {
         this.apiKey = apiKey;
     }
 
-    public String getInterpretation(String rawChartResponse) {
+    public String getInterpretation(AstroWayInterpretationRequest request) {
         try {
-            // Endpoint corretto ricavato dalla documentazione ufficiale https://api.astroway.info/it/credits/
             return restClient.post()
                     .uri("/v1/interpret/natal")
                     .header("X-Api-Key", apiKey)
-                    .contentType(org.springframework.http.MediaType.APPLICATION_JSON)
-                    .body(rawChartResponse)
+                    .header("Accept-Language", "it")
+                    .contentType(MediaType.APPLICATION_JSON)
+                    .body(request)
                     .retrieve()
                     .body(String.class);
 
-        } catch (ResourceAccessException exception) {
+        } catch (RestClientException exception) {
             throw new AstroWayUnavailableException(
-                    "Impossibile raggiungere AstroWay per l'interpretazione del carattere", exception);
+                    "Impossibile raggiungere AstroWay per l'interpretazione del tema",
+                    exception);
         }
     }
 

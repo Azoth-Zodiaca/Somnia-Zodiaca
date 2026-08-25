@@ -10,8 +10,18 @@
       <a href="/" class="brand"><span class="brand-dot"></span> Somnia Zodiaca</a>
       <h2>Crea il tuo account</h2>
 
+      <div class="onboarding-steps" aria-label="Passaggio 1 di 2">
+        <div class="step-dot active"></div>
+        <div class="step-dot"></div>
+      </div>
+
       <!-- Dati account, password e accettazione delle condizioni. -->
       <form th:action="@{/register}" method="post" id="register-form">
+
+        <div th:if="${errorMessage}" class="alert alert-danger">
+          <p th:text="${errorMessage}"></p>
+        </div>
+
         <div class="field">
           <label for="username">Username</label>
           <input type="text" id="username" name="username" placeholder="lunadark" required>
@@ -22,9 +32,11 @@
         </div>
         <div class="field">
           <label for="password">Password</label>
-          <input type="password" id="password" name="password" placeholder="Almeno 8 caratteri" required minlength="8"
-            pattern="(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{8,}"
-            title="La password deve contenere almeno 8 caratteri, una maiuscola, una minuscola, un numero e un simbolo">
+          <input type="password" id="password" name="password" required
+            th:minlength="${appDomain.contenuti.limitePasswordCaratteri}"
+            th:pattern="${'(?=.*[a-z])(?=.*[A-Z])(?=.*[0-9])(?=.*[^A-Za-z0-9]).{' + appDomain.contenuti.limitePasswordCaratteri + ',}'}"
+            th:placeholder="${'Almeno ' + appDomain.contenuti.limitePasswordCaratteri + ' caratteri'}"
+            th:title="${'La password deve contenere almeno ' + appDomain.contenuti.limitePasswordCaratteri + ' caratteri, una maiuscola, una minuscola, un numero e un simbolo'}">
           <span class="field-hint">
             <span id="password-strength" class="field-hint">
               Inserisci una password
@@ -47,7 +59,7 @@
         <a href="/login" class="register-login-link">Accedi</a>
       </div>
 
-  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+      <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
 
 </html>

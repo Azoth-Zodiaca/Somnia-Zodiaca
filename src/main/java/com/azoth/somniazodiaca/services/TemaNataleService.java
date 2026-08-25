@@ -4,12 +4,16 @@ import java.math.BigDecimal;
 import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
 import java.util.Optional;
 
 import org.springframework.stereotype.Service;
 
 import com.azoth.somniazodiaca.converters.TemaNataleConverter;
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
+import com.azoth.somniazodiaca.dtos.records.AstroWayInterpretationRequest;
 import com.azoth.somniazodiaca.entities.SegnoZodiacale;
 import com.azoth.somniazodiaca.entities.TemaNatale;
 import com.azoth.somniazodiaca.entities.Utente;
@@ -19,6 +23,7 @@ import com.azoth.somniazodiaca.repositories.SegnoZodiacaleRepository;
 import com.azoth.somniazodiaca.repositories.TemaNataleRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.fasterxml.jackson.databind.JsonNode;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 
@@ -31,6 +36,8 @@ public class TemaNataleService
         private final TemaNataleViewService temaNataleViewService;
         private final UtenteRepository utenteRepository;
         private final BadgeService badgeService;
+        private final GeminiService geminiService;
+        private final ObjectMapper objectMapper;
 
         public TemaNataleService(
                         TemaNataleRepository repository,
@@ -39,7 +46,9 @@ public class TemaNataleService
                         AstroWayService astroWayService,
                         TemaNataleViewService temaNataleViewService,
                         UtenteRepository utenteRepository,
-                        BadgeService badgeService) {
+                        BadgeService badgeService,
+                        GeminiService geminiService,
+                        ObjectMapper objectMapper) {
 
                 super(repository, converter);
                 this.segnoZodiacaleRepository = segnoZodiacaleRepository;
@@ -47,10 +56,102 @@ public class TemaNataleService
                 this.temaNataleViewService = temaNataleViewService;
                 this.utenteRepository = utenteRepository;
                 this.badgeService = badgeService;
+                this.geminiService = geminiService;
+                this.objectMapper = objectMapper;
         }
 
         public Optional<TemaNataleDto> findByUtenteId(Long utenteId) {
                 return getRepository().findByUtenteId(utenteId).map(getConverter()::fromEToD);
+        }
+
+        @Transactional
+        public void generaInterpretazione(Utente utente) {
+                if (utente.getRuolo() != Ruolo.PREMIUM && utente.getRuolo() != Ruolo.ADMIN) {
+                        throw new IllegalStateException("L'interpretazione del tema natale richiede Premium");
+                }
+
+                TemaNatale temaNatale = getRepository().findByUtenteId(utente.getId())
+                                .orElseThrow(() -> new IllegalStateException("Tema natale non trovato"));
+
+                if (temaNatale.getDataNascita() == null
+                                || temaNatale.getLatitudine() == null
+                                || temaNatale.getLongitudine() == null
+                                || temaNatale.getTimezone() == null) {
+                        throw new IllegalStateException(
+                                        "Dati di nascita insufficienti per l'interpretazione");
+                }
+
+                LocalTime oraNascita = temaNatale.getOraNascita() != null
+                                ? temaNatale.getOraNascita()
+                                : LocalTime.NOON;
+
+                ZoneId zoneId = ZoneId.of(temaNatale.getTimezone());
+
+                LocalDateTime dataOraLocale = LocalDateTime.of(
+                                temaNatale.getDataNascita(),
+                                oraNascita);
+
+                ZoneOffset offset = zoneId.getRules().getOffset(dataOraLocale);
+
+                double timezoneOffset = offset.getTotalSeconds() / 3600.0;
+
+                AstroWayInterpretationRequest richiesta = new AstroWayInterpretationRequest(
+                                temaNatale.getDataNascita().toString(),
+                                oraNascita.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                                timezoneOffset,
+                                temaNatale.getLatitudine().doubleValue(),
+                                temaNatale.getLongitudine().doubleValue(),
+                                "P",
+                                "it");
+
+                String risposta = astroWayService.getInterpretation(richiesta);
+                JsonNode json = astroWayService.parseChart(risposta);
+                String testo = estraiInterpretazione(json);
+
+                if (testo == null || testo.isBlank()) {
+                        throw new IllegalStateException("AstroWay non ha restituito un'interpretazione valida");
+                }
+
+                temaNatale.setInterpretazioneAstroWay(testo);
+                String analisi = geminiService.interpretNatalChart(
+                                temaNatale.getRispostaAstroWay(), testo);
+                temaNatale.setAnalisiGemini(normalizzaJson(analisi));
+                getRepository().save(temaNatale);
+        }
+
+        private String normalizzaJson(String risposta) {
+                try {
+                        String json = risposta.trim();
+                        if (json.startsWith("```") && json.endsWith("```")) {
+                                json = json.substring(json.indexOf('\n') + 1, json.length() - 3).trim();
+                        }
+                        objectMapper.readTree(json);
+                        return json;
+                } catch (Exception exception) {
+                        throw new IllegalStateException(
+                                        "Gemini non ha restituito un'analisi JSON valida", exception);
+                }
+        }
+
+        private String estraiInterpretazione(JsonNode risposta) {
+                if (risposta.isTextual()) {
+                        return risposta.asText();
+                }
+
+                String[] possibiliCampi = { "interpretation", "interpretazione", "text", "content", "narrative" };
+                for (String campo : possibiliCampi) {
+                        JsonNode valore = risposta.path(campo);
+                        if (valore.isTextual() && !valore.asText().isBlank()) {
+                                return valore.asText();
+                        }
+                }
+
+                JsonNode data = risposta.path("data");
+                if (!data.isMissingNode()) {
+                        return estraiInterpretazione(data);
+                }
+
+                return null;
         }
 
         @Transactional
@@ -66,9 +167,9 @@ public class TemaNataleService
                         String rispostaAstroWay) {
 
                 // if (utente.getRuolo() != Ruolo.PREMIUM
-                //                 && utente.getRuolo() != Ruolo.ADMIN) {
-                //         throw new IllegalStateException(
-                //                         "Il calcolo del tema natale richiede Premium");
+                // && utente.getRuolo() != Ruolo.ADMIN) {
+                // throw new IllegalStateException(
+                // "Il calcolo del tema natale richiede Premium");
                 // }
 
                 Optional<TemaNatale> temaEsistente = getRepository()
