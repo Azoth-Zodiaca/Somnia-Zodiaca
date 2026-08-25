@@ -12,8 +12,7 @@
 
       <main class="app-content">
 
-        <!-- Banner + avatar. In produzione il colore/immagine del banner
-             e l'immagine avatar arriverebbero da th:style o th:src -->
+        <!-- Immagini del profilo e form di caricamento. -->
         <div class="profile-banner" th:classappend="${' ' + profiloColoreClasse}">
           <img th:if="${bannerPath != null}" class="profile-banner-image" th:src="@{${bannerPath}}"
             alt="Immagine banner">
@@ -45,6 +44,7 @@
           </button>
         </form>
 
+        <!-- Identita, ruolo e statistiche rapide. -->
         <div class="profile-header-info">
           <h2><span th:text="${'@' + username}">@username</span></h2>
           <span class="badge badge-premium" th:text="${ruolo}">ruolo</span>
@@ -85,7 +85,7 @@
           <span>&#128172; <span th:text="${numeroPost}">0</span> Post</span>
         </div>
 
-        <!-- Tab: Panoramica / Post -->
+        <!-- Viste del profilo: panoramica astrale e post pubblicati. -->
         <div class="tab-row" data-tab-group="profilo-tabs">
           <a href="#" class="js-tab active" data-target="tab-panoramica">
             Panoramica
@@ -97,6 +97,7 @@
 
         <div id="tab-panoramica" class="js-tab-panel">
           <div class="dashboard-grid">
+            <!-- Identita astrale e badge sbloccati. -->
             <div class="card">
               <div class="card-title">
                 <span>Identità astrale</span>

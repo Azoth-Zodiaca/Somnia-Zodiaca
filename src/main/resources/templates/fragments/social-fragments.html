@@ -3,12 +3,14 @@
 
 <body>
 
+    <!-- Lista dei post con contenuto, reazioni e commenti. -->
     <div class="social-post-list" th:fragment="social-post-list(posts, emptyMessage, currentUsername, panelPrefix)">
         <div th:if="${#lists.isEmpty(posts)}" class="card text-muted" th:text="${emptyMessage}">
             Nessun post disponibile.
         </div>
 
         <div th:each="post : ${posts}" class="post-with-comments">
+        <!-- Post e relative azioni. -->
         <article class="card post-card">
             <div class="post-header">
                 <div class="post-user">
@@ -126,6 +128,7 @@
             </div>
         </article>
 
+        <!-- Commenti del post, inizialmente richiusi. -->
         <aside th:id="${panelPrefix + '-comments-' + post.id}" class="social-comments-panel is-hidden">
             <div class="social-comments-heading">
                 <h3>Commenti</h3>

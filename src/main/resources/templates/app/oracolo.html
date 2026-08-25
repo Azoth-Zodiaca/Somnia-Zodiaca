@@ -13,6 +13,7 @@
       <main class="app-content oracolo-page">
         <div class="oracolo-layout">
 
+          <!-- Cronologia delle interpretazioni salvate. -->
           <aside id="oracolo-history" class="oracolo-history">
             <div class="history-header">
               <span class="text-muted">Le tue interpretazioni</span>
@@ -60,7 +61,7 @@
           <section class="oracolo-content">
             <h2 class="serif">Racconta il tuo sogno</h2>
 
-            <!-- Form principale dell'oracolo -->
+            <!-- Inserimento del sogno e configurazione della lettura. -->
             <div class="card oracolo-box">
               <form id="oracolo-form" method="post">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -72,7 +73,7 @@
                   <span id="dream-counter" class="text-muted oracolo-counter">0 / 4000</span>
                 </div>
 
-                <!-- Umore provato durante il sogno -->
+                <!-- Umore associato al sogno. -->
                 <div class="oracolo-options">
                   <div>
                     <span class="text-muted oracolo-option-label">Umore</span>
@@ -92,7 +93,7 @@
                     </div>
                   </div>
 
-                  <!-- Stile di interpretazione -->
+                  <!-- Stile scelto per l'interpretazione. -->
                   <div>
                     <span class="text-muted oracolo-option-label">Stile</span>
                     <div class="chip-row mt-10">
@@ -127,8 +128,7 @@
               </form>
             </div>
 
-            <!-- Risultato dell'interpretazione: mostralo solo dopo l'invio
-               (in Spring: th:if="${interpretazione != null}") -->
+            <!-- Risultato della lettura e azioni di salvataggio/condivisione. -->
             <div class="card mt-20 oracolo-result" id="risultato-oracolo" hidden>
               <div class="card-title">
                 <span>&#10022; Interpretazione</span>

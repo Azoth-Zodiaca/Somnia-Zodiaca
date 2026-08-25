@@ -1,6 +1,7 @@
 package com.azoth.somniazodiaca.controllers;
 
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.authentication.logout.SecurityContextLogoutHandler;
@@ -37,8 +38,37 @@ public class ImpostazioniController {
 
         model.addAttribute("username", utente.getUsername());
         model.addAttribute("email", utente.getEmail());
+        model.addAttribute("ruolo", utente.getRuolo());
 
         return "app/impostazioni";
+    }
+
+    @PostMapping("/app/impostazioni/premium/attiva")
+    public String attivaPremium(Authentication authentication) {
+        UtenteDetail utente = utenteService.attivaPremium(authentication.getName());
+
+        Authentication nuovaAuthentication = new UsernamePasswordAuthenticationToken(
+                utente.getUsername(),
+                authentication.getCredentials(),
+                java.util.List.of(new SimpleGrantedAuthority("ROLE_" + utente.getRuolo().name())));
+
+        SecurityContextHolder.getContext().setAuthentication(nuovaAuthentication);
+
+        return "redirect:/app/impostazioni?sezione=premium";
+    }
+
+    @PostMapping("/app/impostazioni/premium/cancella")
+    public String cancellaPremium(Authentication authentication) {
+        UtenteDetail utente = utenteService.cancellaPremium(authentication.getName());
+
+        Authentication nuovaAuthentication = new UsernamePasswordAuthenticationToken(
+                utente.getUsername(),
+                authentication.getCredentials(),
+                java.util.List.of(new SimpleGrantedAuthority("ROLE_" + utente.getRuolo().name())));
+
+        SecurityContextHolder.getContext().setAuthentication(nuovaAuthentication);
+
+        return "redirect:/app/impostazioni?sezione=premium";
     }
 
     @PostMapping("/app/impostazioni/account")

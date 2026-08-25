@@ -1,29 +1,9 @@
-<!--
-  FRAMMENTO: "guscio" dell'app riservata (sidebar + topbar).
-  Contiene DUE frammenti separati che si usano insieme in ogni pagina di /app:
-
-  1) sidebar(active)  -> menu laterale sinistro. "active" è il nome della voce
-     di menu da evidenziare, es: 'dashboard', 'tema-natale', 'oracolo', 'social',
-     'shop', 'inventario', 'wallet', 'progressi', 'impostazioni'.
-
-  2) topbar(pageTitle) -> barra in alto con saluto e saldo QI.
-
-  ESEMPIO DI UTILIZZO in una pagina app/dashboard.html:
-
-     <div th:replace="~{fragments/app-shell :: sidebar(active='dashboard')}"></div>
-     ...
-     <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Dashboard')}"></div>
-
-  I valori come nome utente, segno zodiacale e saldo QI qui sotto sono scritti
-  come testo statico di esempio (es. "lunadark", "1.240"). Quando colleghi
-  Thymeleaf al controller Spring, basta sostituirli con th:text, per esempio:
-     <span th:text="${utente.username}">lunadark</span>
--->
-<html xmlns:th="http://www.thymeleaf.org">
+<!-- Fragment condivisi dell'area autenticata: sidebar e topbar. -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
 
 <body>
 
-  <!-- ============ SIDEBAR ============ -->
+  <!-- Navigazione principale dell'area autenticata. -->
   <nav th:fragment="sidebar(active)" class="sidebar" id="sidebar">
     <a href="/app/dashboard" class="brand">
       <span class="brand-dot"></span>
@@ -47,18 +27,19 @@
         <span class="icon">&#10022;</span> Wallet
       </a>
 
-      <div class="section-gap"></div>
+    </div>
+
+    <!-- Promozione visibile agli account Base e Admin. -->
+    <div class="sidebar-promo" sec:authorize="hasAnyRole('BASE', 'ADMIN')">
+      <span class="badge badge-premium">Premium</span>
+      <p>Custode del Cielo<br>+500 QI mensili e letture illimitate.</p>
+      <a href="/app/impostazioni?sezione=premium">Scopri di più &rarr;</a>
+    </div>
+
+    <div class="sidebar-settings">
       <a href="/app/impostazioni" th:classappend="${active == 'impostazioni'} ? 'active' : ''">
         <span class="icon">&#9881;</span> Impostazioni
       </a>
-    </div>
-
-    <!-- Box promozionale premium: mostralo solo se l'utente NON è premium
-         (in Spring: th:if="${!utente.premium}") -->
-    <div class="sidebar-promo">
-      <span class="badge badge-premium">Premium</span>
-      <p>Custode del Cielo<br>+500 QI mensili, letture illimitate, cosmetici esclusivi.</p>
-      <a href="/premium">Scopri di più &rarr;</a>
     </div>
 
     <div class="sidebar-user">
@@ -102,7 +83,7 @@
   </nav>
   <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
 
-  <!-- ============ TOPBAR ============ -->
+  <!-- Barra superiore con saluto, titolo pagina e saldo QI. -->
   <header th:fragment="topbar(pageTitle)" class="topbar">
     <button id="sidebar-toggle" class="sidebar-toggle" type="button" aria-label="Apri menu di navigazione"
       aria-controls="sidebar" aria-expanded="false">

@@ -1,36 +1,92 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
-<head th:replace="~{fragments/head :: head(title='Somnia Zodiaca - Il tuo cielo, i tuoi sogni interpretati', responsive=false)}"></head>
+<head th:replace="~{fragments/head :: head(title='Somnia Zodiaca - Il tuo cielo, i tuoi sogni interpretati', responsive=true)}"></head>
 <body>
 
-  <!-- Navbar pubblica riutilizzabile -->
+  <!-- Navigazione pubblica condivisa. -->
   <div th:replace="~{fragments/public-nav :: navbar}"></div>
 
-  <!-- HERO: prima sezione visibile, con animazione del sistema solare -->
+  <!-- Presentazione del servizio e accesso alla registrazione. -->
   <section class="container hero">
     <div>
-      <h1>Il tuo <span class="highlight">cielo</span>.<br>I tuoi <span class="highlight">sogni</span>.<br>Interpretati.</h1>
-      <p>Tema natale personalizzato, oracolo AI per i tuoi sogni notturni e una community di astrofili dove condividere le tue letture.</p>
+      <span class="eyebrow">Il tuo spazio nel cielo</span>
+      <h1>Leggi ciò che ti muove.<br><span class="highlight">Parti da te.</span></h1>
+      <p>Costruisci il tuo tema natale, esplora i sogni con l'Oracolo e trova una community con cui condividere intuizioni e scoperte.</p>
       <div class="hero-actions">
-        <a href="/register" class="btn btn-primary">Crea il tuo tema natale</a>
-        <a href="#come-funziona" class="btn btn-outline">Scopri come funziona</a>
+        <a href="/register" class="btn btn-primary">Crea il tuo spazio</a>
+        <a href="#funzioni" class="btn btn-outline">Scopri le funzioni</a>
       </div>
     </div>
 
-    <!-- Ruota zodiacale animata: in produzione qui va un componente
-         SVG/Canvas con animazione del "sistema solare". Per ora è un
-         cerchio segnaposto animato via CSS/JS. -->
+    <!-- Elemento visuale interattivo della hero. -->
     <div class="zodiac-wheel" id="hero-wheel"></div>
   </section>
 
-  <!-- Sezione "12 storie, un cielo solo": elenco dei 12 segni -->
+  <!-- Panoramica delle funzioni principali. -->
+  <section class="container public-features" id="funzioni">
+    <div class="section-title">
+      <span class="eyebrow">Un cielo da vivere</span>
+      <h2>Tre modi per ascoltarti meglio</h2>
+      <p class="section-lead">Ogni funzione nasce per trasformare una curiosità in un momento tutto tuo.</p>
+    </div>
+
+    <div class="feature-showcase">
+      <article class="card feature-panel feature-oracolo" id="oracolo">
+        <div class="feature-panel-heading">
+          <span class="feature-kicker">01 / Oracolo dei sogni</span>
+          <span class="feature-symbol">&#9789;</span>
+        </div>
+        <h3>Racconta il tuo sogno.</h3>
+        <p class="text-muted">Scrivi cosa hai visto e come ti sei sentito. Scegli l'umore e lo stile della lettura, poi usa il tuo tema natale per ricevere un'interpretazione più personale.</p>
+        <div class="oracle-preview">
+          <span class="preview-label">Esempio di sogno</span>
+          <strong>"Ero in una stanza piena di specchi. Ogni riflesso mostrava una versione diversa di me."</strong>
+          <span class="preview-result">Umore: Confuso &middot; Stile: Astrologico &middot; Tema natale: attivo</span>
+        </div>
+        <div class="oracle-response">
+          <span class="preview-label">Risposta dell'Oracolo</span>
+          <p>Gli specchi possono indicare che stai guardando te stesso da punti di vista diversi. Le versioni che vedi non devono essere per forza in contrasto: possono mostrare lati di te che stai ancora cercando di capire.</p>
+          <span class="oracle-response-tip">Un possibile passo: annota quale riflesso ti ha colpito di piu e perche.</span>
+        </div>
+        <span class="feature-note">20 QI per una lettura &middot; disponibile 48 ore</span>
+        <a href="/register" class="feature-link">Interpreta il tuo primo sogno <span>&rarr;</span></a>
+      </article>
+
+      <article class="card feature-panel feature-social">
+        <div class="feature-panel-heading">
+          <span class="feature-kicker">02 / Social</span>
+          <span class="feature-symbol">&#9752;</span>
+        </div>
+        <h3>Condividi sogno e interpretazione.</h3>
+        <p class="text-muted">Pubblica il sogno, aggiungi una breve descrizione e mostra la lettura dell'Oracolo. Gli altri possono mettere like, commentare e seguirti.</p>
+        <div class="social-preview">
+          <div class="social-preview-user"><span class="mini-avatar">S</span><span><strong>@sofia_pesci</strong><small>ha condiviso un sogno</small></span></div>
+          <p class="social-description">Non riesco a smettere di pensare a questo sogno.</p>
+          <div class="social-dream"><span>IL SOGNO</span><strong>Ero in una stanza piena di specchi. Ogni riflesso mostrava una versione diversa di me.</strong></div>
+          <div class="social-interpretation"><span>ORACOLO</span><strong>Gli specchi possono rappresentare il rapporto con le diverse parti della propria identità.</strong></div>
+          <div class="social-preview-meta"><span>&#9825; 12</span><span>Commenti 2</span></div>
+        </div>
+        <a href="/register" class="feature-link">Trova la tua community <span>&rarr;</span></a>
+      </article>
+    </div>
+
+    <div class="feature-third">
+      <div>
+        <span class="feature-kicker">03 / Tema natale</span>
+        <h3>Una mappa fatta per te.</h3>
+      </div>
+      <p class="text-muted">Segni, pianeti e ascendente diventano una lettura personale da esplorare nel tempo, non una definizione da seguire.</p>
+      <a href="/register" class="btn btn-outline btn-sm">Calcola il tuo tema</a>
+    </div>
+  </section>
+
+  <!-- Elenco dei dodici segni zodiacali. -->
   <section class="container" id="come-funziona">
     <div class="section-title">
       <span class="eyebrow">Zodiaco</span>
       <h2>Dodici storie, un cielo solo</h2>
     </div>
     <div class="zodiac-grid">
-      <!-- In Spring: th:each="segno : ${segniZodiacali}" e th:text per nome/date -->
       <div class="zodiac-item"><div class="icon">&#9800;</div>Ariete<span class="dates">21 mar</span></div>
       <div class="zodiac-item"><div class="icon">&#9801;</div>Toro<span class="dates">20 apr</span></div>
       <div class="zodiac-item"><div class="icon">&#9802;</div>Gemelli<span class="dates">21 mag</span></div>
@@ -46,51 +102,8 @@
     </div>
   </section>
 
-  <!-- Sezione economia virtuale QI -->
-  <section class="container">
-<div class="card featured-item featured-home">
-      <div>
-        <span class="badge badge-leggendaria">Economia QI</span>
-        <h3 class="mt-10">Guadagna, spendi, colleziona.</h3>
-        <p class="text-muted mt-10">I QI sono la valuta del cielo di Quicksilver. Li guadagni interpretando sogni,
-          condividendo contenuti, completando obiettivi. Li spendi in cosmetici per personalizzare il tuo avatar e le tue letture.</p>
-      </div>
-      <div class="icon-box">&#10022;</div>
-    </div>
-  </section>
-
-  <!-- Footer pubblico riutilizzato in tutte le pagine pubbliche -->
-  <footer class="container public-footer">
-    <div>
-      <div class="brand"><span class="brand-dot"></span> Somnia Zodiaca</div>
-      <p class="mt-10">Astrologia moderna, oracolo onirico, community.</p>
-    </div>
-    <div class="footer-columns">
-      <div>
-        <h4>Prodotto</h4>
-        <ul>
-          <li><a href="/premium">Premium</a></li>
-          <li><a href="/#come-funziona">Come funziona</a></li>
-          <li><a href="/register">Registrati</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Zodiaco</h4>
-        <ul>
-          <li><a href="/enciclopedia">Segni</a></li>
-          <li><a href="/enciclopedia">Elementi</a></li>
-          <li><a href="/enciclopedia">Pianeti</a></li>
-        </ul>
-      </div>
-      <div>
-        <h4>Legali</h4>
-        <ul>
-          <li><a href="/legal/privacy">Privacy</a></li>
-          <li><a href="/legal/termini">Termini</a></li>
-        </ul>
-      </div>
-    </div>
-  </footer>
+  <!-- Footer pubblico condiviso. -->
+  <div th:replace="~{fragments/public-footer :: footer}"></div>
 
   <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
 </body>

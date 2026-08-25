@@ -1,11 +1,16 @@
 /* =========================================================
-   QUICKSILVER - JAVASCRIPT PRINCIPALE
-   File unico e commentato, diviso in piccole funzioni.
-   Ogni funzione controlla da sola se gli elementi che le
-   servono esistono nella pagina corrente, quindi puoi
-   includere questo file in TUTTE le pagine senza errori.
-   ========================================================= */
+  SOMNIA ZODIACA - SCRIPT CONDIVISO
+  Funzioni organizzate per area funzionale. Gli inizializzatori
+  verificano autonomamente se gli elementi necessari esistono,
+  così questo file puo essere incluso in tutte le pagine.
+  ========================================================= */
 
+/* ---------------------------------------------------------
+  AVVIO
+  Registra tutti i comportamenti condivisi dopo il caricamento
+  del DOM. Le dichiarazioni di funzione sono hoisted, quindi
+  l'ordine di questo elenco resta esplicito e leggibile.
+--------------------------------------------------------- */
 document.addEventListener("DOMContentLoaded", function () {
   initSidebarToggle();
   initSocialFollowing();
@@ -25,7 +30,11 @@ document.addEventListener("DOMContentLoaded", function () {
   initInterpretationExpanders();
 });
 
-// controllo della forza della password nella pagina di registrazione
+/* ---------------------------------------------------------
+   AUTENTICAZIONE E PROFILO
+--------------------------------------------------------- */
+
+// Controlla la complessita minima della password e aggiorna l'indicatore.
 document.addEventListener("DOMContentLoaded", function () {
   const form = document.getElementById("register-form");
   const password = document.getElementById("password");
@@ -77,7 +86,7 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 
-// profilo
+// Mostra o nasconde il form per cambiare l'immagine del profilo.
 function initUploadProfilo() {
   var editButton = document.getElementById("mostra-upload-profilo");
   var uploadForm = document.getElementById("upload-profilo-form");
@@ -92,10 +101,10 @@ function initUploadProfilo() {
 }
 
 /* ---------------------------------------------------------
-   1) Apertura/chiusura della sidebar su schermi piccoli.
-   Serve un bottone con id="sidebar-toggle" (non presente
-   in ogni pagina: se manca, la funzione non fa nulla).
+  NAVIGAZIONE E CONTROLLI GENERALI
 --------------------------------------------------------- */
+
+// Apre e chiude la sidebar mobile, inclusi backdrop, Escape e resize.
 function initSidebarToggle() {
   var toggleBtn = document.getElementById("sidebar-toggle");
   var sidebar = document.getElementById("sidebar");
@@ -151,41 +160,7 @@ function initSidebarToggle() {
   });
 }
 
-function initSocialFollowing() {
-  var toggleBtn = document.getElementById("social-following-toggle");
-  var panel = document.getElementById("social-following-panel");
-  var closeBtn = document.getElementById("social-following-close");
-  var backdrop = document.getElementById("social-following-backdrop");
-
-  if (!toggleBtn || !panel) return;
-
-  function setPanelState(isOpen) {
-    panel.classList.toggle("is-open", isOpen);
-    if (backdrop) backdrop.classList.toggle("is-open", isOpen);
-    document.body.classList.toggle("social-following-open", isOpen);
-    toggleBtn.setAttribute("aria-expanded", String(isOpen));
-  }
-
-  toggleBtn.addEventListener("click", function () {
-    setPanelState(!panel.classList.contains("is-open"));
-  });
-
-  if (closeBtn) closeBtn.addEventListener("click", function () {
-    setPanelState(false);
-  });
-
-  if (backdrop) backdrop.addEventListener("click", function () {
-    setPanelState(false);
-  });
-
-  document.addEventListener("keydown", function (event) {
-    if (event.key === "Escape" && panel.classList.contains("is-open")) {
-      setPanelState(false);
-    }
-  });
-}
-
-// Saluto in base all'orario (Buongiorno / Buon pomeriggio / Buona sera) nella topbar
+// Personalizza il saluto della topbar in base all'ora locale.
 document.addEventListener('DOMContentLoaded', () => {
   const elementoSaluto = document.getElementById('saluto-orario');
 
@@ -204,12 +179,7 @@ document.addEventListener('DOMContentLoaded', () => {
   }
 });
 
-/* ---------------------------------------------------------
-   2) Tab generiche (es. Riepilogo / Carta / Pianeti / Case
-   nel Tema Natale, oppure Popolari / Recenti nel Social).
-   Basta dare a ogni link classe "js-tab" e un attributo
-   data-target che punta all'id del contenuto da mostrare.
---------------------------------------------------------- */
+// Gestisce le tab collegate a pannelli tramite data-target.
 function initTabs() {
   var tabs = document.querySelectorAll(".js-tab");
   if (tabs.length === 0) return;
@@ -240,12 +210,7 @@ function initTabs() {
   });
 }
 
-/* ---------------------------------------------------------
-   3) Selettori a "chip" (es. Umore e Stile nella pagina
-   Oracolo). Ogni bottone con classe "chip" e attributo
-   data-group diventa selezionabile; solo uno per gruppo
-   può essere attivo alla volta.
---------------------------------------------------------- */
+// Mantiene una sola scelta attiva per ogni gruppo di chip.
 function initChipSelectors() {
   var chips = document.querySelectorAll(".chip");
   if (chips.length === 0) return;
@@ -272,10 +237,10 @@ function initChipSelectors() {
 }
 
 /* ---------------------------------------------------------
-   5) Contatore caratteri nel form "Racconta il tuo sogno"
-   della pagina Oracolo. Richiede una textarea con
-   id="dream-text" e un elemento con id="dream-counter".
+  ORACOLO
 --------------------------------------------------------- */
+
+// Aggiorna il numero di caratteri inseriti nel sogno.
 function initOracoloCounter() {
   var textarea = document.getElementById("dream-text");
   var counter = document.getElementById("dream-counter");
@@ -330,6 +295,7 @@ function initSvuotaOracolo() {
   });
 }
 
+// Converte una scadenza ISO nel testo mostrato nella cronologia.
 function testoScadenza(scadenza) {
   var differenza =
     new Date(scadenza).getTime() - Date.now();
@@ -757,11 +723,45 @@ function aggiornaSaldoQi(qi) {
 }
 
 /* ---------------------------------------------------------
-   6) Bottone "like" nei post del Social. Cambia stile e
-   incrementa/decrementa il numero visualizzato.
-   Richiede: <button class="like-btn" data-liked="false">
-             <span class="like-count">24</span></button>
+  SOCIAL
 --------------------------------------------------------- */
+
+// Apre e chiude il pannello degli utenti seguiti.
+function initSocialFollowing() {
+  var toggleBtn = document.getElementById("social-following-toggle");
+  var panel = document.getElementById("social-following-panel");
+  var closeBtn = document.getElementById("social-following-close");
+  var backdrop = document.getElementById("social-following-backdrop");
+
+  if (!toggleBtn || !panel) return;
+
+  function setPanelState(isOpen) {
+    panel.classList.toggle("is-open", isOpen);
+    if (backdrop) backdrop.classList.toggle("is-open", isOpen);
+    document.body.classList.toggle("social-following-open", isOpen);
+    toggleBtn.setAttribute("aria-expanded", String(isOpen));
+  }
+
+  toggleBtn.addEventListener("click", function () {
+    setPanelState(!panel.classList.contains("is-open"));
+  });
+
+  if (closeBtn) closeBtn.addEventListener("click", function () {
+    setPanelState(false);
+  });
+
+  if (backdrop) backdrop.addEventListener("click", function () {
+    setPanelState(false);
+  });
+
+  document.addEventListener("keydown", function (event) {
+    if (event.key === "Escape" && panel.classList.contains("is-open")) {
+      setPanelState(false);
+    }
+  });
+}
+
+// Invia il like in AJAX e sincronizza tutte le copie dello stesso post.
 function initLikeButtons() {
   var likeForms = document.querySelectorAll("form[data-like-endpoint]");
 
@@ -908,9 +908,10 @@ function initInterpretationExpanders() {
 }
 
 /* ---------------------------------------------------------
-   8) Menu laterale della pagina Impostazioni: mostra solo
-   la sezione scelta ed evidenzia la voce di menu attiva.
+  IMPOSTAZIONI E ACCOUNT
 --------------------------------------------------------- */
+
+// Mostra la sola sezione impostazioni richiesta e aggiorna il menu attivo.
 function initSettingsMenu() {
   var links = document.querySelectorAll(".settings-menu a");
   var sections = document.querySelectorAll(".settings-section");
@@ -921,6 +922,19 @@ function initSettingsMenu() {
   var activeTargetId = activeLink
     ? activeLink.getAttribute("data-target")
     : null;
+
+  var requestedSection = new URLSearchParams(window.location.search).get("sezione");
+  var requestedLink = requestedSection
+    ? document.querySelector('.settings-menu a[data-target="sezione-' + requestedSection + '"]')
+    : null;
+
+  if (requestedLink) {
+    activeLink = requestedLink;
+    activeTargetId = requestedLink.getAttribute("data-target");
+    links.forEach(function (item) {
+      item.classList.toggle("active", item === requestedLink);
+    });
+  }
 
   sections.forEach(function (section) {
     section.classList.toggle("is-hidden", section.id !== activeTargetId);
@@ -946,7 +960,7 @@ function initSettingsMenu() {
 }
 
 
-// pop up per eliminazione account in impostazioni
+// Chiede conferma prima dell'eliminazione definitiva dell'account.
 function initDeleteAccountConfirmation() {
   var form = document.querySelector("form[action*='/account/elimina']");
   if (!form) return;
@@ -958,6 +972,11 @@ function initDeleteAccountConfirmation() {
   });
 }
 
+/* ---------------------------------------------------------
+  COMPONENTI VISIVI
+--------------------------------------------------------- */
+
+// Applica alle barre la percentuale fornita dall'attributo data-percentuale.
 document.querySelectorAll("[data-percentuale]").forEach(barra => {
   barra.style.width =
     `${barra.dataset.percentuale}%`;

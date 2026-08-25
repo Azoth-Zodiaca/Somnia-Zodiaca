@@ -141,6 +141,31 @@ button {
         flex-direction: column;
     }
 
+    .feature-showcase {
+        grid-template-columns: 1fr;
+    }
+
+    .feature-panel {
+        min-height: 0;
+        padding: 22px;
+    }
+
+    .feature-panel h3 {
+        margin-top: 20px;
+        font-size: 23px;
+    }
+
+    .oracle-preview,
+    .social-preview {
+        margin: 18px 0;
+        padding: 14px;
+    }
+
+    .feature-third {
+        grid-template-columns: 1fr;
+        gap: 12px;
+    }
+
     .oracolo-layout {
         display: flex;
         flex-direction: column;
@@ -177,6 +202,22 @@ button {
     .login-page .auth-form-panel,
     .register-page .auth-form-panel {
         padding: 36px 24px;
+    }
+
+    .error-page {
+        padding: 20px 14px;
+    }
+
+    .error-panel {
+        padding: 36px 24px;
+    }
+
+    .error-actions {
+        flex-direction: column;
+    }
+
+    .error-actions .btn {
+        width: 100%;
     }
 
     .topbar {
@@ -374,6 +415,58 @@ button {
         display: block;
         overflow-x: auto;
         white-space: nowrap;
+    }
+
+    .public-navbar {
+        gap: 16px;
+        flex-wrap: wrap;
+    }
+
+    .public-navbar nav {
+        order: 3;
+        width: 100%;
+        justify-content: center;
+        gap: 18px;
+    }
+
+    .public-user-actions {
+        gap: 10px;
+    }
+
+    .public-logout-button {
+        font-size: 12px;
+    }
+
+    .public-profile-name {
+        display: none;
+    }
+
+    .public-footer {
+        grid-template-columns: 1fr;
+        gap: 20px;
+        margin-top: 40px;
+        padding-top: 24px;
+        padding-left: 16px;
+        padding-right: 16px;
+    }
+
+    .footer-columns {
+        display: grid;
+        grid-template-columns: repeat(3, minmax(0, 1fr));
+        gap: 14px;
+    }
+
+    .footer-columns h4,
+    .footer-columns a {
+        overflow-wrap: anywhere;
+    }
+
+    .legal-page {
+        padding-top: 40px;
+    }
+
+    .legal-header h1 {
+        font-size: 30px;
     }
 }
 
@@ -646,10 +739,10 @@ button {
 
 .oracolo-layout {
     display: grid;
-    grid-template-columns: minmax(220px, 280px) minmax(0, 700px);
+    grid-template-columns: minmax(220px, 280px) minmax(0, 1fr);
     gap: 28px;
     width: 100%;
-    max-width: 1008px;
+    max-width: none;
     margin: 0 auto;
     align-items: start;
 }
@@ -662,9 +755,18 @@ button {
 
 .oracolo-history {
     position: sticky;
+    grid-column: 1;
+    grid-row: 1;
     top: 24px;
     max-height: calc(100vh - 48px);
     overflow-y: auto;
+}
+
+.oracolo-content {
+    grid-column: 1 / -1;
+    grid-row: 1;
+    justify-self: center;
+    max-width: 700px;
 }
 
 .oracolo-content>h2 {
@@ -1311,6 +1413,15 @@ button {
     .danger-zone p,
     .premium-section p {
         overflow-wrap: anywhere;
+    }
+
+    .settings-comparison .comparison-table {
+        font-size: 12px;
+    }
+
+    .settings-comparison .comparison-table th,
+    .settings-comparison .comparison-table td {
+        padding: 10px 8px;
     }
 }
 
