@@ -52,7 +52,8 @@
         </div>
 
         <!-- Riepilogo dei dati anagrafici e della triade principale. -->
-        <div class="natal-data-layout natal-protected-summary" th:classappend="${!temaSbloccato and temaNatale != null ? ' is-locked' : ''}">
+        <div class="natal-data-layout natal-protected-summary"
+          th:classappend="${!temaSbloccato and temaNatale != null ? ' is-locked' : ''}">
 
           <div class="natal-summary-column">
 
@@ -263,7 +264,9 @@
                     </p>
 
                     <div th:if="${temaNatale != null
-                    and temaNatale.interpretazioneAstroWay != null}" th:text="${temaNatale.interpretazioneAstroWay}">
+                      and temaNatale.interpretazioneAstroWay != null}"
+                      class="js-markdown-content natal-interpretation-text"
+                      th:text="${temaNatale.interpretazioneAstroWay}">
                       Interpretazione del tema natale.
                     </div>
 
@@ -371,6 +374,8 @@
     </div>
   </div>
 
+  <script th:src="@{/js/vendor/marked.min.js}"></script>
+  <script th:src="@{/js/vendor/purify.min.js}"></script>
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
   <script th:src="@{/js/natal-chart.js}"></script>
 </body>

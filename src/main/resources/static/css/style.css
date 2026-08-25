@@ -3665,9 +3665,9 @@ h4 {
   overflow: visible;
 }
 
-.natal-protected-summary.is-locked > .natal-summary-column,
-.natal-protected-summary.is-locked > .natal-planets-card,
-.natal-tab-protected.is-locked > .natal-tab-content {
+.natal-protected-summary.is-locked>.natal-summary-column,
+.natal-protected-summary.is-locked>.natal-planets-card,
+.natal-tab-protected.is-locked>.natal-tab-content {
   filter: blur(7px);
   opacity: 0.68;
   user-select: none;
@@ -3728,4 +3728,76 @@ h4 {
   margin-bottom: 18px;
   color: var(--text-secondary);
   line-height: 1.6;
+}
+
+.natal-interpretation-text {
+  color: var(--text-secondary);
+  line-height: 1.7;
+  overflow-wrap: anywhere;
+}
+
+.natal-interpretation-text h1,
+.natal-interpretation-text h2,
+.natal-interpretation-text h3,
+.natal-interpretation-text h4 {
+  margin: 22px 0 10px;
+  color: var(--text-primary);
+  font-family: Georgia, "Times New Roman", serif;
+  font-weight: 500;
+  line-height: 1.25;
+}
+
+.natal-interpretation-text h1:first-child,
+.natal-interpretation-text h2:first-child,
+.natal-interpretation-text h3:first-child {
+  margin-top: 0;
+}
+
+.natal-interpretation-text p {
+  margin: 0 0 14px;
+}
+
+.natal-interpretation-text ul,
+.natal-interpretation-text ol {
+  margin: 8px 0 16px 22px;
+  padding: 0;
+}
+
+.natal-interpretation-text li {
+  margin-bottom: 6px;
+}
+
+.natal-interpretation-text strong {
+  color: var(--text-primary);
+}
+
+.natal-interpretation-text hr {
+  margin: 20px 0;
+  border: 0;
+  border-top: 1px solid var(--border-color);
+}
+
+.natal-interpretation-text table {
+  width: 100%;
+  margin: 14px 0 20px;
+  border-collapse: collapse;
+  font-size: 13px;
+}
+
+.natal-interpretation-text th,
+.natal-interpretation-text td {
+  padding: 9px 10px;
+  border: 1px solid var(--border-color);
+  text-align: left;
+  vertical-align: top;
+}
+
+.natal-interpretation-text th {
+  color: var(--text-primary);
+  background: var(--bg-input);
+  font-weight: 600;
+}
+
+.natal-interpretation-text td {
+  color: var(--text-secondary);
 }
