@@ -97,6 +97,10 @@
       <strong th:text="${username}">username</strong> &#9789;
     </div>
     <div class="topbar-right">
+      <a th:if="${!ricompensaRiscossa}" th:href="@{/app/wallet}" class="btn btn-gold btn-sm"
+        title="Riscatta la ricompensa giornaliera">
+        Ricompensa
+      </a>
       <a href="/app/wallet" class="qi-pill" title="Apri il wallet">
         &#10022;
         <span id="saldo-qi" th:text="${saldoQi}">0</span>

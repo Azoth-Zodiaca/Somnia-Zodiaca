@@ -277,12 +277,13 @@ INSERT INTO
         sogno_id,
         prompt,
         testo,
-        tipo,
+        umore,
+        stile,
         scadenza_cache,
         created_at,
         updated_at
     )
-SELECT @sogno_sofia_id, 'Interpretazione simbolica del sogno degli specchi', 'Gli specchi possono rappresentare il rapporto con le diverse parti della propria identita e con i cambiamenti ancora possibili.', 'JUNGIANA', NULL, NOW(), NOW()
+SELECT @sogno_sofia_id, 'Interpretazione simbolica del sogno degli specchi', 'Gli specchi possono rappresentare il rapporto con le diverse parti della propria identita e con i cambiamenti ancora possibili.', 'CONFUSO', 'SIMBOLICO', NULL, NOW(), NOW()
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -329,12 +330,13 @@ INSERT INTO
         sogno_id,
         prompt,
         testo,
-        tipo,
+        umore,
+        stile,
         scadenza_cache,
         created_at,
         updated_at
     )
-SELECT @sogno_marco_id, 'Interpretazione simbolica del sogno del ponte', 'Il ponte che appare durante il cammino suggerisce fiducia nel processo e disponibilita ad affrontare una nuova fase.', 'COGNITIVA', NULL, NOW(), NOW()
+SELECT @sogno_marco_id, 'Interpretazione simbolica del sogno del ponte', 'Il ponte che appare durante il cammino suggerisce fiducia nel processo e disponibilita ad affrontare una nuova fase.', 'SERENO', 'JUNGHIANO', NULL, NOW(), NOW()
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -381,12 +383,13 @@ INSERT INTO
         sogno_id,
         prompt,
         testo,
-        tipo,
+        umore,
+        stile,
         scadenza_cache,
         created_at,
         updated_at
     )
-SELECT @sogno_ely_id, 'Interpretazione simbolica del sogno dell orchestra', 'L orchestra senza direttore puo indicare collaborazione spontanea, sintonia e capacita di contribuire a un obiettivo comune.', 'FOLKLORISTICA', NULL, NOW(), NOW()
+SELECT @sogno_ely_id, 'Interpretazione simbolica del sogno dell orchestra', 'L orchestra senza direttore puo indicare collaborazione spontanea, sintonia e capacita di contribuire a un obiettivo comune.', 'SERENO', 'SIMBOLICO', NULL, NOW(), NOW()
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -432,12 +435,13 @@ INSERT INTO
         sogno_id,
         prompt,
         testo,
-        tipo,
+        umore,
+        stile,
         scadenza_cache,
         created_at,
         updated_at
     )
-SELECT @sogno_luca_id, 'Interpretazione simbolica del sogno della montagna', 'La montagna illuminata puo rappresentare ambizione, energia e il desiderio di raggiungere un obiettivo importante.', 'JUNGIANA', NULL, NOW(), NOW()
+SELECT @sogno_luca_id, 'Interpretazione simbolica del sogno della montagna', 'La montagna illuminata puo rappresentare ambizione, energia e il desiderio di raggiungere un obiettivo importante.', 'INTENSO', 'ASTROLOGICO', NULL, NOW(), NOW()
 WHERE
     NOT EXISTS (
         SELECT 1
@@ -483,12 +487,13 @@ INSERT INTO
         sogno_id,
         prompt,
         testo,
-        tipo,
+        umore,
+        stile,
         scadenza_cache,
         created_at,
         updated_at
     )
-SELECT @sogno_giulia_id, 'Interpretazione simbolica del sogno del palco', 'Il palco puo indicare il bisogno di esprimersi, mostrarsi agli altri e riconoscere il proprio valore.', 'COGNITIVA', NULL, NOW(), NOW()
+SELECT @sogno_giulia_id, 'Interpretazione simbolica del sogno del palco', 'Il palco puo indicare il bisogno di esprimersi, mostrarsi agli altri e riconoscere il proprio valore.', 'SERENO', 'JUNGHIANO', NULL, NOW(), NOW()
 WHERE
     NOT EXISTS (
         SELECT 1

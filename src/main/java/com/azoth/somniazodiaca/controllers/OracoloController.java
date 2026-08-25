@@ -18,6 +18,7 @@ import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.dtos.records.InterpretazioneRequest;
 import com.azoth.somniazodiaca.dtos.records.RendiPermanenteRequest;
 import com.azoth.somniazodiaca.dtos.records.SalvaInterpretazioneRequest;
+import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.services.GeminiService;
 import com.azoth.somniazodiaca.services.InterpretazioneService;
 import com.azoth.somniazodiaca.services.OracoloService;
@@ -61,6 +62,8 @@ public class OracoloController {
                                 .findByUtenteId(utente.getId());
 
                 model.addAttribute("interpretazioni", interpretazioni);
+                model.addAttribute("premiumTemaNatale",
+                                !"BASE".equals(utente.getRuolo().name()));
 
                 return "app/oracolo";
         }
@@ -75,6 +78,8 @@ public class OracoloController {
                                 || richiesta.testoSogno().isBlank()) {
                         throw new IllegalArgumentException("Il testo del sogno è obbligatorio");
                 }
+
+                oracoloService.verificaQiDisponibili(authentication.getName());
 
                 StringBuilder prompt = new StringBuilder();
 
@@ -97,6 +102,11 @@ public class OracoloController {
                         UtenteDetail utente = utenteService
                                         .findByUsername(authentication.getName())
                                         .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+                        if (utente.getRuolo() == Ruolo.BASE) {
+                                throw new IllegalStateException(
+                                                "La personalizzazione con il tema natale è riservata agli utenti Premium");
+                        }
 
                         aggiungiTemaNatale(prompt, utente.getTemaNatale());
                 }
@@ -166,5 +176,16 @@ public class OracoloController {
                                 .getQi();
 
                 return Map.of("qi", qi);
+        }
+
+        @PostMapping(value = "/app/oracolo/cancella", consumes = MediaType.APPLICATION_JSON_VALUE)
+        @ResponseBody
+        public void cancellaInterpretazione(
+                        @RequestBody RendiPermanenteRequest richiesta,
+                        Authentication authentication) {
+
+                oracoloService.cancellaInterpretazione(
+                                authentication.getName(),
+                                richiesta.interpretazioneId());
         }
 }

@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
 import com.azoth.somniazodiaca.entities.Utente;
+import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.azoth.somniazodiaca.services.AstroWayService;
 import com.azoth.somniazodiaca.services.TemaNataleService;
@@ -48,6 +49,11 @@ public class TemaNataleController {
                                 .orElseThrow(() -> new IllegalArgumentException(
                                                 "Utente non trovato"));
 
+                boolean temaSbloccato = utente.getRuolo() == Ruolo.PREMIUM
+                                || utente.getRuolo() == Ruolo.ADMIN;
+
+                model.addAttribute("temaSbloccato", temaSbloccato);
+
                 TemaNataleDto temaNatale = temaNataleService
                                 .findByUtenteId(utente.getId())
                                 .orElse(null);
@@ -68,7 +74,7 @@ public class TemaNataleController {
 
                         JsonNode houses = datiTema.path("houses");
                         double ascendente = houses.path("ascendant").asDouble();
-                        
+
                         String segnoAscendente = temaNataleViewService.segnoDaLongitudine(ascendente);
 
                         model.addAttribute("ascendenteSegno", segnoAscendente);
