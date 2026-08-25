@@ -1638,6 +1638,16 @@ h4 {
   line-height: 1.5;
 }
 
+.alchemical-history-note #alchemical-history {
+  margin: 0 0 10px 0;
+  color: #b3b3b3;
+}
+
+.alchemical-history-note #mercurio-history {
+  margin: 0;
+  color: #b3b3b3;
+}
+
 .element-bar-row {
   margin-bottom: 12px;
 }
