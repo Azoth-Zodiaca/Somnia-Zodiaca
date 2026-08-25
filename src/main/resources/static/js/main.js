@@ -1018,6 +1018,31 @@ async function creaImmagineDaAnteprima(preview) {
   clone.style.maxHeight = "none";
   clone.style.margin = "0";
 
+  var sourceImages = Array.from(preview.querySelectorAll("img"));
+  var clonedImages = Array.from(clone.querySelectorAll("img"));
+  await Promise.all(clonedImages.map(async function (image, index) {
+    var sourceImage = sourceImages[index];
+    var sourceUrl = sourceImage && (sourceImage.currentSrc || sourceImage.src);
+
+    if (!sourceUrl || sourceUrl.startsWith("data:")) {
+      return;
+    }
+
+    try {
+      var response = await fetch(sourceUrl, { credentials: "include" });
+      if (!response.ok) return;
+      var blob = await response.blob();
+      image.src = await new Promise(function (resolve, reject) {
+        var reader = new FileReader();
+        reader.onload = function () { resolve(reader.result); };
+        reader.onerror = reject;
+        reader.readAsDataURL(blob);
+      });
+    } catch (error) {
+      image.src = sourceUrl;
+    }
+  }));
+
   function copyComputedStyles(source, target) {
     var computed = window.getComputedStyle(source);
     Array.from(computed).forEach(function (property) {
