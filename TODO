@@ -3,10 +3,11 @@ Focaboi
 -tema natale bloccato dietro il paywall, prima di allora tutta la pagina sfocata, admin e premium lo vedono
 -tema natale fattibile in un secondo momento.
 -modifica tema natale
-
 -singola barretta in register onboarding
+
 -interpretazione tema natale fatta meglio
 -quicksilver e logo graficati e presenti
+-in register, se usi username già occupato, alert "username/mail già esistente" e far sì che alla registrazione redirecti sulla dashboard invece che sul tema natale.
 
 Albi
 -link social interpretazioni sogno
@@ -14,3 +15,4 @@ Albi
 
 Tutti (max il 26)
 - docker/dominio
+- "ricaricare" il caricatore delle chiavi API per scongiurare smutandate in presentazione (cambiare chiavi in account nuovi intonsi nel .env e testare che funzionino)

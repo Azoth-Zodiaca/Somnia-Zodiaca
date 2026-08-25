@@ -15,18 +15,17 @@ import com.azoth.somniazodiaca.entities.TemaNatale;
 import com.azoth.somniazodiaca.entities.Utente;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.enums.SegnoZodiacaleEnum;
-import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.repositories.SegnoZodiacaleRepository;
 import com.azoth.somniazodiaca.repositories.TemaNataleRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.fasterxml.jackson.databind.JsonNode;
 
-import java.time.LocalDateTime;
 import java.time.ZoneId;
 import java.time.ZoneOffset;
 import java.time.format.DateTimeFormatter;
 
 import com.azoth.somniazodiaca.dtos.records.AstroWayInterpretationRequest;
+import com.fasterxml.jackson.databind.ObjectMapper;
 
 import jakarta.transaction.Transactional;
 
@@ -38,19 +37,24 @@ public class TemaNataleService
         private final AstroWayService astroWayService;
         private final TemaNataleViewService temaNataleViewService;
         private final UtenteRepository utenteRepository;
+        private final GeminiService geminiService;
+        private final ObjectMapper objectMapper;
 
         public TemaNataleService(
                         TemaNataleRepository repository,
                         TemaNataleConverter converter,
                         SegnoZodiacaleRepository segnoZodiacaleRepository,
                         AstroWayService astroWayService,
-                        TemaNataleViewService temaNataleViewService, UtenteRepository utenteRepository) {
+                        TemaNataleViewService temaNataleViewService, UtenteRepository utenteRepository,
+                        GeminiService geminiService, ObjectMapper objectMapper) {
 
                 super(repository, converter);
                 this.segnoZodiacaleRepository = segnoZodiacaleRepository;
                 this.astroWayService = astroWayService;
                 this.temaNataleViewService = temaNataleViewService;
                 this.utenteRepository = utenteRepository;
+                this.geminiService = geminiService;
+                this.objectMapper = objectMapper;
         }
 
         public Optional<TemaNataleDto> findByUtenteId(Long utenteId) {
@@ -106,7 +110,24 @@ public class TemaNataleService
                 }
 
                 temaNatale.setInterpretazioneAstroWay(testo);
+                String analisi = geminiService.interpretNatalChart(
+                                temaNatale.getRispostaAstroWay(), testo);
+                temaNatale.setAnalisiGemini(normalizzaJson(analisi));
                 getRepository().save(temaNatale);
+        }
+
+        private String normalizzaJson(String risposta) {
+                try {
+                        String json = risposta.trim();
+                        if (json.startsWith("```") && json.endsWith("```")) {
+                                json = json.substring(json.indexOf('\n') + 1, json.length() - 3).trim();
+                        }
+                        objectMapper.readTree(json);
+                        return json;
+                } catch (Exception exception) {
+                        throw new IllegalStateException(
+                                        "Gemini non ha restituito un'analisi JSON valida", exception);
+                }
         }
 
         private String estraiInterpretazione(JsonNode risposta) {
