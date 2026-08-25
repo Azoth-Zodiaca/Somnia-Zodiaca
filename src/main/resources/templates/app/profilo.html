@@ -94,113 +94,111 @@
             Post
           </a>
         </div>
-
         <div id="tab-panoramica" class="js-tab-panel">
-          <div class="dashboard-grid">
-            <!-- Identita astrale e badge sbloccati. -->
-            <div class="card">
-              <div class="card-title">
-                <span>Identità astrale</span>
-              </div>
-            
-              <div class="info-row">
-                <span class="label">Sole</span>
-                <span th:if="${profiloSegnoZodiacale != null}"
-                      th:text="${#strings.capitalize(
-                        #strings.toLowerCase(profiloSegnoZodiacale.segnoZodiacale.name())
-                      )}">
-                  Non impostato
-                </span>
-              </div>
-            
-              <div class="info-row">
-                <span th:if="${elementoProfilo != null}"
-                      th:text="${#strings.capitalize(
-                        #strings.toLowerCase(elementoProfilo.elemento.name())
-                      )}">
-                  Non impostato
-                </span>
-              </div>
-            
-              <div class="info-row">
-                <span th:if="${profiloSegnoZodiacale != null}"
-                      th:text="${#strings.capitalize(
-                        #strings.toLowerCase(profiloSegnoZodiacale.modalita.name())
-                      )}">
-                  Non impostata
-                </span>
-              </div>
-            
-              <div class="info-row">
-                <span th:if="${pianetaProfilo != null}"
-                      th:text="${#strings.capitalize(
-                        #strings.toLowerCase(pianetaProfilo.pianeta.name())
-                      )}">
-                  Non impostato
-                </span>
-              </div>
-            
-              <div class="info-row">
-                <span th:if="${metalloProfilo != null}"
-                      th:text="${#strings.capitalize(
-                        #strings.toLowerCase(metalloProfilo.metallo.name())
-                      )}">
-                  Non impostato
-                </span>
-              </div>
-            
-              <div class="info-row">
-                <span class="label">Ascendente</span>
-                <span th:if="${profiloAscendente != null}"
-                      th:text="${#strings.capitalize(
-                        #strings.toLowerCase(profiloAscendente.segnoZodiacale.name())
-                      )}">
-                  Non impostato
-                </span>
-              </div>
+          <div class="card">
+            <div class="card-title">
+              <span>Identità astrale</span>
             </div>
-          
-            <div class="card">
-              <div class="card-title">
-                <span>&#127942; Badge</span>
-                <span class="text-muted"
-                      th:text="${badgeSbloccati + '/' + totaleBadge + ' sbloccati'}">
-                  0/0 sbloccati
-                </span>
-              </div>
-            
-              <div class="badge-grid">
-                <div th:each="badge : ${badges}"
-                     class="badge-slot"
-                     th:classappend="${badge.sbloccato} ? ' unlocked' : ''">
-              
-                  <div class="badge-icon"
-                       th:text="${badge.sbloccato ? badge.icona : '?'}">
-                    ?
-                  </div>
-                
-                  <div class="badge-name"
-                       th:text="${badge.nome}">
-                    Nome badge
-                  </div>
-                
-                  <div class="badge-progress"
-                       th:if="${!badge.sbloccato and badge.soglia != null}"
-                       th:text="${badge.progresso + '/' + badge.soglia}">
-                    0/0
-                  </div>
-                
-                  <div class="badge-progress"
-                       th:if="${badge.sbloccato}"
-                       th:text="${badge.descrizione}">
-                    Badge ottenuto
-                  </div>
+
+            <div class="info-row">
+              <span class="label">Segno zodiacale:</span>
+              <span th:if="${profiloSegnoZodiacale != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(profiloSegnoZodiacale.segnoZodiacale.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Elemento:</span>
+              <span th:if="${elementoProfilo != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(elementoProfilo.elemento.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Modalità:</span>
+              <span th:if="${profiloSegnoZodiacale != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(profiloSegnoZodiacale.modalita.name())
+                    )}">
+                Non impostata
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Pianeta:</span>
+              <span th:if="${pianetaProfilo != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(pianetaProfilo.pianeta.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Metallo:</span>
+              <span th:if="${metalloProfilo != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(metalloProfilo.metallo.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Ascendente:</span>
+              <span th:if="${profiloAscendente != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(profiloAscendente.segnoZodiacale.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">
+              <span>&#127942; Badge</span>
+              <span class="text-muted"
+                    th:text="${badgeSbloccati + '/' + totaleBadge + ' sbloccati'}">
+                0/0 sbloccati
+              </span>
+            </div>
+
+            <div class="badge-grid">
+              <div th:each="badge : ${badges}"
+                   class="badge-slot"
+                   th:classappend="${badge.sbloccato} ? ' unlocked' : ''">
+                <div class="badge-icon"
+                     th:text="${badge.sbloccato ? badge.icona : '?'}">
+                  ?
+                </div>
+
+                <div class="badge-name"
+                     th:text="${badge.nome}">
+                  Nome badge
+                </div>
+
+                <div class="badge-progress"
+                     th:if="${!badge.sbloccato and badge.soglia != null}"
+                     th:text="${badge.progresso + '/' + badge.soglia}">
+                  0/0
+                </div>
+
+                <div class="badge-progress"
+                     th:if="${badge.sbloccato}"
+                     th:text="${badge.descrizione}">
+                  Badge ottenuto
                 </div>
               </div>
             </div>
           </div>
         </div>
-
         <div id="tab-post" class="js-tab-panel is-hidden"
              th:insert="~{fragments/social-fragments :: social-post-list(
                posts=${postsProfilo},
@@ -208,7 +206,6 @@
                emptyMessage='Non hai ancora pubblicato post.'
              )}">
         </div>
-    </div>
     </main>
   </div>
   </div>
