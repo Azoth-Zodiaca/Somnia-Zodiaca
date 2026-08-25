@@ -355,7 +355,7 @@ button {
     }
 
     .history-date,
-    .history-dream {
+    .history-dream-row {
         grid-column: 1;
     }
 

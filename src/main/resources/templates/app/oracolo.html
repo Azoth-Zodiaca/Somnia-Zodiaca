@@ -44,12 +44,23 @@
                 </span>
               </div>
 
-              <div class="history-dream" th:text="${interpretazione.testoSogno}">
-                Testo del sogno
+              <div class="history-dream-row">
+                <div class="history-dream" th:text="${interpretazione.testoSogno}">
+                  Testo del sogno
+                </div>
+                <div class="history-tags">
+                  <span th:if="${interpretazione.umore != null}" class="history-tag history-tag-mood"
+                    th:text="${interpretazione.umore}">SERENO</span>
+                  <span th:if="${interpretazione.stile != null}" class="history-tag history-tag-style"
+                    th:text="${interpretazione.stile}">ASTROLOGICO</span>
+                </div>
               </div>
 
               <button type="button" class="history-open" th:attr="
                   data-interpretazione=${interpretazione.testo},
+                  data-testo-sogno=${interpretazione.testoSogno},
+                  data-umore=${interpretazione.umore},
+                  data-stile=${interpretazione.stile},
                   data-interpretazione-id=${interpretazione.id},
                   data-permanente=${interpretazione.scadenzaCache == null},
                   data-scadenza=${interpretazione.scadenzaCache}">
@@ -110,7 +121,8 @@
                   </div>
 
                   <div class="field-checkbox">
-                    <input type="checkbox" id="usa-tema" name="usaTemaNatale" checked>
+                    <input type="checkbox" id="usa-tema" name="usaTemaNatale"
+                      th:attr="data-premium=${premiumTemaNatale}">
                     <label for="usa-tema" class="oracolo-theme-label">Usa il mio tema natale per
                       personalizzare</label>
                   </div>
@@ -165,6 +177,18 @@
           </section>
 
         </div>
+
+        <dialog id="tema-premium-dialog" class="tema-premium-dialog">
+          <div class="tema-premium-dialog-content">
+            <span class="tema-premium-badge">PREMIUM</span>
+            <h3>Interpreta con il tuo tema natale</h3>
+            <p class="text-muted">Personalizza ogni lettura dei tuoi sogni con la tua carta astrale.</p>
+            <div class="tema-premium-dialog-actions">
+              <button id="chiudi-tema-premium" type="button" class="btn btn-ghost btn-sm">Chiudi</button>
+              <a href="/app/impostazioni?sezione=premium" class="btn btn-primary">Sblocca la funzione</a>
+            </div>
+          </div>
+        </dialog>
       </main>
     </div>
   </div>

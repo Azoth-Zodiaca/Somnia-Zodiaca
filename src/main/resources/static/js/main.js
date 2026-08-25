@@ -28,6 +28,7 @@ document.addEventListener("DOMContentLoaded", function () {
   setInterval(aggiornaScadenze, 60000);
   initUploadProfilo();
   initInterpretationExpanders();
+  initTemaNatalePremium();
 });
 
 /* ---------------------------------------------------------
@@ -240,6 +241,31 @@ function initChipSelectors() {
   ORACOLO
 --------------------------------------------------------- */
 
+function initTemaNatalePremium() {
+  var checkbox = document.getElementById("usa-tema");
+  var dialog = document.getElementById("tema-premium-dialog");
+  var closeButton = document.getElementById("chiudi-tema-premium");
+
+  if (!checkbox || !dialog || checkbox.dataset.premium === "true") return;
+
+  checkbox.addEventListener("click", function (event) {
+    event.preventDefault();
+    dialog.showModal();
+  });
+
+  if (closeButton) {
+    closeButton.addEventListener("click", function () {
+      dialog.close();
+    });
+  }
+
+  dialog.addEventListener("click", function (event) {
+    if (event.target === dialog) {
+      dialog.close();
+    }
+  });
+}
+
 // Aggiorna il numero di caratteri inseriti nel sogno.
 function initOracoloCounter() {
   var textarea = document.getElementById("dream-text");
@@ -256,10 +282,6 @@ function initSvuotaOracolo() {
   var button = document.getElementById("svuota-oracolo");
   var textarea = document.getElementById("dream-text");
   var counter = document.getElementById("dream-counter");
-  var resultBox = document.getElementById("risultato-oracolo");
-  var resultText = document.getElementById("testo-interpretazione");
-  var saveButton = document.getElementById("salva-interpretazione");
-  var shareBox = document.getElementById("condivisione-interpretazione");
 
   if (!button || !textarea) return;
 
@@ -271,28 +293,49 @@ function initSvuotaOracolo() {
       counter.textContent = "0 / 4000";
     }
 
-    if (resultBox) {
-      resultBox.hidden = true;
-      resultBox.removeAttribute("data-interpretazione-id");
-    }
-
-    if (shareBox) {
-      shareBox.classList.add("is-hidden");
-    }
-
-    if (resultText) {
-      resultText.innerHTML = "";
-    }
-
-    if (saveButton) {
-      saveButton.setAttribute("hidden", "");
-      saveButton.classList.add("is-hidden");
-      saveButton.disabled = false;
-      saveButton.textContent = "Salva interpretazione - 20 QI";
-    }
+    resetRisultatoOracolo();
 
     textarea.focus();
   });
+}
+
+function resetRisultatoOracolo() {
+  var resultBox = document.getElementById("risultato-oracolo");
+  var resultText = document.getElementById("testo-interpretazione");
+  var saveButton = document.getElementById("salva-interpretazione");
+  var shareBox = document.getElementById("condivisione-interpretazione");
+  var shareText = document.getElementById("testo-post");
+  var publishButton = document.getElementById("pubblica-interpretazione");
+
+  if (resultBox) {
+    resultBox.hidden = true;
+    resultBox.removeAttribute("data-interpretazione-id");
+  }
+
+  if (resultText) {
+    resultText.innerHTML = "";
+  }
+
+  if (saveButton) {
+    saveButton.setAttribute("hidden", "");
+    saveButton.classList.add("is-hidden");
+    saveButton.classList.remove("btn-ghost");
+    saveButton.classList.add("btn-primary");
+    saveButton.disabled = false;
+    saveButton.textContent = "Salva interpretazione - 20 QI";
+  }
+
+  if (shareBox) {
+    shareBox.classList.add("is-hidden");
+  }
+
+  if (shareText) {
+    shareText.value = "";
+  }
+
+  if (publishButton) {
+    publishButton.disabled = true;
+  }
 }
 
 // Converte una scadenza ISO nel testo mostrato nella cronologia.
@@ -332,11 +375,38 @@ function aggiornaScadenze() {
   });
 }
 
+function aggiornaOpzioniOracolo(umore, stile) {
+  [
+    ["umore", umore],
+    ["stile", stile]
+  ].forEach(function (opzione) {
+    var gruppo = opzione[0];
+    var valore = opzione[1];
+    var valoreNormalizzato = valore ? valore.toUpperCase() : "";
+    var input = document.getElementById(gruppo);
+
+    if (input && valore) {
+      input.value = valore;
+    }
+
+    document
+      .querySelectorAll('.chip[data-group="' + gruppo + '"]')
+      .forEach(function (chip) {
+        chip.classList.toggle(
+          "selected",
+          chip.getAttribute("data-value").toUpperCase() === valoreNormalizzato
+        );
+      });
+  });
+}
+
 function aggiungiInterpretazioneAllaLista(
   testoSogno,
   testoInterpretazione,
   interpretazioneId,
-  scadenza
+  scadenza,
+  umore,
+  stile
 ) {
   var history = document.getElementById("oracolo-history");
   var emptyMessage = document.getElementById("history-empty");
@@ -367,9 +437,32 @@ function aggiungiInterpretazioneAllaLista(
 
   status.appendChild(statusText);
 
+  var dreamRow = document.createElement("div");
+  dreamRow.className = "history-dream-row";
+
   var dream = document.createElement("div");
   dream.className = "history-dream";
   dream.textContent = testoSogno;
+
+  var tags = document.createElement("div");
+  tags.className = "history-tags";
+
+  if (umore) {
+    var moodTag = document.createElement("span");
+    moodTag.className = "history-tag history-tag-mood";
+    moodTag.textContent = umore;
+    tags.appendChild(moodTag);
+  }
+
+  if (stile) {
+    var styleTag = document.createElement("span");
+    styleTag.className = "history-tag history-tag-style";
+    styleTag.textContent = stile;
+    tags.appendChild(styleTag);
+  }
+
+  dreamRow.appendChild(dream);
+  dreamRow.appendChild(tags);
 
   var button = document.createElement("button");
   button.type = "button";
@@ -378,16 +471,31 @@ function aggiungiInterpretazioneAllaLista(
   button.dataset.interpretazioneId = interpretazioneId;
   button.dataset.permanente = "false";
   button.dataset.scadenza = scadenza;
+  button.dataset.testoSogno = testoSogno;
+  button.dataset.umore = umore;
+  button.dataset.stile = stile;
 
   button.addEventListener("click", function () {
     var resultBox = document.getElementById("risultato-oracolo");
     var resultText = document.getElementById("testo-interpretazione");
     var saveButton = document.getElementById("salva-interpretazione");
+    var textarea = document.getElementById("dream-text");
+    var permanente = button.dataset.permanente === "true";
+
+    if (textarea) {
+      textarea.value = testoSogno;
+      var counter = document.getElementById("dream-counter");
+      if (counter) {
+        counter.textContent = testoSogno.length + " / 4000";
+      }
+    }
+
+    aggiornaOpzioniOracolo(umore, stile);
 
     resultBox.hidden = false;
     resultBox.dataset.interpretazioneId = interpretazioneId;
 
-    mostraFormCondivisione(interpretazioneId, false);
+    mostraFormCondivisione(interpretazioneId, permanente);
 
     resultText.innerHTML = DOMPurify.sanitize(
       marked.parse(testoInterpretazione)
@@ -397,13 +505,18 @@ function aggiungiInterpretazioneAllaLista(
       saveButton.hidden = false;
       saveButton.style.display = "inline-block";
       saveButton.disabled = false;
-      saveButton.textContent = "Salva interpretazione - 20 QI";
+      saveButton.textContent = permanente
+        ? "Cancella interpretazione"
+        : "Salva interpretazione - 20 QI";
+      saveButton.dataset.action = permanente ? "delete" : "save";
+      saveButton.classList.toggle("btn-ghost", permanente);
+      saveButton.classList.toggle("btn-primary", !permanente);
     }
   });
 
   item.appendChild(date);
   item.appendChild(status);
-  item.appendChild(dream);
+  item.appendChild(dreamRow);
   item.appendChild(button);
 
   var firstItem = history.querySelector(".history-item");
@@ -425,8 +538,13 @@ function initOracoloForm() {
   var resultBox = document.getElementById("risultato-oracolo");
   var resultText = document.getElementById("testo-interpretazione");
   var saveButton = document.getElementById("salva-interpretazione");
+  var submitButton = form
+    ? form.querySelector('button[type="submit"]')
+    : null;
 
   if (!form || !textarea || !resultBox || !resultText) return;
+
+  aggiornaDisponibilitaInterpretazione(submitButton);
 
   var generatedInterpretation = "";
   var savedInterpretationId = null;
@@ -441,6 +559,8 @@ function initOracoloForm() {
       return;
     }
 
+    resetRisultatoOracolo();
+
     var csrfInput = form.querySelector('input[name="_csrf"]');
 
     if (!csrfInput) {
@@ -454,8 +574,6 @@ function initOracoloForm() {
       stile: document.getElementById("stile").value,
       usaTemaNatale: document.getElementById("usa-tema").checked
     };
-
-    var submitButton = form.querySelector('button[type="submit"]');
 
     submitButton.disabled = true;
 
@@ -509,7 +627,9 @@ function initOracoloForm() {
           prompt: "Interpretazione " +
             document.getElementById("stile").value +
             " del sogno",
-          interpretazione: generatedInterpretation
+          interpretazione: generatedInterpretation,
+          umore: document.getElementById("umore").value,
+          stile: document.getElementById("stile").value
         })
       });
 
@@ -533,7 +653,9 @@ function initOracoloForm() {
         dream,
         generatedInterpretation,
         savedInterpretationId,
-        scadenza
+        scadenza,
+        richiesta.umore,
+        richiesta.stile
       );
 
       if (saveButton) {
@@ -558,6 +680,57 @@ function initOracoloForm() {
         resultBox.dataset.interpretazioneId
       );
 
+      if (saveButton.dataset.action === "delete") {
+        saveButton.disabled = true;
+
+        try {
+          var deleteResponse = await fetch("/app/oracolo/cancella", {
+            method: "POST",
+            headers: {
+              "Content-Type": "application/json",
+              "X-CSRF-TOKEN": csrfInput.value
+            },
+            body: JSON.stringify({
+              interpretazioneId: interpretationId
+            })
+          });
+
+          if (!deleteResponse.ok) {
+            throw new Error("Impossibile cancellare l'interpretazione.");
+          }
+
+          var historyItem = document.querySelector(
+            '.history-item[data-interpretazione-id="' +
+            interpretationId +
+            '"]'
+          );
+
+          if (historyItem) {
+            var statusText = historyItem.querySelector(".history-status span");
+            var historyButton = historyItem.querySelector(".history-open");
+            var scadenza = new Date().toISOString();
+
+            if (statusText) {
+              statusText.className = "status-temporary";
+              statusText.textContent = "Scaduta";
+              statusText.setAttribute("data-scadenza", scadenza);
+            }
+
+            if (historyButton) {
+              historyButton.dataset.permanente = "false";
+              historyButton.dataset.scadenza = scadenza;
+            }
+          }
+
+          resetRisultatoOracolo();
+        } catch (error) {
+          console.error(error);
+          saveButton.disabled = false;
+        }
+
+        return;
+      }
+
       saveButton.disabled = true;
 
       try {
@@ -580,10 +753,13 @@ function initOracoloForm() {
 
         aggiornaSaldoQi(responseData.qi);
 
-        saveButton.textContent = "Interpretazione permanente";
-        saveButton.disabled = true;
-        saveButton.hidden = true;
-        saveButton.classList.add("is-hidden");
+        saveButton.dataset.action = "delete";
+        saveButton.textContent = "Cancella interpretazione";
+        saveButton.classList.remove("btn-primary");
+        saveButton.classList.add("btn-ghost");
+        saveButton.hidden = false;
+        saveButton.classList.remove("is-hidden");
+        saveButton.disabled = false;
 
         var publishButton = document.getElementById("pubblica-interpretazione");
         if (publishButton) {
@@ -659,20 +835,34 @@ function initHistoryButtons() {
       resultBox.hidden = false;
       resultBox.dataset.interpretazioneId = interpretationId;
 
+      var textarea = document.getElementById("dream-text");
+      if (textarea) {
+        textarea.value = button.getAttribute("data-testo-sogno") || "";
+        var counter = document.getElementById("dream-counter");
+        if (counter) {
+          counter.textContent = textarea.value.length + " / 4000";
+        }
+      }
+
+      aggiornaOpzioniOracolo(
+        button.getAttribute("data-umore"),
+        button.getAttribute("data-stile")
+      );
+
       mostraFormCondivisione(interpretationId, permanente);
 
       var saveButton = document.getElementById("salva-interpretazione");
 
       if (saveButton) {
-        if (permanente) {
-          saveButton.hidden = true;
-          saveButton.classList.add("is-hidden");
-        } else {
-          saveButton.hidden = false;
-          saveButton.classList.remove("is-hidden");
-          saveButton.disabled = false;
-          saveButton.textContent = "Rendi permanente - 20 QI";
-        }
+        saveButton.hidden = false;
+        saveButton.classList.remove("is-hidden");
+        saveButton.disabled = false;
+        saveButton.dataset.action = permanente ? "delete" : "save";
+        saveButton.classList.toggle("btn-ghost", permanente);
+        saveButton.classList.toggle("btn-primary", !permanente);
+        saveButton.textContent = permanente
+          ? "Cancella interpretazione"
+          : "Salva interpretazione - 20 QI";
       }
 
       resultText.innerHTML = DOMPurify.sanitize(
@@ -719,6 +909,18 @@ function aggiornaSaldoQi(qi) {
 
   if (saldo && Number.isFinite(Number(qi))) {
     saldo.textContent = qi;
+    aggiornaDisponibilitaInterpretazione();
+  }
+}
+
+function aggiornaDisponibilitaInterpretazione(submitButton) {
+  var button = submitButton || document.querySelector(
+    '#oracolo-form button[type="submit"]'
+  );
+  var saldo = document.getElementById("saldo-qi");
+
+  if (button && saldo) {
+    button.disabled = Number(saldo.textContent.trim()) < 20;
   }
 }
 

@@ -60,7 +60,7 @@ public class AdminInitializer {
 
         admin.setEmail("admin@somniazodiaca.it");
         admin.setRuolo(Ruolo.ADMIN);
-        admin.setQi(10000);
+        admin.setQi(0);
         admin.setProfiloColore("#F97316");
         admin.setSegnoZodiacale(segno);
         admin.setAscendente(segno);

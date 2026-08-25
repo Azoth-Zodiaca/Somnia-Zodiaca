@@ -2,7 +2,8 @@ package com.azoth.somniazodiaca.entities;
 
 import java.time.LocalDateTime;
 
-import com.azoth.somniazodiaca.enums.InterpretazioneEnum;
+import com.azoth.somniazodiaca.enums.StileEnum;
+import com.azoth.somniazodiaca.enums.UmoreEnum;
 
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -36,8 +37,12 @@ public class Interpretazione extends BaseEntity {
     private String testo;
 
     @Enumerated(EnumType.STRING)
-    @Column(name = "tipo", nullable = false)
-    private InterpretazioneEnum interpretazioneEnum;
+    @Column(name = "umore")
+    private UmoreEnum umore;
+
+    @Enumerated(EnumType.STRING)
+    @Column(name = "stile")
+    private StileEnum stile;
 
     @Column(name = "scadenza_cache", nullable = true)
     private LocalDateTime scadenzaCache;

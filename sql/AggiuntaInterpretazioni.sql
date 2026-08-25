@@ -26,7 +26,8 @@ INSERT INTO interpretazioni (
     sogno_id,
     prompt,
     testo,
-    tipo,
+    umore,
+    stile,
     scadenza_cache,
     created_at,
     updated_at
@@ -35,7 +36,8 @@ VALUES (
     @sogno_id,
     'Interpretazione junghiana del sogno',
     'Questo sogno può rappresentare il desiderio di esplorare nuove possibilità interiori.',
-    'JUNGIANA',
+    'SERENO',
+    'ASTROLOGICO',
     NOW() + INTERVAL 48 HOUR,
     NOW(),
     NOW()
@@ -69,7 +71,8 @@ INSERT INTO interpretazioni (
     sogno_id,
     prompt,
     testo,
-    tipo,
+    umore,
+    stile,
     scadenza_cache,
     created_at,
     updated_at
@@ -78,7 +81,8 @@ VALUES (
     @sogno_id,
     'Interpretazione simbolica del sogno',
     'La casa può rappresentare la tua identità, mentre il mare richiama la dimensione emotiva.',
-    'JUNGIANA',
+    'SERENO',
+    'SIMBOLICO',
     NULL,
     NOW(),
     NOW()
@@ -112,7 +116,8 @@ INSERT INTO interpretazioni (
     sogno_id,
     prompt,
     testo,
-    tipo,
+    umore,
+    stile,
     scadenza_cache,
     created_at,
     updated_at
@@ -121,7 +126,8 @@ VALUES (
     @sogno_id,
     'Interpretazione junghiana del sogno',
     'Il tempo accelerato può indicare pressione, cambiamento o paura di perdere un’occasione.',
-    'JUNGIANA',
+    'ANSIOSO',
+    'JUNGHIANO',
     NOW() + INTERVAL 1 MINUTE,
     NOW(),
     NOW()
@@ -155,7 +161,8 @@ INSERT INTO interpretazioni (
     sogno_id,
     prompt,
     testo,
-    tipo,
+    umore,
+    stile,
     scadenza_cache,
     created_at,
     updated_at
@@ -164,7 +171,8 @@ VALUES (
     @sogno_id,
     'Interpretazione junghiana del sogno',
     'La porta chiusa può simboleggiare un ostacolo o una possibilità ancora inesplorata.',
-    'JUNGIANA',
+    'CONFUSO',
+    'SIMBOLICO',
     NOW() - INTERVAL 1 MINUTE,
     NOW(),
     NOW()
