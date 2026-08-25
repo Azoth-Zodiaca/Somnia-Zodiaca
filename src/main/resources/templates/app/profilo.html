@@ -203,13 +203,16 @@
              th:insert="~{fragments/social-fragments :: social-post-list(
                posts=${postsProfilo},
                currentUsername=${currentUsername},
-               emptyMessage='Non hai ancora pubblicato post.'
+               emptyMessage='Non hai ancora pubblicato post.',
+               panelPrefix='profilo'
              )}">
         </div>
     </main>
   </div>
   </div>
 
+  <script th:src="@{/js/vendor/marked.min.js}"></script>
+  <script th:src="@{/js/vendor/purify.min.js}"></script>
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
 

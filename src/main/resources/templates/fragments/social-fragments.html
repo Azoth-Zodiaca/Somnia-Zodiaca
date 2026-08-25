@@ -58,12 +58,14 @@
                         </div>
 
                         <div class="meta">
-                            <span th:if="${post.segnoZodiacale != null}" th:text="${post.segnoZodiacale}">
-                                Segno
+                            <span th:if="${post.segnoZodiacale != null}">
+                                <span th:text="${post.segnoZodiacaleAbbreviato}">Leo</span>
+                                <span class="sign-symbol" th:text="${post.segnoZodiacaleSimbolo}">♌︎</span>
                             </span>
 
-                            <span th:if="${post.ascendente != null}" th:text="${' · Asc. ' + post.ascendente}">
-                                Ascendente
+                            <span th:if="${post.ascendente != null}">
+                                &middot; Asc.
+                                <span class="sign-symbol" th:text="${post.ascendenteSimbolo}">♏︎</span>
                             </span>
 
                             <span th:if="${post.dataPubblicazione != null}"
@@ -76,7 +78,7 @@
 
             </div>
 
-            <div class="post-body" th:text="${post.testoVisibile}">
+            <div class="post-body js-markdown-content" th:text="${post.testoVisibile}">
                 Testo del post
             </div>
 
@@ -91,7 +93,7 @@
 
                 <span class="label">Oracolo</span>
 
-                <div class="social-interpretation-text" th:text="${post.testoInterpretazione}">
+                <div class="social-interpretation-text js-markdown-content" th:text="${post.testoInterpretazione}">
                     Testo dell'interpretazione
                 </div>
 

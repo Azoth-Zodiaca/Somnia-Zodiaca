@@ -1072,6 +1072,11 @@ button {
         align-self: stretch;
     }
 
+    .oracolo-share-actions .btn,
+    .external-share-actions .btn {
+        flex: 1 1 180px;
+    }
+
     .post-user .name {
         flex-wrap: nowrap;
         white-space: nowrap;

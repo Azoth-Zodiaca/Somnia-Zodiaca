@@ -168,9 +168,14 @@
                   <textarea id="testo-post" name="testoVisibile" maxlength="1000" required
                     placeholder="Aggiungi un pensiero su questa interpretazione..."></textarea>
 
-                  <button id="pubblica-interpretazione" type="submit" class="btn btn-primary btn-sm" disabled>
-                    Pubblica nella community
-                  </button>
+                  <div class="oracolo-share-actions">
+                    <button id="pubblica-interpretazione" type="submit" class="btn btn-primary btn-sm" disabled>
+                      Pubblica nella community
+                    </button>
+                    <button id="condividi-esternamente" type="button" class="btn btn-ghost btn-sm" disabled>
+                      Condividi fuori dal sito
+                    </button>
+                  </div>
                 </form>
               </div>
             </div>
@@ -187,6 +192,37 @@
               <button id="chiudi-tema-premium" type="button" class="btn btn-ghost btn-sm">Chiudi</button>
               <a href="/app/impostazioni?sezione=premium" class="btn btn-primary">Sblocca la funzione</a>
             </div>
+          </div>
+        </dialog>
+
+        <dialog id="condivisione-esterna-dialog" class="external-share-dialog">
+          <div class="external-share-dialog-content">
+            <div class="external-share-dialog-header">
+              <div>
+                <span class="text-muted external-share-eyebrow">CONDIVIDI IL POST</span>
+                <h3>Porta il tuo cielo fuori da Somnia</h3>
+              </div>
+              <button id="chiudi-condivisione-esterna" type="button" class="dialog-close" aria-label="Chiudi">&times;</button>
+            </div>
+            <article id="anteprima-condivisione-esterna" class="card external-share-preview">
+              <div class="external-share-preview-user">
+                <div id="anteprima-avatar-condivisione" class="avatar social-avatar">U</div>
+                <div>
+                  <strong id="anteprima-username-condivisione">@utente</strong>
+                  <div id="anteprima-segni-condivisione" class="text-muted">Segno non impostato</div>
+                </div>
+              </div>
+              <div class="external-share-section-label">SOGNO</div>
+              <div id="anteprima-descrizione-condivisione" class="external-share-description"></div>
+              <div class="external-share-section-label">INTERPRETAZIONE</div>
+              <div id="anteprima-testo-condivisione" class="external-share-interpretation"></div>
+              <div class="external-share-brand">Somnia Zodiaca <span>&#10022;</span></div>
+            </article>
+            <div class="external-share-actions">
+              <button id="copia-testo-condivisione" type="button" class="btn btn-ghost btn-sm">Copia testo</button>
+              <button id="copia-immagine-condivisione" type="button" class="btn btn-primary btn-sm">Copia immagine</button>
+            </div>
+            <p id="esito-condivisione-esterna" class="text-muted external-share-status" role="status"></p>
           </div>
         </dialog>
       </main>
