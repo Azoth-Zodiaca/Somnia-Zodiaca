@@ -39,7 +39,7 @@ public class OnboardingController {
         @PostMapping("/onboarding/dati-nascita")
         public String datiNascita(
                         @RequestParam LocalDate dataNascita,
-                        @RequestParam LocalTime oraNascita,
+                        @RequestParam(required = false) LocalTime oraNascita,
                         @RequestParam String luogoNascita,
                         @RequestParam Long geonameId,
                         @RequestParam BigDecimal latitudine,
@@ -51,6 +51,10 @@ public class OnboardingController {
                                 .findByUsername(authentication.getName())
                                 .orElseThrow(() -> new IllegalArgumentException(
                                                 "Utente non trovato"));
+
+                if (oraNascita == null) {
+                        oraNascita = LocalTime.NOON;
+                }
 
                 ZoneId zoneId = ZoneId.of(timezone);
 

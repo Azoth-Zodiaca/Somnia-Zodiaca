@@ -1,28 +1,28 @@
 .sidebar-toggle {
-  display: none;
-  width: 36px;
-  height: 36px;
-  flex: 0 0 36px;
-  flex-direction: column;
-  align-items: center;
-  justify-content: center;
-  gap: 4px;
-  border-radius: var(--radius-sm);
-  background: var(--bg-input);
-  border: 1px solid var(--border-color);
+    display: none;
+    width: 36px;
+    height: 36px;
+    flex: 0 0 36px;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 4px;
+    border-radius: var(--radius-sm);
+    background: var(--bg-input);
+    border: 1px solid var(--border-color);
 }
 
 .sidebar-toggle span {
-  display: block;
-  width: 16px;
-  height: 2px;
-  flex: 0 0 2px;
-  border-radius: 2px;
-  background: var(--text-primary);
+    display: block;
+    width: 16px;
+    height: 2px;
+    flex: 0 0 2px;
+    border-radius: 2px;
+    background: var(--text-primary);
 }
 
 .sidebar-backdrop {
-  display: none;
+    display: none;
 }
 
 /* ---------- Responsive comune ---------- */
@@ -552,10 +552,16 @@ button {
         max-width: none;
     }
 
-    .natal-grid {
-        grid-template-columns: minmax(0, 1fr);
-    }
+    @media (max-width: 1024px) {
+        .natal-grid {
+            grid-template-columns: 1fr;
+        }
 
+        .natal-interpretation {
+            height: auto;
+        }
+    }
+    
     .ai-analysis-layout {
         grid-template-columns: minmax(0, 1fr);
     }

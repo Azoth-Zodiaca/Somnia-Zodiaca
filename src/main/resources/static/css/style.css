@@ -1200,7 +1200,13 @@ h4 {
   display: grid;
   grid-template-columns: 1.4fr 1fr;
   gap: 18px;
+  align-items: stretch;
 }
+
+.natal-interpretation {
+  height: 100%;
+}
+
 
 .natal-wheel {
   aspect-ratio: 1;
@@ -2713,25 +2719,283 @@ h4 {
 
 .triad-item-aligned {
   display: grid;
-  grid-template-columns: 92px minmax(0, 1fr);
+  grid-template-columns: 120px 1fr;
+  /* Allargato a 120px per dare respiro al nome */
   gap: 16px;
   align-items: center;
 }
 
 .triad-value {
-  display: inline-flex;
+  display: grid;
+  /* 1: sim. pianeta, 2: sim. segno, 3: nome segno, 4: puntino, 5: casa romana */
+  grid-template-columns: 30px 30px 110px 20px 50px;
   align-items: center;
-  justify-content: flex-end;
-  gap: 6px;
+  justify-content: end;
+  /* Spinge tutte le colonne subito dopo il nome a sinistra */
+  justify-items: end;
+  /* Allinea il contenuto di ogni singola colonna a sinistra */
   min-width: 0;
+}
+
+/* Assicura che i testi dentro le colonne della griglia non siano allineati a destra */
+.triad-value span {
   text-align: right;
+  display: inline-block;
 }
 
-.triad-value .planet-symbol,
-.triad-value .sign-symbol {
-  flex: 0 0 20px;
+/* Forza il separatore al centro del suo spazio */
+.triad-value .col-separator {
+  text-align: center;
+  width: 100%;
 }
 
-.triad-value>span:not(.planet-symbol):not(.sign-symbol) {
-  white-space: nowrap;
+/* Stile del contenitore del grafico natale */
+#natal-chart {
+  width: 100%;
+  max-width: 550px;
+  /* Limite massimo per evitare che diventi sproporzionato */
+  margin: 0 auto;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 16px;
+}
+
+/* Stili degli elementi dell'SVG */
+.astrology-chart-svg {
+  width: 100%;
+  height: auto;
+  background-color: transparent;
+  overflow: visible;
+}
+
+.astrology-chart-svg text {
+  fill: rgba(255, 255, 255, 0.6);
+}
+
+/* Colore dei cerchi concentrici della ruota */
+.chart-border-outer,
+.chart-border-inner {
+  stroke: rgba(255, 255, 255, 0.4) !important;
+}
+
+/* Colore delle linee di divisione dei 12 settori zodiacali */
+.zodiac-division {
+  stroke: rgba(255, 255, 255, 0.2) !important;
+  /* Bianco semitrasparente per tema scuro */
+  stroke-width: 1px;
+}
+
+/* Linee delle case astrologiche */
+.house-division {
+  stroke: var(--border-color, #bdc3c7);
+  stroke-width: 1px;
+}
+
+/* Assi principali prominenti (AC e MC) */
+.axis-ascendant {
+  stroke: #e74c3c !important;
+  /* Colore rosso o accento per l'Ascendente */
+  stroke-width: 2.5px !important;
+}
+
+.axis-mc {
+  stroke: #3498db !important;
+  /* Colore azzurro per il Medio Cielo */
+  stroke-width: 2px !important;
+}
+
+/* Testo dei simboli dei pianeti */
+.planet-glyph-text {
+  font-family: "Segoe UI Symbol", "Arial Unicode MS", "Apple Color Emoji", sans-serif;
+  font-size: 18px;
+  /* Leggermente aumentato per leggibilità */
+  fill: #ffffff !important;
+  /* Forza il colore bianco per renderli visibili */
+  text-shadow: 0px 1px 3px rgba(0, 0, 0, 0.5);
+  /* Aggiunge contrasto sullo sfondo */
+  cursor: pointer;
+}
+
+.chart-planet-glyph:hover .planet-glyph-text {
+  fill: #e67e22;
+  /* Colore evidenziato al passaggio del mouse */
+  transform: scale(1.2);
+  transform-origin: center;
+}
+
+/* --- COLORI METALLI ALCHEMICI PER I SIMBOLI DEI PIANETI --- */
+
+/* Sole = Oro */
+.sun-symbol,
+[data-name="Sole"] .planet-glyph-text,
+[data-name="Sun"] .planet-glyph-text {
+  color: #ffd700 !important;
+  fill: #ffd700 !important;
+  text-shadow: 0 0 8px rgba(255, 215, 0, 0.3);
+}
+
+/* Luna = Argento */
+.moon-symbol,
+[data-name="Luna"] .planet-glyph-text,
+[data-name="Moon"] .planet-glyph-text {
+  color: #e2e8f0 !important;
+  /* Un argento/bianco luminoso e pulito */
+  fill: #e2e8f0 !important;
+  text-shadow: 0 0 8px rgba(226, 232, 240, 0.3);
+}
+
+/* Mercurio = Mercurio/Quicksilver (Grigio vivo/Azzurrato cangiante) */
+.mercury-symbol,
+[data-name="Mercurio"] .planet-glyph-text,
+[data-name="Mercury"] .planet-glyph-text {
+  color: #a8a29e !important;
+  fill: #a8a29e !important;
+}
+
+/* Venere = Rame (Rosa dorato / Bronzo antico) */
+.venus-symbol,
+[data-name="Venere"] .planet-glyph-text,
+[data-name="Venus"] .planet-glyph-text {
+  color: #b45309 !important;
+  /* Tonalità rame caldo */
+  fill: #b45309 !important;
+}
+
+/* Marte = Ferro (Rosso ruggine / Sangue) */
+.mars-symbol,
+[data-name="Marte"] .planet-glyph-text,
+[data-name="Mars"] .planet-glyph-text {
+  color: #dc2626 !important;
+  fill: #dc2626 !important;
+}
+
+/* Giove = Stagno (Peltro / Grigio Chiaro Lucido) */
+.jupiter-symbol,
+[data-name="Giove"] .planet-glyph-text,
+[data-name="Jupiter"] .planet-glyph-text {
+  color: #cbd5e1 !important;
+  fill: #cbd5e1 !important;
+}
+
+/* Saturno = Piombo (Grigio scuro opaco / Ardesia) */
+.saturn-symbol,
+[data-name="Saturno"] .planet-glyph-text,
+[data-name="Saturn"] .planet-glyph-text {
+  color: #64748b !important;
+  fill: #64748b !important;
+}
+
+/* Uranio/Nettuno/Plutone (Metalli moderni o tonalità spirituali blu/viola/platino) */
+.uranus-symbol,
+[data-name="Urano"] .planet-glyph-text {
+  color: #22d3ee !important;
+  fill: #22d3ee !important;
+}
+
+.neptune-symbol,
+[data-name="Nettuno"] .planet-glyph-text {
+  color: #818cf8 !important;
+  fill: #818cf8 !important;
+}
+
+.pluto-symbol,
+[data-name="Plutone"] .planet-glyph-text {
+  color: #f43f5e !important;
+  fill: #f43f5e !important;
+}
+
+/* --- STRUTTURA E ALLINEAMENTO DELLA TRIADE PRINCIPALE --- */
+
+/* Contenitore principale di ogni riga della triade */
+.triad-item-aligned {
+  display: grid;
+  grid-template-columns: 180px 1fr;
+  /* Spazio fisso a sinistra per Simbolo + Nome del pianeta */
+  gap: 16px;
+  align-items: center;
+  padding: 12px 0;
+  border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+  /* Sottile linea di divisione stile tabella */
+}
+
+/* Rimuove la linea di divisione dall'ultima riga (Ascendente) */
+.triad-item-aligned:last-of-type {
+  border-bottom: none;
+}
+
+/* Gruppo di sinistra: allinea orizzontalmente il simbolo metallico e il testo (es: ☉ SOLE) */
+.triad-label-group {
+  display: flex;
+  align-items: center;
+  gap: 12px;
+}
+
+/* Testo delle etichette a sinistra (SOLE, LUNA, ASCENDENTE) */
+.triad-name {
+  font-size: 0.85rem;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: #94a3b8;
+  /* Grigio soft coordinato con la tabella dei pianeti */
+  font-weight: 500;
+}
+
+/* Dimensione e centratura del blocco dei simboli dei pianeti a sinistra */
+.col-symbol {
+  font-size: 1.25rem;
+  width: 24px;
+  display: inline-block;
+  text-align: center;
+  /* Nota: i colori specifici (oro, argento, ecc.) vengono ereditati dalle tue regole dei metalli */
+}
+
+/* Gruppo di destra: Spinge i dati astrologici sul bordo destro e li allinea perfettamente */
+.triad-value {
+  display: grid;
+  /* 1: Simbolo segno, 2: Nome segno, 3: Separatore ·, 4: Casa romana */
+  grid-template-columns: 28px 110px 20px 40px;
+  align-items: center;
+  justify-content: end;
+  /* Spinge l'intero blocco dei dati a destra, creando lo spazio vuoto al centro */
+  justify-items: start;
+  /* Allinea i testi di ogni colonna partendo da sinistra */
+}
+
+/* Stile per i singoli elementi di testo all'interno della griglia dei valori */
+.triad-value span {
+  text-align: left;
+  display: inline-block;
+}
+
+/* Simbolo grafico dello zodiaco (es: ♏︎, ♑) */
+.col-sign-symbol {
+  font-size: 1.1rem;
+  color: #ffffff;
+  /* Bianco puro ad alto contrasto per risaltare */
+}
+
+/* Nome del segno zodiacale (es: Sagittario, Vergine) */
+.col-sign-name {
+  font-size: 0.95rem;
+  color: #94a3b8;
+  /* Colore più scuro/attenuato coordinato con la tabella dei pianeti */
+}
+
+/* Separatore centrale · */
+.col-separator {
+  color: #64748b;
+  /* Grigio scuro soffuso */
+  text-align: center !important;
+  width: 100%;
+}
+
+/* Numero identificativo della casa romana (es: VII, V) */
+.col-house {
+  font-size: 0.9rem;
+  color: #94a3b8;
+  /* Colore più scuro/attenuato coordinato con la tabella dei pianeti */
+  text-align: right !important;
+  /* Spinge la casa contro il bordo finale destro */
+  width: 100%;
 }
