@@ -28,6 +28,12 @@ document.addEventListener("DOMContentLoaded", () => {
     const form = document.querySelector("form");
 
     form.addEventListener("submit", event => {
+        const submitter = event.submitter;
+
+        if (submitter && submitter.formAction.endsWith("/onboarding/salta")) {
+            return;
+        }
+
         const geonameId = document.querySelector("#geoname-id").value;
 
         if (!geonameId) {
@@ -50,7 +56,7 @@ document.addEventListener("DOMContentLoaded", () => {
             risultatiContainer.innerHTML = "";
             return;
         }
-        
+
         timer = setTimeout(() => {
             cercaLocalita(query);
         }, 750);

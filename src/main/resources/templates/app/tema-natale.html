@@ -29,145 +29,171 @@
             </div>
           </div>
 
-          <a th:if="${temaNatale != null}" th:href="@{/app/tema-natale/modifica}" class="btn btn-outline btn-sm">
+          <a th:if="${temaNatale != null and temaSbloccato}" th:href="@{/app/tema-natale/modifica}"
+            class="btn btn-outline btn-sm">
             Modifica dati
+          </a>
+
+          <span th:if="${temaNatale != null and !temaSbloccato}" class="text-muted natal-edit-locked">
+            Modifica disponibile con Premium
+          </span>
+        </div>
+
+        <div th:if="${temaNatale == null}" class="card natal-empty-card">
+          <div class="card-title">Dati di nascita</div>
+
+          <p class="text-muted">
+            Inserisci i tuoi dati per calcolare il tema natale.
+          </p>
+
+          <a href="/onboarding" class="btn btn-gold mt-10">
+            Inserisci i dati di nascita
           </a>
         </div>
 
-        <div th:if="${temaNatale == null}" class="card">
-          <p class="text-muted">
-            Non hai ancora completato i dati del tema natale.
-          </p>
-        </div>
+        <div class="natal-protected-summary" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
+          <!-- Riepilogo dei dati anagrafici e della triade principale. -->
+          <div class="natal-data-layout">
 
-        <!-- Riepilogo dei dati anagrafici e della triade principale. -->
-        <div class="natal-data-layout">
+            <div class="natal-summary-column">
 
-          <div class="natal-summary-column">
+              <div class="card natal-birth-card" th:if="${temaNatale != null}">
+                <div class="card-title">Dati di nascita</div>
 
-            <div class="card natal-birth-card" th:if="${temaNatale != null}">
-              <div class="card-title">Dati di nascita</div>
+                <p>
+                  <strong>Luogo:</strong>
+                  <span th:text="${temaNatale.luogoNascita}">Napoli</span>
+                </p>
 
-              <p>
-                <strong>Luogo:</strong>
-                <span th:text="${temaNatale.luogoNascita}">Napoli</span>
-              </p>
+                <p>
+                  <strong>Latitudine:</strong>
+                  <span th:text="${temaNatale.latitudine}">40.8518</span>
+                </p>
 
-              <p>
-                <strong>Latitudine:</strong>
-                <span th:text="${temaNatale.latitudine}">40.8518</span>
-              </p>
+                <p>
+                  <strong>Longitudine:</strong>
+                  <span th:text="${temaNatale.longitudine}">14.2681</span>
+                </p>
 
-              <p>
-                <strong>Longitudine:</strong>
-                <span th:text="${temaNatale.longitudine}">14.2681</span>
-              </p>
+                <p>
+                  <strong>Fuso orario:</strong>
+                  <span th:text="${temaNatale.timezone}">Europe/Rome</span>
+                </p>
+              </div>
 
-              <p>
-                <strong>Fuso orario:</strong>
-                <span th:text="${temaNatale.timezone}">Europe/Rome</span>
-              </p>
+              <div class="card natal-triad-card" th:if="${pianeti != null}">
+                <div class="card-title">
+                  <span>Triade principale</span>
+                </div>
+                <p class="natal-card-subtitle">
+                  La tua firma stellare
+                </p>
+
+                <!-- SOLE -->
+                <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
+                  th:if="${pianeta.nome == 'Sole'}">
+                  <div class="triad-label-group">
+                    <span class="col-symbol planet-symbol sun-symbol" th:text="${pianeta.simbolo}">☉</span>
+                    <span class="triad-name">SOLE</span>
+                  </div>
+                  <div class="triad-value">
+                    <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♏︎</span>
+                    <span class="col-sign-name" th:text="${pianeta.segno}">Scorpione</span>
+                    <span class="col-separator">·</span>
+                    <span class="col-house" th:text="${pianeta.casaRomana}">VIII</span>
+                  </div>
+                </div>
+
+                <!-- LUNA -->
+                <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
+                  th:if="${pianeta.nome == 'Luna'}">
+                  <div class="triad-label-group">
+                    <span class="col-symbol planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
+                    <span class="triad-name">LUNA</span>
+                  </div>
+                  <div class="triad-value">
+                    <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
+                    <span class="col-sign-name" th:text="${pianeta.segno}">Capricorno</span>
+                    <span class="col-separator">·</span>
+                    <span class="col-house" th:text="${pianeta.casaRomana}">X</span>
+                  </div>
+                </div>
+
+                <!-- ASCENDENTE -->
+                <div class="triad-item triad-item-aligned">
+                  <div class="triad-label-group">
+                    <!-- Colonna simbolo vuota per l'Ascendente per mantenere l'allineamento perfetto -->
+                    <span class="col-symbol ascendant-empty-symbol"></span>
+                    <span class="triad-name">ASCENDENTE</span>
+                  </div>
+                  <div class="triad-value">
+                    <span class="col-sign-symbol sign-symbol" th:text="${ascendenteSimbolo}">♑︎</span>
+                    <span class="col-sign-name" th:text="${ascendenteSegno}">Capricorno</span>
+                    <span class="col-separator"></span>
+                    <span class="col-house"></span>
+                  </div>
+                </div>
+              </div>
+
+
             </div>
 
-            <div class="card natal-triad-card" th:if="${pianeti != null}">
-              <div class="card-title">
-                <span>Triade principale</span>
-              </div>
-              <p class="natal-card-subtitle">
-                La tua firma stellare
-              </p>
-
-              <!-- SOLE -->
-              <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
-                th:if="${pianeta.nome == 'Sole'}">
-                <div class="triad-label-group">
-                  <span class="col-symbol planet-symbol sun-symbol" th:text="${pianeta.simbolo}">☉</span>
-                  <span class="triad-name">SOLE</span>
-                </div>
-                <div class="triad-value">
-                  <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♏︎</span>
-                  <span class="col-sign-name" th:text="${pianeta.segno}">Scorpione</span>
-                  <span class="col-separator">·</span>
-                  <span class="col-house" th:text="${pianeta.casaRomana}">VIII</span>
-                </div>
+            <div class="card natal-planets-card" th:if="${pianeti != null}">
+              <div class="planet-row planet-row-header">
+                <span>Pianeta</span>
+                <span>Segno</span>
+                <span>Casa</span>
+                <span>Angolo</span>
+                <span>Stato</span>
               </div>
 
-              <!-- LUNA -->
-              <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
-                th:if="${pianeta.nome == 'Luna'}">
-                <div class="triad-label-group">
-                  <span class="col-symbol planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
-                  <span class="triad-name">LUNA</span>
-                </div>
-                <div class="triad-value">
-                  <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
-                  <span class="col-sign-name" th:text="${pianeta.segno}">Capricorno</span>
-                  <span class="col-separator">·</span>
-                  <span class="col-house" th:text="${pianeta.casaRomana}">X</span>
-                </div>
-              </div>
+              <div class="planet-row" th:each="pianeta : ${pianeti}">
+                <span class="natal-planet-name">
+                  <span class="planet-symbol" th:text="${pianeta.simbolo}">
+                    ☉
+                  </span>
+                  <span th:text="${pianeta.nome}">Sole</span>
+                </span>
 
-              <!-- ASCENDENTE -->
-              <div class="triad-item triad-item-aligned">
-                <div class="triad-label-group">
-                  <!-- Colonna simbolo vuota per l'Ascendente per mantenere l'allineamento perfetto -->
-                  <span class="col-symbol ascendant-empty-symbol"></span>
-                  <span class="triad-name">ASCENDENTE</span>
-                </div>
-                <div class="triad-value">
-                  <span class="col-sign-symbol sign-symbol" th:text="${ascendenteSimbolo}">♑︎</span>
-                  <span class="col-sign-name" th:text="${ascendenteSegno}">Capricorno</span>
-                  <span class="col-separator"></span>
-                  <span class="col-house"></span>
-                </div>
+                <span class="planet-sign">
+                  <span class="sign-symbol" th:text="${pianeta.simboloSegno}">
+                    ♏︎
+                  </span>
+                  <span th:text="${pianeta.segno}">Scorpione</span>
+                </span>
+
+                <span class="planet-house" th:text="${pianeta.casaRomana}">
+                  VIII
+                </span>
+
+                <span class="planet-angle">
+                  <span th:text="${#numbers.formatDecimal(pianeta.longitudine, 1, 2)}">
+                    228.77
+                  </span>
+                  °
+                </span>
+
+                <span class="planet-retrograde">
+                  <span th:if="${pianeta.retrogrado}">Retrogrado</span>
+                  <span th:unless="${pianeta.retrogrado}">Diretto</span>
+                </span>
               </div>
             </div>
-
 
           </div>
+          <div th:if="${!temaSbloccato}" class="natal-inline-paywall">
+            <div class="natal-paywall-box">
+              <span class="badge badge-premium">Premium</span>
 
-          <div class="card natal-planets-card" th:if="${pianeti != null}">
-            <div class="planet-row planet-row-header">
-              <span>Pianeta</span>
-              <span>Segno</span>
-              <span>Casa</span>
-              <span>Angolo</span>
-              <span>Stato</span>
-            </div>
+              <h3>Il tuo cielo ti aspetta</h3>
 
-            <div class="planet-row" th:each="pianeta : ${pianeti}">
-              <span class="natal-planet-name">
-                <span class="planet-symbol" th:text="${pianeta.simbolo}">
-                  ☉
-                </span>
-                <span th:text="${pianeta.nome}">Sole</span>
-              </span>
+              <p>Questa funzionalità è riservata agli utenti Premium.</p>
 
-              <span class="planet-sign">
-                <span class="sign-symbol" th:text="${pianeta.simboloSegno}">
-                  ♏︎
-                </span>
-                <span th:text="${pianeta.segno}">Scorpione</span>
-              </span>
-
-              <span class="planet-house" th:text="${pianeta.casaRomana}">
-                VIII
-              </span>
-
-              <span class="planet-angle">
-                <span th:text="${#numbers.formatDecimal(pianeta.longitudine, 1, 2)}">
-                  228.77
-                </span>
-                °
-              </span>
-
-              <span class="planet-retrograde">
-                <span th:if="${pianeta.retrogrado}">Retrogrado</span>
-                <span th:unless="${pianeta.retrogrado}">Diretto</span>
-              </span>
+              <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                Scopri Premium
+              </a>
             </div>
           </div>
-
         </div>
 
 
@@ -179,94 +205,169 @@
           <a href="#" class="js-tab" data-target="tab-case">Case</a>
         </div>
 
+
         <div id="tab-riepilogo" class="js-tab-panel">
-          <div class="natal-grid">
+          <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
 
-            <div class="dashboard-col">
+            <div class="natal-tab-content">
+              <div class="natal-paywall-content">
 
-              <!-- Distribuzione dei quattro elementi. -->
-              <div class="card">
-                <div class="card-title">Elementi</div>
+                <div class="natal-grid">
 
-                <div class="element-bar-row" th:each="elemento : ${elementi}">
-                  <div class="element-label">
-                    <span th:text="${elemento.nome}">Fuoco</span>
-                    <span th:text="${elemento.percentuale + '%'}">40%</span>
+                  <div class="dashboard-col">
+
+                    <div class="card">
+                      <div class="card-title">Elementi</div>
+
+                      <div class="element-bar-row" th:each="elemento : ${elementi}">
+                        <div class="element-label">
+                          <span th:text="${elemento.nome}">Fuoco</span>
+                          <span th:text="${elemento.percentuale + '%'}">40%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                          <div class="progress-bar-fill" th:classappend="${elemento.classeCss}"
+                            th:style="'width:' + ${elemento.percentuale} + '%'">
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div class="card">
+                      <div class="card-title">Modalità</div>
+
+                      <div class="element-bar-row" th:each="modalitaItem : ${modalita}">
+                        <div class="element-label">
+                          <span th:text="${modalitaItem.nome}">Cardinale</span>
+                          <span th:text="${modalitaItem.percentuale + '%'}">40%</span>
+                        </div>
+
+                        <div class="progress-bar">
+                          <div class="progress-bar-fill" th:classappend="${modalitaItem.classeCss}"
+                            th:attr="data-percentuale=${modalitaItem.percentuale}">
+                          </div>
+                        </div>
+                      </div>
+
+                      <p class="text-muted mt-10">
+                        Distribuzione calcolata sui pianeti principali.
+                      </p>
+                    </div>
+
                   </div>
 
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" th:classappend="${elemento.classeCss}"
-                      th:style="'width:' + ${elemento.percentuale} + '%'">
+                  <div class="card natal-interpretation-card">
+                    <div class="card-title">Lettura del profilo</div>
+
+                    <p class="text-muted">
+                      Scopri l’interpretazione personalizzata del tuo tema natale,
+                      dei pianeti e delle case astrologiche.
+                    </p>
+
+                    <div th:if="${temaNatale != null
+                    and temaNatale.interpretazioneAstroWay != null}" th:text="${temaNatale.interpretazioneAstroWay}">
+                      Interpretazione del tema natale.
+                    </div>
+
+                    <div th:unless="${temaNatale != null
+                         and temaNatale.interpretazioneAstroWay != null}">
+                      La tua interpretazione apparirà dopo il calcolo del tema.
                     </div>
                   </div>
-                </div>
-              </div>
 
-              <!-- Distribuzione delle modalità astrologiche. -->
-              <div class="card">
-                <div class="card-title">Modalità</div>
-
-                <div class="element-bar-row" th:each="modalita : ${modalita}">
-                  <div class="element-label">
-                    <span th:text="${modalita.nome}">Cardinale</span>
-                    <span th:text="${modalita.percentuale + '%'}">40%</span>
-                  </div>
-
-                  <div class="progress-bar">
-                    <div class="progress-bar-fill" th:classappend="${modalita.classeCss}"
-                      th:attr="data-percentuale=${modalita.percentuale}">
-                    </div>
-                  </div>
                 </div>
 
-                <p class="text-muted mt-10 natal-mode-description">
-                  Distribuzione calcolata sui pianeti principali.
-                </p>
-              </div>
-
-            </div>
-
-            <!-- Modificato th:if per mostrare la card se il tema esiste, usando un fallback se il testo è vuoto -->
-            <div class="card natal-interpretation-card" th:if="${temaNatale != null}">
-              <div class="card-title">Lettura del profilo</div>
-              <p class="text-muted">
-                L'esplorazione astrologica del tema natale non vuole essere una valutazione scientifica,
-                quanto più uno strumento di confronto tra possibili profili caratteriali al fine di aumentarne la
-                conoscenza e migliorare la comprensione delle loro interazioni.
-              </p>
-
-              <!-- Mostra il testo se presente, altrimenti mostra un messaggio di caricamento -->
-              <div th:if="${temaNatale.interpretazioneAstroWay != null}"
-                th:utext="${temaNatale.interpretazioneAstroWay}"></div>
-              <div th:unless="${temaNatale.interpretazioneAstroWay != null}" class="text-muted italic">
-                <p>Interpretazione in fase di elaborazione o non disponibile per questo profilo.</p>
               </div>
             </div>
 
+            <div th:if="${!temaSbloccato}" class="natal-tab-paywall">
+              <div class="natal-paywall-box">
+                <span class="badge badge-premium">Premium</span>
+
+                <h3>Il tuo tema natale</h3>
+
+                <p>Questa funzionalità è riservata agli utenti Premium.</p>
+
+                <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                  Scopri Premium
+                </a>
+              </div>
+            </div>
           </div>
         </div>
 
         <div id="tab-carta" class="js-tab-panel is-hidden">
-          <p class="text-muted">Vista dettagliata della carta astrale.</p>
+          <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
 
-          <div class="card">
-            <!-- Contenitore pulito per il grafico SVG -->
-            <div id="natal-chart" th:if="${temaChart != null}"></div>
+            <div class="natal-tab-content natal-chart-content">
+              <div id="natal-chart" th:attr="
+             data-ascendant=${temaChart != null
+               ? temaChart.get('houses').get('ascendant')
+               : 119.52},
+             data-mc=${temaChart != null
+               ? temaChart.get('houses').get('mc')
+               : 10.72}">
+              </div>
+            </div>
+
+            <div th:if="${!temaSbloccato}" class="natal-tab-paywall">
+              <div class="natal-paywall-box">
+                <span class="badge badge-premium">Premium</span>
+
+                <h3>La tua carta astrale</h3>
+
+                <p>Questa funzionalità è riservata agli utenti Premium.</p>
+
+                <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                  Sblocca la carta
+                </a>
+              </div>
+            </div>
           </div>
-
-          <!-- MODIFICATO: Sfrutta l'inlining nativo di Thymeleaf sicuro per gli oggetti/mappe -->
-          <script type="application/json" id="tema-chart-data" th:if="${temaChart != null}" th:inline="javascript">
-            [# th:utext="${temaChart}" /]
-          </script>
         </div>
 
-
         <div id="tab-pianeti" class="js-tab-panel is-hidden">
-          <p class="text-muted">Spiegazione di ogni pianeta e sua possibile interpretazione</p>
+          <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
+
+            <div class="natal-tab-content">
+              <p class="text-muted">
+                Spiegazione di ogni pianeta e sua possibile interpretazione.
+              </p>
+            </div>
+
+            <div th:if="${!temaSbloccato}" class="natal-tab-paywall">
+              <div class="natal-paywall-box">
+                <span class="badge badge-premium">Premium</span>
+                <h3>Interpretazioni astrologiche</h3>
+                <p>Questa funzionalità è riservata agli utenti Premium.</p>
+                <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                  Scopri Premium
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
         <div id="tab-case" class="js-tab-panel is-hidden">
-          <p class="text-muted">Le 12 case astrologiche con relativo significato.</p>
+          <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
+
+            <div class="natal-tab-content">
+              <p class="text-muted">
+                Le 12 case astrologiche con relativo significato.
+              </p>
+            </div>
+
+            <div th:if="${!temaSbloccato}" class="natal-tab-paywall">
+              <div class="natal-paywall-box">
+                <span class="badge badge-premium">Premium</span>
+                <h3>Le tue case astrologiche</h3>
+                <p>Questa funzionalità è riservata agli utenti Premium.</p>
+                <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                  Scopri Premium
+                </a>
+              </div>
+            </div>
+          </div>
         </div>
 
       </main>

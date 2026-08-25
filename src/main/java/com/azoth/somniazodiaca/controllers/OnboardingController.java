@@ -47,14 +47,14 @@ public class OnboardingController {
                         @RequestParam String timezone,
                         Authentication authentication) {
 
+                if (oraNascita == null) {
+                        oraNascita = LocalTime.NOON;
+                }
+
                 Utente utente = utenteRepository
                                 .findByUsername(authentication.getName())
                                 .orElseThrow(() -> new IllegalArgumentException(
                                                 "Utente non trovato"));
-
-                if (oraNascita == null) {
-                        oraNascita = LocalTime.NOON;
-                }
 
                 ZoneId zoneId = ZoneId.of(timezone);
 
@@ -89,5 +89,10 @@ public class OnboardingController {
                                 rispostaAstroWay);
 
                 return "redirect:/app/tema-natale";
+        }
+
+        @PostMapping("/onboarding/salta")
+        public String saltaOnboarding() {
+                return "redirect:/app/dashboard";
         }
 }

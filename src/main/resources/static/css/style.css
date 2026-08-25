@@ -571,7 +571,7 @@ h4 {
   font-weight: 500;
 }
 
-.feature-panel > p {
+.feature-panel>p {
   max-width: 440px;
 }
 
@@ -3430,4 +3430,135 @@ h4 {
   text-align: right !important;
   /* Spinge la casa contro il bordo finale destro */
   width: 100%;
+}
+
+.natal-paywall-page,
+.natal-chart-paywall-wrapper {
+  position: relative;
+  overflow: hidden;
+}
+
+.natal-paywall-page .natal-paywall-content {
+  filter: blur(7px);
+  opacity: 0.72;
+  pointer-events: none;
+  user-select: none;
+}
+
+.natal-paywall-overlay,
+.natal-chart-paywall-overlay {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 28px;
+  background: rgba(12, 14, 24, 0.35);
+}
+
+.natal-paywall-box {
+  width: min(100%, 390px);
+  padding: 28px;
+  text-align: center;
+  background: rgba(22, 25, 40, 0.94);
+  border: 1px solid var(--accent-gold);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+}
+
+.natal-paywall-box h3 {
+  margin: 14px 0 8px;
+  color: var(--text-primary);
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+
+.natal-paywall-box p {
+  margin-bottom: 18px;
+  color: var(--text-secondary);
+  line-height: 1.6;
+}
+
+.natal-chart-paywall-wrapper {
+  min-height: 540px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+}
+
+.natal-chart-paywall-wrapper.is-locked #natal-chart {
+  filter: blur(8px);
+  opacity: 0.7;
+  pointer-events: none;
+}
+
+.natal-chart-paywall-wrapper #natal-chart {
+  min-height: 490px;
+}
+
+.natal-protected-summary,
+.natal-tab-protected {
+  position: relative;
+  min-width: 0;
+  overflow: hidden;
+}
+
+.natal-protected-summary.is-locked>.natal-data-layout,
+.natal-tab-protected.is-locked>.natal-tab-content {
+  filter: blur(7px);
+  opacity: 0.68;
+  user-select: none;
+}
+
+.natal-inline-paywall,
+.natal-tab-paywall {
+  position: absolute;
+  inset: 0;
+  z-index: 2;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  background: rgba(12, 14, 24, 0.32);
+}
+
+.natal-tab-protected {
+  min-height: 280px;
+}
+
+.natal-chart-content {
+  min-height: 540px;
+  padding: 24px;
+  border: 1px solid var(--border-color);
+  border-radius: var(--radius-sm);
+  background: var(--bg-panel);
+}
+
+.natal-chart-content #natal-chart {
+  min-height: 490px;
+}
+
+.natal-paywall-box {
+  width: min(100%, 390px);
+  padding: 28px;
+  text-align: center;
+  background: rgba(22, 25, 40, 0.96);
+  border: 1px solid var(--accent-gold);
+  border-radius: var(--radius-sm);
+  box-shadow: 0 18px 55px rgba(0, 0, 0, 0.35);
+}
+
+.natal-paywall-box h3 {
+  margin: 14px 0 8px;
+  color: var(--text-primary);
+  font-family: Georgia, serif;
+  font-size: 24px;
+}
+
+.natal-paywall-box p {
+  margin-bottom: 18px;
+  color: var(--text-secondary);
+  line-height: 1.6;
 }
