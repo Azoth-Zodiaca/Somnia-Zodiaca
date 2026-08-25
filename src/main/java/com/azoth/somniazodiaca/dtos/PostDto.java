@@ -32,7 +32,10 @@ public class PostDto implements GenericDto {
     private String profiloColore;
 
     private String segnoZodiacale;
+    private String segnoZodiacaleAbbreviato;
+    private String segnoZodiacaleSimbolo;
     private String ascendente;
+    private String ascendenteSimbolo;
 
     private String testoSogno;
     private String testoInterpretazione;

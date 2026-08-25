@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initOracoloForm();
   initLikeButtons();
   initComments();
+  initSocialMarkdown();
   initSettingsMenu();
   initDeleteAccountConfirmation();
   initHistoryButtons();
@@ -303,6 +304,7 @@ function resetRisultatoOracolo() {
   var resultBox = document.getElementById("risultato-oracolo");
   var resultText = document.getElementById("testo-interpretazione");
   var saveButton = document.getElementById("salva-interpretazione");
+  var externalShareButton = document.getElementById("condividi-esternamente");
   var shareBox = document.getElementById("condivisione-interpretazione");
   var shareText = document.getElementById("testo-post");
   var publishButton = document.getElementById("pubblica-interpretazione");
@@ -335,6 +337,10 @@ function resetRisultatoOracolo() {
 
   if (publishButton) {
     publishButton.disabled = true;
+  }
+
+  if (externalShareButton) {
+    externalShareButton.disabled = true;
   }
 }
 
@@ -538,11 +544,14 @@ function initOracoloForm() {
   var resultBox = document.getElementById("risultato-oracolo");
   var resultText = document.getElementById("testo-interpretazione");
   var saveButton = document.getElementById("salva-interpretazione");
+  var externalShareButton = document.getElementById("condividi-esternamente");
   var submitButton = form
     ? form.querySelector('button[type="submit"]')
     : null;
 
   if (!form || !textarea || !resultBox || !resultText) return;
+
+  initExternalShare(resultText, textarea, externalShareButton);
 
   aggiornaDisponibilitaInterpretazione(submitButton);
 
@@ -662,6 +671,10 @@ function initOracoloForm() {
         saveButton.removeAttribute("hidden");
         saveButton.classList.remove("is-hidden");
         saveButton.disabled = false;
+      }
+
+      if (externalShareButton) {
+        externalShareButton.disabled = false;
       }
     } catch (error) {
       console.error(error);
@@ -801,6 +814,7 @@ function initHistoryButtons() {
   var historyButtons = document.querySelectorAll(".history-open");
   var resultBox = document.getElementById("risultato-oracolo");
   var resultText = document.getElementById("testo-interpretazione");
+  var externalShareButton = document.getElementById("condividi-esternamente");
 
   if (!resultBox || !resultText || historyButtons.length === 0) {
     return;
@@ -865,6 +879,10 @@ function initHistoryButtons() {
           : "Salva interpretazione - 20 QI";
       }
 
+      if (externalShareButton) {
+        externalShareButton.disabled = false;
+      }
+
       resultText.innerHTML = DOMPurify.sanitize(
         marked.parse(interpretation)
       );
@@ -875,6 +893,237 @@ function initHistoryButtons() {
       });
     });
   });
+}
+
+function initExternalShare(resultText, postDescription, shareButton) {
+  var dialog = document.getElementById("condivisione-esterna-dialog");
+  var closeButton = document.getElementById("chiudi-condivisione-esterna");
+  var copyTextButton = document.getElementById("copia-testo-condivisione");
+  var copyImageButton = document.getElementById("copia-immagine-condivisione");
+  var previewDescription = document.getElementById("anteprima-descrizione-condivisione");
+  var previewText = document.getElementById("anteprima-testo-condivisione");
+  var previewUsername = document.getElementById("anteprima-username-condivisione");
+  var previewAvatar = document.getElementById("anteprima-avatar-condivisione");
+  var previewSigns = document.getElementById("anteprima-segni-condivisione");
+  var status = document.getElementById("esito-condivisione-esterna");
+
+  if (!dialog || !shareButton || !resultText || !postDescription) return;
+
+  function getProfileData() {
+    var sidebar = document.querySelector(".sidebar-user");
+    var usernameElement = sidebar
+      ? sidebar.querySelector(".username")
+      : document.querySelector(".greeting strong:nth-of-type(2)");
+    var avatarImage = sidebar ? sidebar.querySelector(".avatar img") : null;
+    var signElement = sidebar ? sidebar.querySelector(".sign") : null;
+
+    return {
+      username: usernameElement
+        ? usernameElement.textContent.trim().replace(/^@/, "")
+        : "utente",
+      avatarImage: avatarImage,
+      signs: signElement ? signElement.textContent.replace(/\s+/g, " ").trim() : "Segno non impostato"
+    };
+  }
+
+  function getShareText() {
+    var description = postDescription.value.trim();
+    var interpretation = resultText.innerText.trim();
+    return [
+      "SOGNO:\n" + (description || "Nessuna descrizione"),
+      "INTERPRETAZIONE:\n" + interpretation
+    ].join("\n\n");
+  }
+
+  function setStatus(message) {
+    if (status) status.textContent = message;
+  }
+
+  shareButton.addEventListener("click", function () {
+    var profile = getProfileData();
+    var username = profile.username;
+    var description = postDescription.value.trim();
+    previewUsername.textContent = "@" + username;
+    previewAvatar.replaceChildren();
+    if (profile.avatarImage) {
+      var avatarImage = profile.avatarImage.cloneNode(true);
+      previewAvatar.appendChild(avatarImage);
+    } else {
+      previewAvatar.textContent = username.charAt(0).toUpperCase() || "U";
+    }
+    previewSigns.textContent = profile.signs;
+    previewDescription.classList.toggle("is-empty", !description);
+    previewDescription.innerHTML = description
+      ? DOMPurify.sanitize(marked.parse(description))
+      : "Aggiungi una descrizione nella schermata dell'Oracolo";
+    previewText.innerHTML = resultText.innerHTML;
+    setStatus("");
+    dialog.showModal();
+  });
+
+  closeButton.addEventListener("click", function () { dialog.close(); });
+  dialog.addEventListener("click", function (event) {
+    if (event.target === dialog) dialog.close();
+  });
+
+  copyTextButton.addEventListener("click", async function () {
+    try {
+      await navigator.clipboard.writeText(getShareText());
+      setStatus("Testo copiato negli appunti.");
+    } catch (error) {
+      setStatus("Impossibile copiare il testo in questo browser.");
+    }
+  });
+
+  copyImageButton.addEventListener("click", async function () {
+    var preview = document.getElementById("anteprima-condivisione-esterna");
+    var canvas;
+    try {
+      canvas = await creaImmagineDaAnteprima(preview);
+      var blob = await new Promise(function (resolve) {
+        canvas.toBlob(resolve, "image/png");
+      });
+      await navigator.clipboard.write([
+        new ClipboardItem({ "image/png": blob })
+      ]);
+      setStatus("Immagine copiata negli appunti.");
+    } catch (error) {
+      if (!canvas) {
+        setStatus("Impossibile creare l'immagine del post in questo browser.");
+        return;
+      }
+      var link = document.createElement("a");
+      link.download = "somnia-zodiaca-post.png";
+      link.href = canvas.toDataURL("image/png");
+      link.click();
+      setStatus("Il browser non permette la copia: immagine scaricata.");
+    }
+  });
+}
+
+async function creaImmagineDaAnteprima(preview) {
+  if (!preview) {
+    throw new Error("Anteprima non disponibile");
+  }
+
+  var rect = preview.getBoundingClientRect();
+  var width = Math.ceil(rect.width);
+  var height = Math.ceil(rect.height);
+  var clone = preview.cloneNode(true);
+  clone.removeAttribute("id");
+  clone.style.width = width + "px";
+  clone.style.height = height + "px";
+  clone.style.maxWidth = "none";
+  clone.style.maxHeight = "none";
+  clone.style.margin = "0";
+
+  function copyComputedStyles(source, target) {
+    var computed = window.getComputedStyle(source);
+    Array.from(computed).forEach(function (property) {
+      target.style.setProperty(
+        property,
+        computed.getPropertyValue(property),
+        computed.getPropertyPriority(property)
+      );
+    });
+
+    Array.from(source.children).forEach(function (child, index) {
+      if (target.children[index]) {
+        copyComputedStyles(child, target.children[index]);
+      }
+    });
+  }
+
+  copyComputedStyles(preview, clone);
+  clone.style.width = width + "px";
+  clone.style.height = height + "px";
+  clone.style.maxWidth = "none";
+  clone.style.maxHeight = "none";
+  clone.style.margin = "0";
+
+  var imageInterpretation = clone.querySelector(
+    ".external-share-interpretation"
+  );
+  if (imageInterpretation) {
+    var interpretationText = imageInterpretation.innerText.trim();
+    var maximumCharacters = 280;
+    if (interpretationText.length > maximumCharacters) {
+      interpretationText = interpretationText.slice(0, maximumCharacters);
+      interpretationText = interpretationText.slice(
+        0,
+        interpretationText.lastIndexOf(" ")
+      ).trim() + "...";
+    }
+    imageInterpretation.textContent = interpretationText;
+    imageInterpretation.style.display = "block";
+    imageInterpretation.style.webkitBoxOrient = "initial";
+    imageInterpretation.style.webkitLineClamp = "none";
+    imageInterpretation.style.overflow = "hidden";
+    imageInterpretation.style.height = "auto";
+    imageInterpretation.style.maxHeight = "none";
+  }
+
+  clone.style.height = "auto";
+  var measuringWrapper = document.createElement("div");
+  measuringWrapper.style.position = "absolute";
+  measuringWrapper.style.left = "-10000px";
+  measuringWrapper.style.top = "0";
+  measuringWrapper.style.width = width + "px";
+  measuringWrapper.style.visibility = "hidden";
+  measuringWrapper.appendChild(clone);
+  document.body.appendChild(measuringWrapper);
+
+  var brand = clone.querySelector(".external-share-brand");
+  if (brand) {
+    var cloneRect = clone.getBoundingClientRect();
+    var brandRect = brand.getBoundingClientRect();
+    height = Math.ceil(brandRect.bottom - cloneRect.top + 20);
+  }
+  clone.style.height = height + "px";
+  measuringWrapper.remove();
+
+  var styles = "";
+  Array.from(document.styleSheets).forEach(function (sheet) {
+    try {
+      styles += Array.from(sheet.cssRules).map(function (rule) {
+        return rule.cssText;
+      }).join("\n");
+    } catch (error) {
+      // I fogli esterni non accessibili non sono necessari per la card locale.
+    }
+  });
+
+  var svg = [
+    '<svg xmlns="http://www.w3.org/2000/svg" xmlns:xhtml="http://www.w3.org/1999/xhtml" width="',
+    width,
+    '" height="',
+    height,
+    '">',
+    '<foreignObject width="100%" height="100%">',
+    '<xhtml:div xmlns="http://www.w3.org/1999/xhtml" style="width:',
+    width,
+    'px;height:',
+    height,
+    'px;background:#171827;">',
+    '<xhtml:style>',
+    styles,
+    '</xhtml:style>',
+    new XMLSerializer().serializeToString(clone),
+    '</xhtml:div></foreignObject></svg>'
+  ].join("");
+
+  var image = new Image();
+  image.src = "data:image/svg+xml;charset=utf-8," + encodeURIComponent(svg);
+  await new Promise(function (resolve, reject) {
+    image.onload = resolve;
+    image.onerror = reject;
+  });
+
+  var canvas = document.createElement("canvas");
+  canvas.width = width;
+  canvas.height = height;
+  canvas.getContext("2d").drawImage(image, 0, 0, width, height);
+  return canvas;
 }
 
 function mostraFormCondivisione(interpretazioneId, permanente) {
@@ -927,6 +1176,20 @@ function aggiornaDisponibilitaInterpretazione(submitButton) {
 /* ---------------------------------------------------------
   SOCIAL
 --------------------------------------------------------- */
+
+function initSocialMarkdown() {
+  var markdownElements = document.querySelectorAll(".js-markdown-content");
+
+  if (markdownElements.length === 0 ||
+      typeof marked === "undefined" ||
+      typeof DOMPurify === "undefined") {
+    return;
+  }
+
+  markdownElements.forEach(function (element) {
+    element.innerHTML = DOMPurify.sanitize(marked.parse(element.textContent));
+  });
+}
 
 // Apre e chiude il pannello degli utenti seguiti.
 function initSocialFollowing() {
