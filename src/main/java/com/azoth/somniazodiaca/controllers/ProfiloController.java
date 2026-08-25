@@ -17,7 +17,9 @@ import com.azoth.somniazodiaca.services.UtenteService;
 import com.azoth.somniazodiaca.services.PostService;
 import com.azoth.somniazodiaca.repositories.LikePostRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
-
+import com.azoth.somniazodiaca.services.ElementoService;
+import com.azoth.somniazodiaca.services.PianetaService;
+import com.azoth.somniazodiaca.services.MetalloService;
 @Controller
 public class ProfiloController {
 
@@ -26,19 +28,28 @@ public class ProfiloController {
     private final PostService postService;
     private final LikePostRepository likePostRepository;
     private final SognoRepository sognoRepository;
+    private final ElementoService elementoService;
+    private final PianetaService pianetaService;
+    private final MetalloService metalloService;
 
     public ProfiloController(
             UtenteService utenteService,
             BadgeService badgeService,
             PostService postService,
             LikePostRepository likePostRepository,
-            SognoRepository sognoRepository) {
+            SognoRepository sognoRepository,
+            ElementoService elementoService,
+            PianetaService pianetaService,
+            MetalloService metalloService) {
 
         this.utenteService = utenteService;
         this.badgeService = badgeService;
         this.postService = postService;
         this.likePostRepository = likePostRepository;
         this.sognoRepository = sognoRepository;
+        this.elementoService = elementoService;
+        this.pianetaService = pianetaService;
+        this.metalloService = metalloService;
     }
 
     @GetMapping("/profilo")
@@ -82,6 +93,28 @@ public class ProfiloController {
         model.addAttribute("badgeSbloccati", badgeSbloccati);
         model.addAttribute("totaleBadge", badges.size());
         
+        if (utente.getSegnoZodiacale() != null) {
+            var segno = utente.getSegnoZodiacale();
+        
+            if (segno.getElementoId() != null) {
+                model.addAttribute(
+                        "elementoProfilo",
+                        elementoService.getById(segno.getElementoId()));
+            }
+        
+            if (segno.getPianetaId() != null) {
+                model.addAttribute(
+                        "pianetaProfilo",
+                        pianetaService.getById(segno.getPianetaId()));
+            }
+        
+            if (segno.getMetalloId() != null) {
+                model.addAttribute(
+                        "metalloProfilo",
+                        metalloService.getById(segno.getMetalloId()));
+            }
+        }
+
         return "app/profilo";
     }
 
