@@ -203,7 +203,8 @@
              th:insert="~{fragments/social-fragments :: social-post-list(
                posts=${postsProfilo},
                currentUsername=${currentUsername},
-               emptyMessage='Non hai ancora pubblicato post.'
+               emptyMessage='Non hai ancora pubblicato post.',
+               panelPrefix='profilo'
              )}">
         </div>
     </main>
