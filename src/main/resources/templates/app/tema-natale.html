@@ -217,7 +217,8 @@
                           th:text="${elemento.percentuale + '%'}">40%</span></div>
                       <div class="progress-bar">
                         <div class="progress-bar-fill" th:classappend="${elemento.classeCss}"
-                          th:style="'width:' + ${elemento.percentuale} + '%' "></div>
+                          th:style="|--width-fill: ${elemento.percentuale}%;|">
+                        </div>
                       </div>
                     </div>
                   </div>
@@ -338,10 +339,11 @@
                     <p id="alchemical-history">Nella tradizione ermetica, i metalli sono
                       manifestazioni fisiche di archetipi celesti. La trasmutazione dei metalli vili in oro simboleggia
                       l'evoluzione interiore per purificare l'anima e raggiungere un sé superiore.</p>
-                    <p id="mercurio-history">Il <strong>Mercurio ☿: Simbolo QI </strong> funge
+                    <p id="mercurio-history">Il <bold>Mercurio ☿ (<strong id="q">Q</strong>uicksilver <strong id="i">I</strong>ngots): Simbolo QI </bold> funge
                       all'interno della piattaforma da unita di misura energetica. In alchimia esso è il
                       <em>catalizzatore universale</em> necessario a consentire l'ascensione verso un sé più noto,
-                      un'anima più pura e un metallo più nobile.</p>
+                      un'anima più pura e un metallo più nobile.
+                    </p>
                   </div>
 
                   <div class="natal-wiki-list">
