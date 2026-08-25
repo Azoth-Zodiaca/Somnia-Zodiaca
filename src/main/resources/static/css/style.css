@@ -32,6 +32,7 @@
   --accent-green: #22c55e;
   --accent-red: #ef4444;
   --accent-blue: #38bdf8;
+  --accent-grey: #c7cbd1;
 
   --gradient-brand: linear-gradient(135deg, var(--accent-pink), var(--accent-purple));
   --gradient-gold: linear-gradient(135deg, var(--accent-gold), var(--accent-orange));
@@ -1284,11 +1285,11 @@ h4 {
   padding: 8px 14px;
   font-size: 13px;
   font-weight: 600;
-  color: var(--accent-gold);
+  color: var(--accent-grey);
 }
 
 .qi-symbol {
-  color: #c7cbd1;
+  color: var(--accent-grey);
   font-size: 1.15em;
   line-height: 1;
 }
@@ -1625,6 +1626,16 @@ h4 {
   font-size: 12px;
   margin: 0 auto;
   max-width: 340px;
+}
+
+.alchemical-history-note {
+  margin-bottom: 25px;
+  padding: 15px;
+  background: rgba(255, 255, 255, 0.05);
+  border-left: 3px solid #8e44ad;
+  border-radius: 4px;
+  font-size: 0.95rem;
+  line-height: 1.5;
 }
 
 .element-bar-row {
@@ -3792,8 +3803,8 @@ h4 {
   grid-template-columns: repeat(2, minmax(0, 1fr));
 }
 
-.natal-triad-reading-grid > div,
-.natal-analysis-columns > div {
+.natal-triad-reading-grid>div,
+.natal-analysis-columns>div {
   padding: 14px;
   border: 1px solid var(--border-color);
   border-radius: var(--radius-sm);
