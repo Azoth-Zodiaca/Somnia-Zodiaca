@@ -29,8 +29,6 @@ public class PostDto implements GenericDto {
     private String username;
     private boolean premium;
     private String avatarPath;
-    private String profiloColore;
-
     private String segnoZodiacale;
     private String segnoZodiacaleAbbreviato;
     private String segnoZodiacaleSimbolo;

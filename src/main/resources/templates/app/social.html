@@ -35,8 +35,7 @@
             <div th:unless="${#lists.isEmpty(seguiti)}" class="social-following-list">
               <div th:each="seguito : ${seguiti}" class="social-following-item">
                 <a class="social-following-profile" th:href="@{/app/social}">
-                  <div class="avatar social-avatar"
-                    th:classappend="${seguito.profiloColore != null ? ' ' + seguito.profiloColore : ''}">
+                  <div class="avatar social-avatar">
                     <img th:if="${seguito.avatarPath != null}" th:src="@{${seguito.avatarPath}}" alt="Avatar">
                     <span th:unless="${seguito.avatarPath != null}"
                       th:text="${#strings.toUpperCase(#strings.substring(seguito.username, 0, 1))}">U</span>
@@ -44,7 +43,8 @@
                   <span class="social-following-username" th:text="${'@' + seguito.username}">@utente</span>
                 </a>
 
-                <form method="post" th:action="@{'/app/social/utente/' + ${seguito.username} + '/unfollow'}">
+                <form method="post" th:action="@{'/app/social/utente/' + ${seguito.username} + '/unfollow'}"
+                  th:attr="data-follow-username=${seguito.username},data-follow-action='unfollow'">
                   <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                   <button type="submit" class="btn btn-ghost btn-sm" title="Smetti di seguire"
                     aria-label="Smetti di seguire" data-follow-action="unfollow">&times;</button>

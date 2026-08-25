@@ -78,7 +78,6 @@ public class ProfiloController {
         model.addAttribute("profiloAscendente", utente.getAscendente());
         model.addAttribute("dataRegistrazione", utente.getDataRegistrazione());
         model.addAttribute("ultimoAccesso", utente.getUltimoAccesso());
-        model.addAttribute("profiloColore", utente.getProfiloColore());
         model.addAttribute("avatarPath", utente.getAvatarPath());
         model.addAttribute("bannerPath", utente.getBannerPath());
 

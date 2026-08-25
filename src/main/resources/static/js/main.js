@@ -20,6 +20,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initOracoloForm();
   initLikeButtons();
   initComments();
+  initSocialActions();
   initSocialMarkdown();
   initNatalMarkdown();
   initSettingsMenu();
@@ -1327,13 +1328,45 @@ function initComments() {
   var commentForms = document.querySelectorAll(".social-comment-form");
 
   commentForms.forEach(function (form) {
-    form.addEventListener("submit", function () {
-      sessionStorage.setItem("social-comment-scroll", String(window.scrollY));
+    form.addEventListener("submit", function (event) {
+      var endpoint = form.dataset.commentEndpoint;
+      if (!endpoint) return;
 
-      var commentPanel = form.closest(".social-comments-panel");
-      if (commentPanel) {
-        sessionStorage.setItem("social-comment-panel", commentPanel.id);
-      }
+      event.preventDefault();
+      var submitButton = form.querySelector("button[type='submit']");
+      if (submitButton) submitButton.disabled = true;
+
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        body: new FormData(form)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Comment request failed");
+          return response.json();
+        })
+        .then(function (data) {
+          var panel = form.closest(".social-comments-panel");
+          var list = panel && panel.querySelector(".social-comments-list");
+          if (!list) return;
+          var emptyMessage = list.querySelector(".social-comments-empty");
+          if (emptyMessage) emptyMessage.remove();
+          list.insertAdjacentHTML("beforeend",
+            "<div class='social-comment'><strong>@" + escapeHtml(data.username) +
+            "</strong><p>" + escapeHtml(data.testo) + "</p></div>");
+          form.reset();
+          var postId = form.dataset.postId;
+          document.querySelectorAll("[data-comments-target]").forEach(function (button) {
+            if (button.dataset.commentsTarget.endsWith("-" + postId)) {
+              var count = button.querySelector("span:last-child");
+              if (count) count.textContent = data.count;
+            }
+          });
+        })
+        .catch(function () { form.submit(); })
+        .finally(function () {
+          if (submitButton) submitButton.disabled = false;
+        });
     });
   });
 
@@ -1383,6 +1416,50 @@ function initComments() {
       });
     });
   }
+}
+
+function initSocialActions() {
+  document.querySelectorAll("form[data-follow-action]").forEach(function (form) {
+    form.addEventListener("submit", function (event) {
+      event.preventDefault();
+      var username = form.dataset.followUsername;
+      var action = form.dataset.followAction;
+      var endpoint = form.action + "/ajax";
+      var button = form.querySelector("button");
+      if (!username || !button) return;
+
+      button.disabled = true;
+      fetch(endpoint, {
+        method: "POST",
+        headers: { "X-Requested-With": "XMLHttpRequest" },
+        body: new FormData(form)
+      })
+        .then(function (response) {
+          if (!response.ok) throw new Error("Follow request failed");
+          return response.json();
+        })
+        .then(function () {
+          document.querySelectorAll("form[data-follow-username='" + username + "']").forEach(function (matchingForm) {
+            var matchingButton = matchingForm.querySelector("button");
+            if (!matchingButton) return;
+            var following = action === "follow";
+            matchingForm.dataset.followAction = following ? "unfollow" : "follow";
+            matchingForm.action = matchingForm.action.replace(/\/(?:un)?follow(?:\/ajax)?$/, following ? "/unfollow" : "/follow");
+            matchingButton.textContent = following ? "Smetti di seguire" : "Segui";
+            matchingButton.classList.toggle("btn-primary", !following);
+            matchingButton.classList.toggle("btn-ghost", following);
+          });
+        })
+        .catch(function () { form.submit(); })
+        .finally(function () { button.disabled = false; });
+    });
+  });
+}
+
+function escapeHtml(value) {
+  var div = document.createElement("div");
+  div.textContent = value;
+  return div.innerHTML;
 }
 
 function initInterpretationExpanders() {

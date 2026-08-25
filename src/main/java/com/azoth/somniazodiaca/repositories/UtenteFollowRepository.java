@@ -21,6 +21,10 @@ public interface UtenteFollowRepository
             Long followerId,
             Long seguitoId);
 
+        void deleteByFollower(Utente utente);
+
+        void deleteBySeguito(Utente utente);
+
     @Query("""
             SELECT f.seguito
             FROM UtenteFollow f
