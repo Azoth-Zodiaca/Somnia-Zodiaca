@@ -6,7 +6,7 @@
   <!-- Navigazione principale dell'area autenticata. -->
   <nav th:fragment="sidebar(active)" class="sidebar" id="sidebar">
     <a href="/app/dashboard" class="brand">
-      <span class="brand-dot"></span>
+      <img class="brand-logo" th:src="@{/images/somnia-zodiaca-logo.svg}" src="/images/somnia-zodiaca-logo.svg" alt="">
       Somnia Zodiaca
     </a>
 
@@ -24,7 +24,7 @@
         <span class="icon">&#9752;</span> Social
       </a>
       <a href="/app/wallet" th:classappend="${active == 'wallet'} ? 'active' : ''">
-        <span class="icon">&#10022;</span> Wallet
+        <span class="icon qi-symbol" aria-hidden="true">&#9791;</span> Wallet
       </a>
 
     </div>
@@ -102,7 +102,7 @@
         Ricompensa
       </a>
       <a href="/app/wallet" class="qi-pill" title="Apri il wallet">
-        &#10022;
+        <span class="qi-symbol" aria-hidden="true">&#9791;</span>
         <span id="saldo-qi" th:text="${saldoQi}">0</span>
         QI
       </a>

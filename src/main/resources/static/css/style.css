@@ -356,6 +356,28 @@ h4 {
   background: var(--gradient-brand);
 }
 
+.brand-logo {
+  width: 34px;
+  height: 34px;
+  object-fit: contain;
+  flex: 0 0 auto;
+}
+
+.sidebar .brand-logo {
+  width: 40px;
+  height: 40px;
+}
+
+.footer-brand .brand-logo {
+  width: 36px;
+  height: 36px;
+}
+
+.auth-form-panel .brand-logo {
+  width: 52px;
+  height: 52px;
+}
+
 .public-navbar nav {
   display: flex;
   gap: 28px;
@@ -1263,6 +1285,12 @@ h4 {
   font-size: 13px;
   font-weight: 600;
   color: var(--accent-gold);
+}
+
+.qi-symbol {
+  color: #c7cbd1;
+  font-size: 1.15em;
+  line-height: 1;
 }
 
 .app-content {

@@ -17,7 +17,7 @@
         <div class="card wallet-balance">
           <div class="label">Saldo attuale</div>
           <div class="amount">
-            &#10022; <span th:text="${utente.qi}">0</span>
+            <span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${utente.qi}">0</span>
           </div>
           <div class="sub">QI &middot; Quicksilver Ingots</div>
         </div>
@@ -26,7 +26,7 @@
         <div class="recharge-grid">
           <div class="card recharge-card" th:each="pacchetto : ${pacchettiQi}">
             <div class="text-muted wallet-package-label" th:text="${pacchetto.nome}">STELLA</div>
-            <div class="amount">&#10022; <span th:text="${pacchetto.quantitaQi + pacchetto.bonusQi}">100</span></div>
+            <div class="amount"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${pacchetto.quantitaQi + pacchetto.bonusQi}">100</span></div>
             <div class="bonus" th:text="${'+' + pacchetto.bonusQi + ' bonus'}">+0 bonus</div>
             <form th:action="@{/app/wallet/ricarica}" method="post">
               <input type="hidden" name="quantitaQi" th:value="${pacchetto.quantitaQi}">

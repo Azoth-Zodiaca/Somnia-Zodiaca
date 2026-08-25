@@ -14,7 +14,7 @@
         <div class="stats-grid">
           <div class="card stat-card">
             <div class="stat-label">QI</div>
-            <div class="stat-value">&#10022; <span th:text="${appDomain.dashboard.qi}">-</span></div>
+            <div class="stat-value"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${appDomain.dashboard.qi}">-</span></div>
             <div class="stat-delta">+<span th:text="${appDomain.dashboard.qiSettimanali}">-</span> sett.</div>
           </div>
           <div class="card stat-card">
@@ -46,7 +46,7 @@
               <form th:action="@{/app/oracolo/interpreta}" method="post" action="#">
                 <textarea name="testoSogno" placeholder="Racconta il tuo sogno... l'oracolo ascolta."></textarea>
                 <div class="oracolo-actions">
-                  <button type="submit" class="btn btn-primary btn-sm">&#10022; Interpreta con AI</button>
+                  <button type="submit" class="btn btn-primary btn-sm"><span class="qi-symbol" aria-hidden="true">&#9791;</span> Interpreta con AI</button>
                 </div>
               </form>
             </div>

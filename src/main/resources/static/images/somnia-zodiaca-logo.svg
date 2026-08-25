@@ -1,0 +1,27 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 768 768" role="img" aria-labelledby="title desc">
+  <title id="title">Logo Somnia Zodiaca</title>
+  <desc id="desc">Simbolo dorato con sole, luna, stelle e pendenti su fondo nero</desc>
+  <rect width="768" height="768" fill="#000"/>
+  <g fill="none" stroke="#e9b949" stroke-width="7" stroke-linecap="round" stroke-linejoin="round">
+    <path d="M230 242 A160 160 0 0 1 538 242 M538 350 A160 160 0 0 1 230 350"/>
+    <circle cx="307" cy="296" r="48"/>
+    <path d="M458 248 A50 50 0 1 1 458 344 A45 48 0 1 0 458 248Z"/>
+    <path d="M383 444 C343 494 298 508 256 528 M385 444 C425 494 470 508 512 528 M293 458 C327 493 349 513 384 526 C419 513 441 493 475 458"/>
+    <path d="M284 470 V535 M484 470 V535 M384 486 V558"/>
+    <path d="M284 536 C270 551 270 579 284 601 C298 579 298 551 284 536Z M484 536 C470 551 470 579 484 601 C498 579 498 551 484 536Z M384 578 C362 606 362 646 384 676 C406 646 406 606 384 578Z"/>
+    <path d="M377 554 L384 545 L391 554 L384 563Z"/>
+  </g>
+  <g fill="#f4c65e">
+    <circle cx="307" cy="296" r="12"/>
+    <circle cx="384" cy="190" r="6"/><circle cx="384" cy="275" r="5"/><circle cx="384" cy="296" r="5"/><circle cx="384" cy="319" r="5"/><circle cx="384" cy="405" r="6"/>
+    <circle cx="228" cy="244" r="6"/><circle cx="540" cy="244" r="6"/><circle cx="228" cy="350" r="6"/><circle cx="540" cy="350" r="6"/>
+    <circle cx="282" cy="168" r="7"/><circle cx="486" cy="168" r="7"/><circle cx="282" cy="426" r="7"/><circle cx="486" cy="426" r="7"/>
+  </g>
+  <g fill="#f4c65e" stroke="#f4c65e" stroke-linejoin="round">
+    <path d="M384 94 L390 126 L407 133 L390 140 L384 174 L378 140 L361 133 L378 126Z"/>
+    <path d="M216 263 L221 286 L240 296 L221 306 L216 330 L211 306 L192 296 L211 286Z"/>
+    <path d="M552 263 L557 286 L576 296 L557 306 L552 330 L547 306 L528 296 L547 286Z"/>
+    <path d="M384 430 L390 452 L407 461 L390 470 L384 492 L378 470 L361 461 L378 452Z"/>
+    <path d="M384 215 L388 229 L399 234 L388 239 L384 253 L380 239 L369 234 L380 229Z"/>
+  </g>
+</svg>
