@@ -15,10 +15,18 @@ import com.azoth.somniazodiaca.entities.TemaNatale;
 import com.azoth.somniazodiaca.entities.Utente;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.enums.SegnoZodiacaleEnum;
+import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.repositories.SegnoZodiacaleRepository;
 import com.azoth.somniazodiaca.repositories.TemaNataleRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.fasterxml.jackson.databind.JsonNode;
+
+import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.ZoneOffset;
+import java.time.format.DateTimeFormatter;
+
+import com.azoth.somniazodiaca.dtos.records.AstroWayInterpretationRequest;
 
 import jakarta.transaction.Transactional;
 
@@ -50,6 +58,79 @@ public class TemaNataleService
         }
 
         @Transactional
+        public void generaInterpretazione(Utente utente) {
+                if (utente.getRuolo() != Ruolo.PREMIUM && utente.getRuolo() != Ruolo.ADMIN) {
+                        throw new IllegalStateException("L'interpretazione del tema natale richiede Premium");
+                }
+
+                TemaNatale temaNatale = getRepository().findByUtenteId(utente.getId())
+                                .orElseThrow(() -> new IllegalStateException("Tema natale non trovato"));
+
+                if (temaNatale.getDataNascita() == null
+                                || temaNatale.getLatitudine() == null
+                                || temaNatale.getLongitudine() == null
+                                || temaNatale.getTimezone() == null) {
+                        throw new IllegalStateException(
+                                        "Dati di nascita insufficienti per l'interpretazione");
+                }
+
+                LocalTime oraNascita = temaNatale.getOraNascita() != null
+                                ? temaNatale.getOraNascita()
+                                : LocalTime.NOON;
+
+                ZoneId zoneId = ZoneId.of(temaNatale.getTimezone());
+
+                LocalDateTime dataOraLocale = LocalDateTime.of(
+                                temaNatale.getDataNascita(),
+                                oraNascita);
+
+                ZoneOffset offset = zoneId.getRules().getOffset(dataOraLocale);
+
+                double timezoneOffset = offset.getTotalSeconds() / 3600.0;
+
+                AstroWayInterpretationRequest richiesta = new AstroWayInterpretationRequest(
+                                temaNatale.getDataNascita().toString(),
+                                oraNascita.format(DateTimeFormatter.ofPattern("HH:mm:ss")),
+                                timezoneOffset,
+                                temaNatale.getLatitudine().doubleValue(),
+                                temaNatale.getLongitudine().doubleValue(),
+                                "P",
+                                "it");
+
+                String risposta = astroWayService.getInterpretation(richiesta);
+                JsonNode json = astroWayService.parseChart(risposta);
+                String testo = estraiInterpretazione(json);
+
+                if (testo == null || testo.isBlank()) {
+                        throw new IllegalStateException("AstroWay non ha restituito un'interpretazione valida");
+                }
+
+                temaNatale.setInterpretazioneAstroWay(testo);
+                getRepository().save(temaNatale);
+        }
+
+        private String estraiInterpretazione(JsonNode risposta) {
+                if (risposta.isTextual()) {
+                        return risposta.asText();
+                }
+
+                String[] possibiliCampi = { "interpretation", "interpretazione", "text", "content", "narrative" };
+                for (String campo : possibiliCampi) {
+                        JsonNode valore = risposta.path(campo);
+                        if (valore.isTextual() && !valore.asText().isBlank()) {
+                                return valore.asText();
+                        }
+                }
+
+                JsonNode data = risposta.path("data");
+                if (!data.isMissingNode()) {
+                        return estraiInterpretazione(data);
+                }
+
+                return null;
+        }
+
+        @Transactional
         public void creaTemaNatale(
                         Utente utente,
                         LocalDate dataNascita,
@@ -62,9 +143,9 @@ public class TemaNataleService
                         String rispostaAstroWay) {
 
                 // if (utente.getRuolo() != Ruolo.PREMIUM
-                //                 && utente.getRuolo() != Ruolo.ADMIN) {
-                //         throw new IllegalStateException(
-                //                         "Il calcolo del tema natale richiede Premium");
+                // && utente.getRuolo() != Ruolo.ADMIN) {
+                // throw new IllegalStateException(
+                // "Il calcolo del tema natale richiede Premium");
                 // }
 
                 Optional<TemaNatale> temaEsistente = getRepository()

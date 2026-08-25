@@ -29,14 +29,14 @@
             </div>
           </div>
 
-          <a th:if="${temaNatale != null and temaSbloccato}" th:href="@{/app/tema-natale/modifica}"
+          <!-- <a th:if="${temaNatale != null and temaSbloccato}" th:href="@{/app/tema-natale/modifica}"
             class="btn btn-outline btn-sm">
             Modifica dati
           </a>
 
           <span th:if="${temaNatale != null and !temaSbloccato}" class="text-muted natal-edit-locked">
             Modifica disponibile con Premium
-          </span>
+          </span> -->
         </div>
 
         <div th:if="${temaNatale == null}" class="card natal-empty-card">
@@ -52,7 +52,7 @@
         </div>
 
         <!-- Riepilogo dei dati anagrafici e della triade principale. -->
-        <div class="natal-data-layout natal-protected-summary" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
+        <div class="natal-data-layout natal-protected-summary" th:classappend="${!temaSbloccato and temaNatale != null ? ' is-locked' : ''}">
 
           <div class="natal-summary-column">
 
@@ -179,7 +179,7 @@
             </div>
           </div>
 
-          <div th:if="${!temaSbloccato}" class="natal-inline-paywall">
+          <div th:if="${!temaSbloccato and temaNatale != null}" class="natal-inline-paywall">
             <div class="natal-paywall-box">
               <span class="badge badge-premium">Premium</span>
 
@@ -269,7 +269,12 @@
 
                     <div th:unless="${temaNatale != null
                          and temaNatale.interpretazioneAstroWay != null}">
-                      La tua interpretazione apparirà dopo il calcolo del tema.
+                      <span>La tua interpretazione non è ancora stata generata.</span>
+                      <form th:if="${temaNatale != null and temaSbloccato}"
+                        th:action="@{/app/tema-natale/interpretazione}" method="post" class="mt-10">
+                        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                        <button type="submit" class="btn btn-gold">Genera interpretazione</button>
+                      </form>
                     </div>
                   </div>
 
@@ -299,13 +304,6 @@
 
             <div class="natal-tab-content natal-chart-content">
               <div id="natal-chart" th:attr="data-chart=${temaChartJson}">
-                data-ascendant=${temaChart != null
-                ? temaChart.get('houses').get('ascendant')
-                : 119.52},
-                data-mc=${temaChart != null
-                ? temaChart.get('houses').get('mc')
-                : 10.72},
-                data-chart=${temaChart != null ? temaChart : ''}>
               </div>
             </div>
 
