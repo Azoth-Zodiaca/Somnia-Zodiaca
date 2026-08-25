@@ -117,6 +117,19 @@ public class SocialController {
                 return "redirect:/app/social";
         }
 
+        @PostMapping("/app/social/post/{postId}/commento/ajax")
+        @ResponseBody
+        public Map<String, Object> aggiungiCommentoJson(
+                        Authentication authentication,
+                        @PathVariable Long postId,
+                        @RequestParam String testoCommento) {
+
+                PostService.CommentResult result = postService.aggiungiCommento(
+                                authentication.getName(), postId, testoCommento);
+
+                return Map.of("username", result.username(), "testo", result.testo(), "count", result.count());
+        }
+
         @PostMapping("/app/social/post/{postId}/like/toggle")
         @ResponseBody
         public Map<String, Object> toggleLikeJson(
@@ -151,4 +164,18 @@ public class SocialController {
 
         return "redirect:/app/social";
     }
+
+        @PostMapping("/app/social/utente/{username}/follow/ajax")
+        @ResponseBody
+        public Map<String, Object> seguiJson(Authentication authentication, @PathVariable String username) {
+                postService.segui(authentication.getName(), username);
+                return Map.of("following", true);
+        }
+
+        @PostMapping("/app/social/utente/{username}/unfollow/ajax")
+        @ResponseBody
+        public Map<String, Object> smettiDiSeguireJson(Authentication authentication, @PathVariable String username) {
+                postService.smettiDiSeguire(authentication.getName(), username);
+                return Map.of("following", false);
+        }
 }

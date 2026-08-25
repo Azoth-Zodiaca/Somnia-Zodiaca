@@ -61,9 +61,6 @@ public class PostConverter implements GenericConverter<Post, PostDto> {
                 .avatarPath(utente != null
                         ? utente.getAvatarPath()
                         : null)
-                .profiloColore(utente != null
-                        ? utente.getProfiloColore()
-                        : null)
                 .segnoZodiacale(nomeSegno(utente != null
                         ? utente.getSegnoZodiacale()
                         : null))

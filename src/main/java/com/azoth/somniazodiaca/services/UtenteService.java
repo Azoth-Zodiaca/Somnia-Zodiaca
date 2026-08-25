@@ -1,19 +1,28 @@
 package com.azoth.somniazodiaca.services;
 
 import java.io.IOException;
+import java.awt.Color;
+import java.awt.Font;
+import java.awt.FontMetrics;
+import java.awt.Graphics2D;
+import java.awt.RenderingHints;
+import java.awt.image.BufferedImage;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
-import java.util.HexFormat;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
 import java.util.UUID;
 import java.util.regex.Pattern;
 
+import javax.imageio.ImageIO;
+
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.boot.context.event.ApplicationReadyEvent;
+import org.springframework.context.event.EventListener;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
@@ -27,11 +36,14 @@ import com.azoth.somniazodiaca.exceptions.EmailAlreadyExistsException;
 import com.azoth.somniazodiaca.exceptions.UsernameAlreadyExistsException;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.InventarioCosmeticoRepository;
+import com.azoth.somniazodiaca.repositories.CommentoRepository;
+import com.azoth.somniazodiaca.repositories.LikePostRepository;
 import com.azoth.somniazodiaca.repositories.PostRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
 import com.azoth.somniazodiaca.repositories.TemaNataleRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.azoth.somniazodiaca.repositories.UtenteBadgeRepository;
+import com.azoth.somniazodiaca.repositories.UtenteFollowRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -47,10 +59,22 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     private final InterpretazioneRepository interpretazioneRepository;
     private final BadgeService badgeService;
     private final UtenteBadgeRepository utenteBadgeRepository;
+    private final CommentoRepository commentoRepository;
+    private final LikePostRepository likePostRepository;
+    private final UtenteFollowRepository utenteFollowRepository;
     
 
     private static final SecureRandom RANDOM = new SecureRandom();
-    private static final HexFormat HEX_FORMAT = HexFormat.of();
+        private static final List<Color> COLORI_AVATAR = List.of(
+            Color.decode("#F97316"),
+            Color.decode("#E11D48"),
+            Color.decode("#16A34A"),
+            Color.decode("#2563EB"),
+            Color.decode("#9333EA"));
+
+        private static final int DIMENSIONE_AVATAR_GENERATO = 256;
+        private static final int LARGHEZZA_BANNER_GENERATO = 1200;
+        private static final int ALTEZZA_BANNER_GENERATO = 320;
 
     private static final Pattern PASSWORD_FORTE = Pattern.compile(
             "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$");
@@ -75,7 +99,10 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             InventarioCosmeticoRepository inventarioCosmeticoRepository,
             InterpretazioneRepository interpretazioneRepository,
             BadgeService badgeService,
-            UtenteBadgeRepository utenteBadgeRepository) {
+            UtenteBadgeRepository utenteBadgeRepository,
+            CommentoRepository commentoRepository,
+            LikePostRepository likePostRepository,
+            UtenteFollowRepository utenteFollowRepository) {
 
         super(repository, converter);
         this.passwordEncoder = passwordEncoder;
@@ -86,6 +113,9 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         this.interpretazioneRepository = interpretazioneRepository;
         this.badgeService = badgeService;
         this.utenteBadgeRepository = utenteBadgeRepository;
+        this.commentoRepository = commentoRepository;
+        this.likePostRepository = likePostRepository;
+        this.utenteFollowRepository = utenteFollowRepository;
     }
 
     public Optional<UtenteDetail> findByUsername(String username) {
@@ -267,6 +297,12 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
                 .findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
+        likePostRepository.deleteByUtente(utente);
+        likePostRepository.deleteByPost_Utente(utente);
+        commentoRepository.deleteByUtente(utente);
+        commentoRepository.deleteByPost_Utente(utente);
+        utenteFollowRepository.deleteByFollower(utente);
+        utenteFollowRepository.deleteBySeguito(utente);
         temaNataleRepository.deleteByUtente(utente);
         inventarioCosmeticoRepository.deleteByUtente(utente);
         postRepository.deleteByUtente(utente);
@@ -305,22 +341,88 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
                     "La password deve essere forte.");
         }
 
+        Color coloreAvatar = scegliColoreAvatar();
         Utente utente = Utente.builder()
                 .username(registrazione.username())
                 .email(registrazione.email())
                 .passwordHash(passwordEncoder.encode(registrazione.password()))
                 .ruolo(Ruolo.BASE)
-                .profiloColore(generaColoreProfilo())
+            .avatarPath(generaAvatar(registrazione.username(), coloreAvatar))
+            .bannerPath(generaBanner(coloreAvatar))
                 .build();
 
         return getRepository().save(utente);
     }
 
-    private String generaColoreProfilo() {
-        byte[] colore = new byte[3];
-        RANDOM.nextBytes(colore);
+        private Color scegliColoreAvatar() {
+            return COLORI_AVATAR.get(RANDOM.nextInt(COLORI_AVATAR.size()));
+        }
 
-        return "#" + HEX_FORMAT.formatHex(colore).toUpperCase();
+        private String generaAvatar(String username, Color colore) {
+        BufferedImage immagine = new BufferedImage(
+            DIMENSIONE_AVATAR_GENERATO,
+            DIMENSIONE_AVATAR_GENERATO,
+            BufferedImage.TYPE_INT_RGB);
+
+        Graphics2D graphics = immagine.createGraphics();
+        try {
+            graphics.setColor(colore);
+            graphics.fillRect(0, 0, DIMENSIONE_AVATAR_GENERATO, DIMENSIONE_AVATAR_GENERATO);
+            graphics.setColor(Color.WHITE);
+            graphics.setFont(new Font(Font.SANS_SERIF, Font.BOLD, 128));
+            graphics.setRenderingHint(
+                RenderingHints.KEY_TEXT_ANTIALIASING,
+                RenderingHints.VALUE_TEXT_ANTIALIAS_ON);
+
+            String iniziale = username == null || username.isBlank()
+                ? "?"
+                : username.substring(0, 1).toUpperCase();
+            FontMetrics metrics = graphics.getFontMetrics();
+            int x = (DIMENSIONE_AVATAR_GENERATO - metrics.stringWidth(iniziale)) / 2;
+            int y = (DIMENSIONE_AVATAR_GENERATO - metrics.getHeight()) / 2
+                + metrics.getAscent();
+            graphics.drawString(iniziale, x, y);
+        } finally {
+            graphics.dispose();
+        }
+
+        return salvaImmagine(immagine, "avatar");
+    }
+
+    private String generaBanner(Color colore) {
+        BufferedImage immagine = new BufferedImage(
+                LARGHEZZA_BANNER_GENERATO,
+                ALTEZZA_BANNER_GENERATO,
+                BufferedImage.TYPE_INT_RGB);
+        Graphics2D graphics = immagine.createGraphics();
+        try {
+            graphics.setColor(colore);
+            graphics.fillRect(0, 0, LARGHEZZA_BANNER_GENERATO, ALTEZZA_BANNER_GENERATO);
+        } finally {
+            graphics.dispose();
+        }
+
+        return salvaImmagine(immagine, "banner");
+    }
+
+    @EventListener(ApplicationReadyEvent.class)
+    @Transactional
+        public void completaAvatarEsistenti() {
+        List<Utente> utentiDaAggiornare = getRepository().findAll().stream()
+            .filter(utente -> utente.getAvatarPath() == null
+                || utente.getAvatarPath().isBlank())
+                .peek(utente -> {
+                    Color colore = scegliColoreAvatar();
+                    utente.setAvatarPath(generaAvatar(utente.getUsername(), colore));
+                    if (utente.getBannerPath() == null || utente.getBannerPath().isBlank()) {
+                        utente.setBannerPath(generaBanner(colore));
+                    }
+                })
+                .toList();
+
+        if (!utentiDaAggiornare.isEmpty()) {
+            getRepository().saveAll(utentiDaAggiornare);
+        }
     }
 
     @Transactional
@@ -387,6 +489,24 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         } catch (IOException e) {
             throw new IllegalStateException(
                     "Impossibile salvare l'immagine", e);
+        }
+    }
+
+    private String salvaImmagine(BufferedImage immagine, String prefisso) {
+        try {
+            Path directory = Paths.get(uploadDir);
+            Files.createDirectories(directory);
+
+            String nomeFile = prefisso + "-"
+                    + UUID.randomUUID()
+                    + ".png";
+            Path destinazione = directory.resolve(nomeFile);
+            ImageIO.write(immagine, "png", destinazione.toFile());
+
+            return "/uploads/profiles/" + nomeFile;
+        } catch (IOException e) {
+            throw new IllegalStateException(
+                    "Impossibile salvare l'avatar generato", e);
         }
     }
 

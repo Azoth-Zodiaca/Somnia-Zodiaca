@@ -47,7 +47,6 @@ public class AdminInitializer {
                             .qi(10000)
                             .giorniConsecutivi(6)
                             .giorniRicompensaGiornaliera(6)
-                            .profiloColore("#F97316")
                             .build();
 
                     return utenteRepository.save(nuovoAdmin);
@@ -61,7 +60,6 @@ public class AdminInitializer {
         admin.setEmail("admin@somniazodiaca.it");
         admin.setRuolo(Ruolo.ADMIN);
         admin.setQi(0);
-        admin.setProfiloColore("#F97316");
         admin.setSegnoZodiacale(segno);
         admin.setAscendente(segno);
         admin.setGiorniConsecutivi(6);

@@ -26,7 +26,6 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .giorniConsecutivi(d.getGiorniConsecutivi())
                 .giorniRicompensaGiornaliera(d.getGiorniRicompensaGiornaliera())
                 .ultimaRicompensaGiornaliera(d.getUltimaRicompensaGiornaliera())
-                .profiloColore(d.getProfiloColore())
                 .avatarPath(d.getAvatarPath())
                 .bannerPath(d.getBannerPath())
                 .build();
@@ -59,7 +58,6 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .giorniConsecutivi(e.getGiorniConsecutivi())
                 .giorniRicompensaGiornaliera(e.getGiorniRicompensaGiornaliera())
                 .ultimaRicompensaGiornaliera(e.getUltimaRicompensaGiornaliera())
-                .profiloColore(e.getProfiloColore())
                 .avatarPath(e.getAvatarPath())
                 .bannerPath(e.getBannerPath())
                 .dataRegistrazione(e.getCreatedAt())

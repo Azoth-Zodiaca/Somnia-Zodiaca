@@ -134,7 +134,7 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
         }
 
         @Transactional
-        public void aggiungiCommento(String username, Long postId, String testo) {
+        public CommentResult aggiungiCommento(String username, Long postId, String testo) {
                 if (testo == null || testo.isBlank()) {
                         throw new IllegalArgumentException("Il commento non può essere vuoto");
                 }
@@ -144,14 +144,20 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                         throw new IllegalArgumentException("Il commento non può superare 500 caratteri");
                 }
 
+                Post post = getRepository().findById(postId)
+                                .orElseThrow(() -> new IllegalArgumentException("Post non trovato"));
+                Utente utente = trovaUtente(username);
                 Commento commento = Commento.builder()
-                                .post(getRepository().findById(postId)
-                                                .orElseThrow(() -> new IllegalArgumentException("Post non trovato")))
-                                .utente(trovaUtente(username))
+                                .post(post)
+                                .utente(utente)
                                 .testo(testoPulito)
                                 .build();
 
                 commentoRepository.save(commento);
+                return new CommentResult(utente.getUsername(), testoPulito, post.getCommenti().size());
+        }
+
+        public record CommentResult(String username, String testo, int count) {
         }
 
         public record LikeResult(boolean liked, int count) {
