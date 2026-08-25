@@ -22,6 +22,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initComments();
   initSocialActions();
   initSocialMarkdown();
+  initNatalMarkdown();
   initSettingsMenu();
   initDeleteAccountConfirmation();
   initHistoryButtons();
@@ -1202,13 +1203,30 @@ function aggiornaDisponibilitaInterpretazione(submitButton) {
 /* ---------------------------------------------------------
   SOCIAL
 --------------------------------------------------------- */
+function initNatalMarkdown() {
+  const elements = document.querySelectorAll(".natal-interpretation-text");
+
+  if (elements.length === 0 ||
+    typeof marked === "undefined" ||
+    typeof DOMPurify === "undefined") {
+    return;
+  }
+
+  elements.forEach(element => {
+    const markdown = element.textContent.trim();
+
+    element.innerHTML = DOMPurify.sanitize(
+      marked.parse(markdown)
+    );
+  });
+}
 
 function initSocialMarkdown() {
   var markdownElements = document.querySelectorAll(".js-markdown-content");
 
   if (markdownElements.length === 0 ||
-      typeof marked === "undefined" ||
-      typeof DOMPurify === "undefined") {
+    typeof marked === "undefined" ||
+    typeof DOMPurify === "undefined") {
     return;
   }
 
