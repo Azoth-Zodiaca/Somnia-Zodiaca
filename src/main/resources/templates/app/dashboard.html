@@ -14,23 +14,23 @@
         <div class="stats-grid">
           <div class="card stat-card">
             <div class="stat-label">QI</div>
-            <div class="stat-value">&#10022; 1.240</div>
-            <div class="stat-delta">+120 sett.</div>
+            <div class="stat-value">&#10022; <span th:text="${appDomain.dashboard.qi}">-</span></div>
+            <div class="stat-delta">+<span th:text="${appDomain.dashboard.qiSettimanali}">-</span> sett.</div>
           </div>
           <div class="card stat-card">
             <div class="stat-label">Sogni</div>
-            <div class="stat-value">&#9789; 14</div>
+            <div class="stat-value">&#9789; <span th:text="${appDomain.dashboard.sogni}">-</span></div>
             <div class="stat-delta">+12 sett.</div>
           </div>
           <div class="card stat-card">
             <div class="stat-label">Like</div>
-            <div class="stat-value">&#9825; 87</div>
+            <div class="stat-value">&#9825; <span th:text="${appDomain.dashboard.like}">-</span></div>
             <div class="stat-delta">+8 sett.</div>
           </div>
           <div class="card stat-card">
             <div class="stat-label">Streak</div>
-            <div class="stat-value">&#128293; 6 gg</div>
-            <div class="stat-delta">+25 QI domani</div>
+            <div class="stat-value">&#128293; <span th:text="${appDomain.dashboard.streak}">-</span> gg</div>
+            <div class="stat-delta">+<span th:text="${appDomain.dashboard.qiDomani}">-</span> QI domani</div>
           </div>
         </div>
 
@@ -63,7 +63,7 @@
                 </div>
                 <p>Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena illuminava tutto. Non avevo paura, solo un senso di libertà...</p>
                 <div class="dream-actions">
-                  <button class="btn btn-ghost btn-sm">Salva &minus;20 QI</button>
+                  <button class="btn btn-ghost btn-sm">Salva &minus;<span th:text="${appDomain.oracolo.costoPermanenza}">-</span> QI</button>
                   <button class="btn btn-primary btn-sm">Pubblica</button>
                 </div>
               </div>
@@ -79,7 +79,7 @@
               <div class="progress-bar mt-10">
                 <div class="progress-bar-fill dashboard-progress"></div>
               </div>
-              <p class="text-muted mt-10 dashboard-xp">720/1000 XP &middot; Prossimo: Interprete</p>
+              <p class="text-muted mt-10 dashboard-xp"><span th:text="${appDomain.dashboard.xp}">-</span>/<span th:text="${appDomain.dashboard.xpProssimoLivello}">-</span> XP &middot; Prossimo: Interprete</p>
             </div>
 
             <!-- Obiettivi disponibili nella giornata corrente. -->
@@ -88,15 +88,15 @@
               <div class="goal-list">
                 <div class="goal-item done">
                   <div class="goal-left">&#10003; <span class="goal-name">Accedi</span></div>
-                  <span class="goal-reward">+10 QI</span>
+                  <span class="goal-reward">+<span th:text="${appDomain.dashboard.ricompensaAccesso}">-</span> QI</span>
                 </div>
                 <div class="goal-item">
                   <div class="goal-left">&#9633; <span class="goal-name">Interpreta 1 sogno</span></div>
-                  <span class="goal-reward">+25 QI</span>
+                  <span class="goal-reward">+<span th:text="${appDomain.dashboard.ricompensaSogno}">-</span> QI</span>
                 </div>
                 <div class="goal-item">
-                  <div class="goal-left">&#9633; <span class="goal-name">Metti 3 like (1/3)</span></div>
-                  <span class="goal-reward">+5 QI</span>
+                  <div class="goal-left">&#9633; <span class="goal-name">Metti <span th:text="${appDomain.dashboard.likeObiettivo}">-</span> like (1/<span th:text="${appDomain.dashboard.likeObiettivo}">-</span>)</span></div>
+                  <span class="goal-reward">+<span th:text="${appDomain.dashboard.ricompensaLike}">-</span> QI</span>
                 </div>
               </div>
             </div>
@@ -114,15 +114,15 @@
               <div class="card-title"><span>Attività</span><a href="/app/wallet" class="link">Storico &rarr;</a></div>
               <div class="activity-item">
                 <span>Cornice d'Oro</span>
-                <span class="activity-negative">-120</span>
+                <span class="activity-negative">-<span th:text="${appDomain.dashboard.spesaCorniceOro}">-</span></span>
               </div>
               <div class="activity-item">
                 <span>Obiettivo giornaliero</span>
-                <span class="activity-positive">+25</span>
+                <span class="activity-positive">+<span th:text="${appDomain.dashboard.ricompensaSogno}">-</span></span>
               </div>
               <div class="activity-item">
                 <span>Login giornaliero</span>
-                <span class="activity-positive">+10</span>
+                <span class="activity-positive">+<span th:text="${appDomain.dashboard.ricompensaAccesso}">-</span></span>
               </div>
             </div>
           </div>

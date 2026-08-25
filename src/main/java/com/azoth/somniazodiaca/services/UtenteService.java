@@ -31,6 +31,7 @@ import com.azoth.somniazodiaca.converters.UtenteConverter;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.dtos.records.Registrazione;
 import com.azoth.somniazodiaca.entities.Utente;
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.exceptions.EmailAlreadyExistsException;
 import com.azoth.somniazodiaca.exceptions.UsernameAlreadyExistsException;
@@ -62,6 +63,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
     private final CommentoRepository commentoRepository;
     private final LikePostRepository likePostRepository;
     private final UtenteFollowRepository utenteFollowRepository;
+    private final AppDomainProperties appDomainProperties;
     
 
     private static final SecureRandom RANDOM = new SecureRandom();
@@ -77,7 +79,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         private static final int ALTEZZA_BANNER_GENERATO = 320;
 
     private static final Pattern PASSWORD_FORTE = Pattern.compile(
-            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).{8,}$");
+            "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)(?=.*[^A-Za-z\\d]).+$");
 
     private static final long DIMENSIONE_MASSIMA_IMMAGINE = 5 * 1024 * 1024;
 
@@ -102,7 +104,8 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             UtenteBadgeRepository utenteBadgeRepository,
             CommentoRepository commentoRepository,
             LikePostRepository likePostRepository,
-            UtenteFollowRepository utenteFollowRepository) {
+            UtenteFollowRepository utenteFollowRepository,
+            AppDomainProperties appDomainProperties) {
 
         super(repository, converter);
         this.passwordEncoder = passwordEncoder;
@@ -116,6 +119,7 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         this.commentoRepository = commentoRepository;
         this.likePostRepository = likePostRepository;
         this.utenteFollowRepository = utenteFollowRepository;
+        this.appDomainProperties = appDomainProperties;
     }
 
     public Optional<UtenteDetail> findByUsername(String username) {
@@ -213,18 +217,22 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             utente.setGiorniRicompensaGiornaliera(0);
         }
 
-        int[] ricompense = { 10, 20, 40, 70, 110, 150, 200 };
+        java.util.List<Integer> ricompense = appDomainProperties.getWallet().getRicompenseGiornaliere();
+
+        if (ricompense.isEmpty()) {
+            throw new IllegalStateException("Nessuna ricompensa giornaliera configurata");
+        }
 
         int giorno = Math.min(
             Math.max(0, utente.getGiorniRicompensaGiornaliera() == null
                 ? 0
                 : utente.getGiorniRicompensaGiornaliera()) + 1,
-            ricompense.length);
-        int indice = Math.min(giorno, ricompense.length) - 1;
-        int quantitaQi = ricompense[indice];
+            ricompense.size());
+        int indice = Math.min(giorno, ricompense.size()) - 1;
+        int quantitaQi = ricompense.get(indice);
 
         utente.setQi(utente.getQi() + quantitaQi);
-        utente.setGiorniRicompensaGiornaliera(giorno == ricompense.length ? 0 : giorno);
+        utente.setGiorniRicompensaGiornaliera(giorno == ricompense.size() ? 0 : giorno);
         utente.setUltimaRicompensaGiornaliera(oggi);
 
         getRepository().save(utente);
@@ -275,9 +283,9 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
                     "La conferma della nuova password non coincide");
         }
 
-        if (nuovaPassword.length() < 8) {
+        if (nuovaPassword.length() < appDomainProperties.getContenuti().getLimitePasswordCaratteri()) {
             throw new IllegalArgumentException(
-                    "La nuova password deve contenere almeno 8 caratteri");
+                "La nuova password non rispetta il limite configurato");
         }
 
         Utente utente = getRepository().findByUsername(username)
@@ -336,7 +344,9 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
             throw new EmailAlreadyExistsException("L'email esiste già");
         }
 
-        if (!PASSWORD_FORTE.matcher(registrazione.password()).matches()) {
+        if (registrazione.password().length()
+            < appDomainProperties.getContenuti().getLimitePasswordCaratteri()
+            || !PASSWORD_FORTE.matcher(registrazione.password()).matches()) {
             throw new IllegalArgumentException(
                     "La password deve essere forte.");
         }
