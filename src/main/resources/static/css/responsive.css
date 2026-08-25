@@ -1636,27 +1636,6 @@ button {
 
 @media (max-width: 760px) {
 
-    .natal-paywall-overlay,
-    .natal-chart-paywall-overlay {
-        padding: 16px;
-    }
-
-    .natal-paywall-box {
-        padding: 22px 18px;
-    }
-
-    .natal-chart-paywall-wrapper {
-        min-height: 420px;
-        padding: 12px;
-    }
-
-    .natal-chart-paywall-wrapper #natal-chart {
-        min-height: 390px;
-    }
-}
-
-@media (max-width: 760px) {
-
     .natal-inline-paywall,
     .natal-tab-paywall {
         padding: 14px;
@@ -1673,5 +1652,10 @@ button {
 
     .natal-chart-content #natal-chart {
         min-height: 390px;
+    }
+
+    .natal-inline-paywall,
+    .natal-tab-paywall {
+        padding: 14px;
     }
 }

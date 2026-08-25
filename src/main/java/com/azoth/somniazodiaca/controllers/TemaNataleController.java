@@ -82,9 +82,8 @@ public class TemaNataleController {
                                         "ascendenteSimbolo",
                                         temaNataleViewService.simboloDaSegno(segnoAscendente));
 
-                        // CORREZIONE CRITICA: Passa il JSON come stringa a Thymeleaf per prevenire
-                        // l'errore del rendering interrotto
-                        model.addAttribute("temaChart", datiTema.toString());
+                        model.addAttribute("temaChart", datiTema);
+                        model.addAttribute("temaChartJson", datiTema.toString());
 
                         var pianeti = temaNataleViewService.estraiPianeti(datiTema);
 
@@ -98,6 +97,19 @@ public class TemaNataleController {
                 }
 
                 return "app/tema-natale";
+        }
+
+        @GetMapping("/app/tema-natale/modifica")
+        public String modificaTemaNatale(Authentication authentication, Model model) {
+                Utente utente = utenteRepository
+                                .findByUsername(authentication.getName())
+                                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+                TemaNataleDto temaNatale = temaNataleService.findByUtenteId(utente.getId())
+                                .orElseThrow(() -> new IllegalArgumentException("Tema natale non trovato"));
+
+                model.addAttribute("temaNatale", temaNatale);
+                return "app/tema-natale-modifica";
         }
 
 }

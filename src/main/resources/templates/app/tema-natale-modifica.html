@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Modifica tema natale - Somnia Zodiaca', responsive=true)}"></head>
+
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='tema-natale')}"></div>
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Modifica tema natale')}"></div>
+
+      <main class="app-content">
+        <div class="natal-header">
+          <div>
+            <h2 class="serif natal-title">Modifica i dati di nascita</h2>
+            <p class="subtitle">Disponibile per gli utenti Premium.</p>
+          </div>
+          <a th:href="@{/app/tema-natale}" class="btn btn-outline btn-sm">Annulla</a>
+        </div>
+
+        <div class="card natal-edit-card">
+          <form th:action="@{/onboarding/dati-nascita}" method="post">
+            <div class="field">
+              <label for="data-nascita">Data di nascita</label>
+              <input type="date" id="data-nascita" name="dataNascita"
+                th:value="${temaNatale.dataNascita}" required>
+            </div>
+
+            <div class="field">
+              <label for="ora-nascita">Ora di nascita (facoltativa)</label>
+              <input type="time" id="ora-nascita" name="oraNascita"
+                th:value="${temaNatale.oraNascita}">
+            </div>
+
+            <div class="field">
+              <label for="luogo-nascita">Luogo di nascita</label>
+              <input type="text" id="luogo-nascita" name="luogoNascita"
+                th:value="${temaNatale.luogoNascita}" required>
+              <div id="risultati-localita"></div>
+            </div>
+
+            <input type="hidden" id="geoname-id" name="geonameId" th:value="${temaNatale.geonameId}">
+            <input type="hidden" id="latitudine" name="latitudine" th:value="${temaNatale.latitudine}">
+            <input type="hidden" id="longitudine" name="longitudine" th:value="${temaNatale.longitudine}">
+            <input type="hidden" id="timezone" name="timezone" th:value="${temaNatale.timezone}">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+            <button type="submit" class="btn btn-primary">Ricalcola il tema natale</button>
+          </form>
+        </div>
+      </main>
+    </div>
+  </div>
+  <script th:src="@{/js/onboarding.js}"></script>
+</body>
+
+</html>
