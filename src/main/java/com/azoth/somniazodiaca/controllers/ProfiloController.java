@@ -20,6 +20,7 @@ import com.azoth.somniazodiaca.repositories.SognoRepository;
 import com.azoth.somniazodiaca.services.ElementoService;
 import com.azoth.somniazodiaca.services.PianetaService;
 import com.azoth.somniazodiaca.services.MetalloService;
+import com.azoth.somniazodiaca.repositories.UtenteFollowRepository;
 @Controller
 public class ProfiloController {
 
@@ -31,6 +32,7 @@ public class ProfiloController {
     private final ElementoService elementoService;
     private final PianetaService pianetaService;
     private final MetalloService metalloService;
+    private final UtenteFollowRepository utenteFollowRepository;
 
     public ProfiloController(
             UtenteService utenteService,
@@ -40,7 +42,8 @@ public class ProfiloController {
             SognoRepository sognoRepository,
             ElementoService elementoService,
             PianetaService pianetaService,
-            MetalloService metalloService) {
+            MetalloService metalloService,
+            UtenteFollowRepository utenteFollowRepository) {
 
         this.utenteService = utenteService;
         this.badgeService = badgeService;
@@ -50,6 +53,7 @@ public class ProfiloController {
         this.elementoService = elementoService;
         this.pianetaService = pianetaService;
         this.metalloService = metalloService;
+        this.utenteFollowRepository = utenteFollowRepository;
     }
 
     @GetMapping("/profilo")
@@ -62,6 +66,28 @@ public class ProfiloController {
         UtenteDetail utente = utenteService.findByUsername(authentication.getName())
                 .orElseThrow(() -> new IllegalStateException("Utente autenticato non trovato"));
 
+        preparaProfilo(authentication.getName(), utente, true, model);
+        return "app/profilo";
+        }
+
+        @GetMapping("/app/social/utente/{username}")
+        public String profiloSocial(
+            Authentication authentication,
+            @org.springframework.web.bind.annotation.PathVariable String username,
+            Model model) {
+        UtenteDetail utente = utenteService.findByUsername(username)
+            .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        preparaProfilo(authentication.getName(), utente,
+            authentication.getName().equals(utente.getUsername()), model);
+        return "app/profilo";
+        }
+
+        private void preparaProfilo(
+            String currentUsername,
+            UtenteDetail utente,
+            boolean profiloProprio,
+            Model model) {
         long numeroPost = postService.findByUtenteId(utente.getId()).size();
         long numeroLike = likePostRepository.countLikeRicevuti(utente.getId());
         long numeroSogni = sognoRepository.countByUtente_Id(utente.getId());
@@ -69,8 +95,12 @@ public class ProfiloController {
         model.addAttribute("numeroPost", numeroPost);
         model.addAttribute("numeroLike", numeroLike);
         model.addAttribute("numeroSogni", numeroSogni);
-        model.addAttribute("postsProfilo", postService.findByUtenteId(utente.getId()));
-        model.addAttribute("currentUsername", authentication.getName());
+        model.addAttribute("postsProfilo", postService.findByUtenteId(utente.getId(), currentUsername));
+        model.addAttribute("currentUsername", currentUsername);
+        model.addAttribute("profiloProprio", profiloProprio);
+        model.addAttribute("seguitoDaCurrentUser", !profiloProprio
+            && utenteFollowRepository.existsByFollowerIdAndSeguitoId(
+                utenteService.findByUsername(currentUsername).orElseThrow().getId(), utente.getId()));
         model.addAttribute("username", utente.getUsername());
         model.addAttribute("ruolo", utente.getRuolo());
         model.addAttribute("saldoQI", utente.getQi());
@@ -81,8 +111,7 @@ public class ProfiloController {
         model.addAttribute("avatarPath", utente.getAvatarPath());
         model.addAttribute("bannerPath", utente.getBannerPath());
 
-        List<BadgeViewDto> badges = badgeService
-                .getProgressi(authentication.getName());
+        List<BadgeViewDto> badges = badgeService.getProgressi(utente.getUsername());
             
         long badgeSbloccati = badges.stream()
                 .filter(BadgeViewDto::sbloccato)
@@ -114,7 +143,6 @@ public class ProfiloController {
             }
         }
 
-        return "app/profilo";
     }
 
     @PostMapping(value = "/app/profilo/immagini", consumes = MediaType.MULTIPART_FORM_DATA_VALUE)

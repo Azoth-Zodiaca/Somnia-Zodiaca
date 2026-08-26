@@ -1518,6 +1518,32 @@ h4 {
   margin-bottom: 6px;
 }
 
+.profile-identity-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 10px;
+  width: 100%;
+}
+
+.profile-identity-row h2 {
+  margin: 0;
+}
+
+.profile-follow-action {
+  margin-left: auto;
+}
+
+.social-profile-link {
+  color: inherit;
+  text-decoration: none;
+}
+
+.social-profile-link:hover {
+  color: var(--text-primary);
+  text-decoration: underline;
+}
+
 .profile-meta {
   color: var(--text-muted);
   font-size: 13px;

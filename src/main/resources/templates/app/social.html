@@ -34,7 +34,7 @@
 
             <div th:unless="${#lists.isEmpty(seguiti)}" class="social-following-list">
               <div th:each="seguito : ${seguiti}" class="social-following-item">
-                <a class="social-following-profile" th:href="@{/app/social}">
+                <a class="social-following-profile" th:href="@{'/app/social/utente/' + ${seguito.username}}">
                   <div class="avatar social-avatar">
                     <img th:if="${seguito.avatarPath != null}" th:src="@{${seguito.avatarPath}}" alt="Avatar">
                     <span th:unless="${seguito.avatarPath != null}"

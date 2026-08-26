@@ -1458,6 +1458,10 @@ button {
     flex-wrap: wrap;
 }
 
+.profile-identity-row {
+    min-width: 0;
+}
+
 .profile-header-info h2,
 .profile-meta,
 .profile-quickstats span {
@@ -1497,6 +1501,14 @@ button {
     .profile-header-info {
         align-items: flex-start;
         gap: 8px;
+    }
+
+    .profile-identity-row {
+        align-items: flex-start;
+    }
+
+    .profile-follow-action {
+        margin-left: auto;
     }
 
     .profile-header-info h2 {

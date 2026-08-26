@@ -27,7 +27,8 @@
 
                     <div>
                         <div class="name">
-                            <span th:text="${'@' + post.username}">@utente</span>
+                            <a class="social-profile-link" th:href="@{'/app/social/utente/' + ${post.username}}"
+                                th:text="${'@' + post.username}">@utente</a>
 
                             <span th:if="${post.premium}" class="badge badge-premium social-premium-badge">
                                 Premium

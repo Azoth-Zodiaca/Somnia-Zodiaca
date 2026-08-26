@@ -16,7 +16,7 @@
         <div class="profile-banner">
           <img th:if="${bannerPath != null}" class="profile-banner-image" th:src="@{${bannerPath}}"
             alt="Immagine banner">
-          <button type="button" class="btn btn-ghost btn-sm profile-edit-button" id="mostra-upload-profilo">
+          <button th:if="${profiloProprio}" type="button" class="btn btn-ghost btn-sm profile-edit-button" id="mostra-upload-profilo">
             &#9998; Modifica
           </button>
           <div class="profile-avatar-lg">
@@ -28,7 +28,7 @@
             </span>
           </div>
         </div>
-        <form id="upload-profilo-form" class="profile-upload-form is-hidden" method="post" enctype="multipart/form-data"
+        <form th:if="${profiloProprio}" id="upload-profilo-form" class="profile-upload-form is-hidden" method="post" enctype="multipart/form-data"
           th:action="@{/app/profilo/immagini}">
 
           <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
@@ -46,8 +46,22 @@
 
         <!-- Identita, ruolo e statistiche rapide. -->
         <div class="profile-header-info">
-          <h2><span th:text="${'@' + username}">@username</span></h2>
-          <span class="badge badge-premium" th:text="${ruolo}">ruolo</span>
+          <div class="profile-identity-row">
+            <h2><span th:text="${'@' + username}">@username</span></h2>
+            <span class="badge badge-premium" th:text="${ruolo}">ruolo</span>
+            <div th:if="${!profiloProprio}" class="profile-follow-action">
+              <form th:if="${!seguitoDaCurrentUser}" method="post"
+                th:action="@{'/app/social/utente/' + ${username} + '/follow'}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="btn btn-primary btn-sm">Segui</button>
+              </form>
+              <form th:if="${seguitoDaCurrentUser}" method="post"
+                th:action="@{'/app/social/utente/' + ${username} + '/unfollow'}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="btn btn-ghost btn-sm">Smetti di seguire</button>
+              </form>
+            </div>
+          </div>
         </div>
         <p class="profile-meta">
           <span th:if="${profiloSegnoZodiacale != null}" th:text="${#strings.capitalize(
@@ -79,7 +93,7 @@
           </span>
         </p>
         <div class="profile-quickstats">
-          <span><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${saldoQI}">0</span> QI</span>
+          <span th:if="${profiloProprio}"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${saldoQI}">0</span> QI</span>
           <span>&#9825; <span th:text="${numeroLike}">0</span> Like</span>
           <span>&#9789; <span th:text="${numeroSogni}">0</span> Sogni</span>
           <span>&#128172; <span th:text="${numeroPost}">0</span> Post</span>

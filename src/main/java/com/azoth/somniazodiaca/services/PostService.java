@@ -59,6 +59,14 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
         }
 
         @Transactional
+        public List<PostDto> findByUtenteId(Long utenteId, String viewerUsername) {
+                Utente viewer = trovaUtente(viewerUsername);
+                return convertiFeed(
+                                getRepository().findByUtenteIdOrderByDataPubblicazioneDesc(utenteId),
+                                viewer.getId());
+        }
+
+        @Transactional
         public void creaPost(
                         String username,
                         Long interpretazioneId,
