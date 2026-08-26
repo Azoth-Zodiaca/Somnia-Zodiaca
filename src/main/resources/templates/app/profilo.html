@@ -14,15 +14,15 @@
 
         <!-- Immagini del profilo e form di caricamento. -->
         <div class="profile-banner">
-          <img th:if="${bannerPath != null}" class="profile-banner-image" th:src="@{${bannerPath}}"
+          <img th:if="${profiloBannerPath != null}" class="profile-banner-image" th:src="@{${profiloBannerPath}}"
             alt="Immagine banner">
           <button th:if="${profiloProprio}" type="button" class="btn btn-ghost btn-sm profile-edit-button" id="mostra-upload-profilo">
             &#9998; Modifica
           </button>
           <div class="profile-avatar-lg">
-            <img th:if="${avatarPath != null}" th:src="@{${avatarPath}}" alt="Immagine profilo">
-            <span th:unless="${avatarPath != null}" th:text="${username != null and !username.isEmpty()
-          ? #strings.toUpperCase(#strings.substring(username, 0, 1))
+            <img th:if="${profiloAvatarPath != null}" th:src="@{${profiloAvatarPath}}" alt="Immagine profilo">
+            <span th:unless="${profiloAvatarPath != null}" th:text="${profiloUsername != null and !profiloUsername.isEmpty()
+          ? #strings.toUpperCase(#strings.substring(profiloUsername, 0, 1))
           : '?'}">
               L
             </span>
@@ -47,16 +47,18 @@
         <!-- Identita, ruolo e statistiche rapide. -->
         <div class="profile-header-info">
           <div class="profile-identity-row">
-            <h2><span th:text="${'@' + username}">@username</span></h2>
-            <span class="badge badge-premium" th:text="${ruolo}">ruolo</span>
+            <h2><span th:text="${'@' + profiloUsername}">@username</span></h2>
+            <span class="badge badge-premium" th:text="${profiloRuolo}">ruolo</span>
             <div th:if="${!profiloProprio}" class="profile-follow-action">
               <form th:if="${!seguitoDaCurrentUser}" method="post"
-                th:action="@{'/app/social/utente/' + ${username} + '/follow'}">
+                th:action="@{'/app/social/utente/' + ${profiloUsername} + '/follow'}"
+                th:attr="data-follow-username=${profiloUsername},data-follow-action='follow'">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <button type="submit" class="btn btn-primary btn-sm">Segui</button>
               </form>
               <form th:if="${seguitoDaCurrentUser}" method="post"
-                th:action="@{'/app/social/utente/' + ${username} + '/unfollow'}">
+                th:action="@{'/app/social/utente/' + ${profiloUsername} + '/unfollow'}"
+                th:attr="data-follow-username=${profiloUsername},data-follow-action='unfollow'">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <button type="submit" class="btn btn-ghost btn-sm">Smetti di seguire</button>
               </form>
@@ -79,21 +81,21 @@
           </span>
           &middot;
           Membro dal
-          <span th:text="${dataRegistrazione != null
-                ? #temporals.format(dataRegistrazione, 'dd/MM/yyyy')
+              <span th:text="${profiloDataRegistrazione != null
+                ? #temporals.format(profiloDataRegistrazione, 'dd/MM/yyyy')
                 : 'Data non disponibile'}">
             Data non disponibile
           </span>
           &middot;
           Ultimo accesso
-          <span th:text="${ultimoAccesso != null
-        ? #temporals.format(ultimoAccesso, 'dd/MM/yyyy')
+          <span th:text="${profiloUltimoAccesso != null
+        ? #temporals.format(profiloUltimoAccesso, 'dd/MM/yyyy')
         : 'Mai'}">
             Mai
           </span>
         </p>
         <div class="profile-quickstats">
-          <span th:if="${profiloProprio}"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${saldoQI}">0</span> QI</span>
+          <span th:if="${profiloProprio}"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${profiloSaldoQI}">0</span> QI</span>
           <span>&#9825; <span th:text="${numeroLike}">0</span> Like</span>
           <span>&#9789; <span th:text="${numeroSogni}">0</span> Sogni</span>
           <span>&#128172; <span th:text="${numeroPost}">0</span> Post</span>

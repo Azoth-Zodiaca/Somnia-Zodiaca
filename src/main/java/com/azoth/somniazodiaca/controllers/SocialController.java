@@ -152,7 +152,7 @@ public class SocialController {
 
         postService.segui(authentication.getName(), username);
 
-        return "redirect:/app/social";
+        return "redirect:/app/social/utente/" + username;
     }
 
     @PostMapping("/app/social/utente/{username}/unfollow")
@@ -162,7 +162,7 @@ public class SocialController {
 
         postService.smettiDiSeguire(authentication.getName(), username);
 
-        return "redirect:/app/social";
+        return "redirect:/app/social/utente/" + username;
     }
 
         @PostMapping("/app/social/utente/{username}/follow/ajax")

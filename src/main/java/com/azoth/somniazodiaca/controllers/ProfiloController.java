@@ -6,6 +6,7 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
@@ -73,10 +74,12 @@ public class ProfiloController {
         @GetMapping("/app/social/utente/{username}")
         public String profiloSocial(
             Authentication authentication,
-            @org.springframework.web.bind.annotation.PathVariable String username,
+            @PathVariable String username,
             Model model) {
-        UtenteDetail utente = utenteService.findByUsername(username)
-            .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+        UtenteDetail utente = utenteService.findByUsername(username).orElse(null);
+        if (utente == null) {
+            return "redirect:/app/social";
+        }
 
         preparaProfilo(authentication.getName(), utente,
             authentication.getName().equals(utente.getUsername()), model);
@@ -101,15 +104,15 @@ public class ProfiloController {
         model.addAttribute("seguitoDaCurrentUser", !profiloProprio
             && utenteFollowRepository.existsByFollowerIdAndSeguitoId(
                 utenteService.findByUsername(currentUsername).orElseThrow().getId(), utente.getId()));
-        model.addAttribute("username", utente.getUsername());
-        model.addAttribute("ruolo", utente.getRuolo());
-        model.addAttribute("saldoQI", utente.getQi());
+        model.addAttribute("profiloUsername", utente.getUsername());
+        model.addAttribute("profiloRuolo", utente.getRuolo());
+        model.addAttribute("profiloSaldoQI", utente.getQi());
         model.addAttribute("profiloSegnoZodiacale", utente.getSegnoZodiacale());
         model.addAttribute("profiloAscendente", utente.getAscendente());
-        model.addAttribute("dataRegistrazione", utente.getDataRegistrazione());
-        model.addAttribute("ultimoAccesso", utente.getUltimoAccesso());
-        model.addAttribute("avatarPath", utente.getAvatarPath());
-        model.addAttribute("bannerPath", utente.getBannerPath());
+        model.addAttribute("profiloDataRegistrazione", utente.getDataRegistrazione());
+        model.addAttribute("profiloUltimoAccesso", utente.getUltimoAccesso());
+        model.addAttribute("profiloAvatarPath", utente.getAvatarPath());
+        model.addAttribute("profiloBannerPath", utente.getBannerPath());
 
         List<BadgeViewDto> badges = badgeService.getProgressi(utente.getUsername());
             
