@@ -72,6 +72,9 @@ public class OracoloController {
                 model.addAttribute("interpretazioni", interpretazioni);
                 model.addAttribute("premiumTemaNatale",
                                 !"BASE".equals(utente.getRuolo().name()));
+                int interpretazioniResidue = oracoloService.interpretazioniResidue(authentication.getName());
+                model.addAttribute("interpretazioniResidue", interpretazioniResidue);
+                model.addAttribute("interpretazioniIllimitate", interpretazioniResidue < 0);
 
                 model.addAttribute("testoSogno", testoSogno);
                 model.addAttribute("interpretazioneId", interpretazioneId);
@@ -95,7 +98,7 @@ public class OracoloController {
                         throw new IllegalArgumentException("Il testo del sogno supera il limite configurato");
                 }
 
-                oracoloService.verificaQiDisponibili(authentication.getName());
+                oracoloService.verificaAccessoInterpretazione(authentication.getName());
 
                 StringBuilder prompt = new StringBuilder();
 
@@ -173,7 +176,11 @@ public class OracoloController {
                                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"))
                                 .getQi();
 
-                return Map.of("id", id, "qi", qi);
+                return Map.of(
+                                "id", id,
+                                "qi", qi,
+                                "interpretazioniResidue",
+                                oracoloService.interpretazioniResidue(authentication.getName()));
         }
 
         @PostMapping(value = "/app/oracolo/rendi-permanente", consumes = MediaType.APPLICATION_JSON_VALUE, produces = MediaType.APPLICATION_JSON_VALUE)

@@ -1,6 +1,9 @@
 package com.azoth.somniazodiaca.services;
 
+import java.time.DayOfWeek;
 import java.time.LocalDateTime;
+import java.time.ZoneId;
+import java.time.temporal.TemporalAdjusters;
 
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -12,6 +15,7 @@ import com.azoth.somniazodiaca.entities.Sogno;
 import com.azoth.somniazodiaca.entities.Utente;
 import com.azoth.somniazodiaca.enums.StileEnum;
 import com.azoth.somniazodiaca.enums.UmoreEnum;
+import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
@@ -48,6 +52,45 @@ public class OracoloService {
         }
     }
 
+    public void verificaAccessoInterpretazione(String username) {
+        Utente utente = utenteRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        if (utente.getRuolo() == Ruolo.BASE
+                && contaInterpretazioniSettimana(utente)
+                        >= appDomainProperties.getPremium().getInterpretazioniFreeSettimana()) {
+            throw new IllegalStateException("Hai raggiunto il limite settimanale di interpretazioni");
+        }
+
+        if (utente.getQi() < appDomainProperties.getOracolo().getCostoInterpretazione()) {
+            throw new IllegalStateException("QI insufficienti");
+        }
+    }
+
+    public int interpretazioniResidue(String username) {
+        Utente utente = utenteRepository.findByUsername(username)
+                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+        if (utente.getRuolo() != Ruolo.BASE) {
+            return -1;
+        }
+
+        int limite = appDomainProperties.getPremium().getInterpretazioniFreeSettimana();
+        return Math.max(0, limite - (int) contaInterpretazioniSettimana(utente));
+    }
+
+    private long contaInterpretazioniSettimana(Utente utente) {
+        ZoneId zoneId = ZoneId.systemDefault();
+        LocalDateTime inizioSettimana = LocalDateTime.now(zoneId)
+                .with(TemporalAdjusters.previousOrSame(DayOfWeek.MONDAY))
+                .toLocalDate()
+                .atStartOfDay();
+
+        return interpretazioneRepository
+                .countBySogno_Utente_IdAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+                        utente.getId(), inizioSettimana, inizioSettimana.plusWeeks(1));
+    }
+
     @Transactional
     public Long salvaInterpretazione(
             String username,
@@ -63,9 +106,7 @@ public class OracoloService {
         Utente utente = utenteRepository.findByUsername(username)
                 .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
 
-        if (utente.getQi() < appDomainProperties.getOracolo().getCostoInterpretazione()) {
-            throw new IllegalStateException("QI insufficienti");
-        }
+        verificaAccessoInterpretazione(username);
 
         Sogno sogno = Sogno.builder()
                 .utente(utente)

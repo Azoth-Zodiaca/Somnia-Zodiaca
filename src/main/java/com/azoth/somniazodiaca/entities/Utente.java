@@ -59,6 +59,12 @@ public class Utente extends BaseEntity {
     @Builder.Default
     private Integer qi = 0;
 
+    @Column(name = "premium_attivato_at")
+    private LocalDateTime premiumAttivatoAt;
+
+    @Column(name = "prossimo_bonus_premium_at")
+    private LocalDateTime prossimoBonusPremiumAt;
+
     @Column(name = "ultimo_accesso")
     private LocalDateTime ultimoAccesso;
 

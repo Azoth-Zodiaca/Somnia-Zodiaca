@@ -80,6 +80,7 @@
                 th:data-costo-permanenza="${appDomain.oracolo.costoPermanenza}"
                 th:data-durata-cache-ore="${appDomain.oracolo.durataCacheOre}"
                 th:data-limite-sogno-caratteri="${appDomain.oracolo.limiteSognoCaratteri}"
+                th:data-interpretazioni-residue="${interpretazioniResidue}"
                 th:data-interpretazione-id="${interpretazioneId}" th:data-azione="${azione}">
                 <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
                 <input type="hidden" id="umore" value="Sereno">
@@ -90,6 +91,9 @@
                 <div class="oracolo-meta">
                   <span id="dream-counter" class="text-muted oracolo-counter"
                     th:text="${'0 / ' + appDomain.oracolo.limiteSognoCaratteri}">-</span>
+                  <span class="text-muted" th:if="${interpretazioniIllimitate}">Interpretazioni illimitate</span>
+                  <span id="interpretazioni-residue" class="text-muted" th:unless="${interpretazioniIllimitate}"
+                    th:text="${interpretazioniResidue + ' interpretazioni rimaste questa settimana'}">-</span>
                 </div>
 
                 <!-- Umore associato al sogno. -->
@@ -144,7 +148,8 @@
                     <button id="svuota-oracolo" type="button" class="btn btn-ghost btn-sm">
                       Svuota
                     </button>
-                    <button type="submit" class="btn btn-primary btn-sm"><span class="qi-symbol"
+                    <button type="submit" class="btn btn-primary btn-sm"
+                      th:disabled="${!interpretazioniIllimitate and interpretazioniResidue == 0}"><span class="qi-symbol"
                         aria-hidden="true">&#9791;</span> Interpreta il sogno - <span
                         th:text="${appDomain.oracolo.costoInterpretazione}">-</span> QI</button>
                   </div>

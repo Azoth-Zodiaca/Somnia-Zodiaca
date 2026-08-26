@@ -729,6 +729,8 @@ function initOracoloForm() {
       savedInterpretationId = Number(saveData.id);
       aggiornaSaldoQi(saveData.qi);
 
+      aggiornaInterpretazioniResidue(form, saveData.interpretazioniResidue);
+
       mostraFormCondivisione(savedInterpretationId, false);
 
       resultBox.dataset.interpretazioneId = savedInterpretationId;
@@ -757,10 +759,10 @@ function initOracoloForm() {
       }
     } catch (error) {
       console.error(error);
-      resultText.textContent =
+      resultText.textContent = error.message ||
         "Non è stato possibile interpretare il sogno.";
     } finally {
-      submitButton.disabled = false;
+      aggiornaDisponibilitaInterpretazione(submitButton);
     }
   });
 
@@ -1273,11 +1275,31 @@ function aggiornaDisponibilitaInterpretazione(submitButton) {
     '#oracolo-form button[type="submit"]'
   );
   var saldo = document.getElementById("saldo-qi");
+  var form = document.getElementById("oracolo-form");
 
-  if (button && saldo) {
-    button.disabled = Number(saldo.textContent.trim()) <
+  if (button) {
+    var saldoInsufficiente = saldo && Number(saldo.textContent.trim()) <
       configurazioneOracolo().costoInterpretazione;
+    var limiteRaggiunto = form && form.dataset.interpretazioniResidue === "0";
+    button.disabled = Boolean(saldoInsufficiente || limiteRaggiunto);
   }
+}
+
+function aggiornaInterpretazioniResidue(form, residue) {
+  var valore = Number(residue);
+
+  if (!Number.isFinite(valore) || valore < 0) {
+    return;
+  }
+
+  form.dataset.interpretazioniResidue = String(valore);
+
+  var elemento = document.getElementById("interpretazioni-residue");
+  if (elemento) {
+    elemento.textContent = valore + " interpretazioni rimaste questa settimana";
+  }
+
+  aggiornaDisponibilitaInterpretazione();
 }
 
 /* ---------------------------------------------------------

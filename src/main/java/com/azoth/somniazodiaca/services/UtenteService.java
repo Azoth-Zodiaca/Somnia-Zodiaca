@@ -1,17 +1,18 @@
 package com.azoth.somniazodiaca.services;
 
-import java.io.IOException;
 import java.awt.Color;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
+import java.io.IOException;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.security.SecureRandom;
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 import java.util.Optional;
 import java.util.Set;
@@ -23,28 +24,29 @@ import javax.imageio.ImageIO;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.boot.context.event.ApplicationReadyEvent;
 import org.springframework.context.event.EventListener;
+import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 import org.springframework.web.multipart.MultipartFile;
 
+import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.converters.UtenteConverter;
 import com.azoth.somniazodiaca.dtos.UtenteDetail;
 import com.azoth.somniazodiaca.dtos.records.Registrazione;
 import com.azoth.somniazodiaca.entities.Utente;
-import com.azoth.somniazodiaca.config.AppDomainProperties;
 import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.exceptions.EmailAlreadyExistsException;
 import com.azoth.somniazodiaca.exceptions.UsernameAlreadyExistsException;
+import com.azoth.somniazodiaca.repositories.CommentoRepository;
 import com.azoth.somniazodiaca.repositories.InterpretazioneRepository;
 import com.azoth.somniazodiaca.repositories.InventarioCosmeticoRepository;
-import com.azoth.somniazodiaca.repositories.CommentoRepository;
 import com.azoth.somniazodiaca.repositories.LikePostRepository;
 import com.azoth.somniazodiaca.repositories.PostRepository;
 import com.azoth.somniazodiaca.repositories.SognoRepository;
 import com.azoth.somniazodiaca.repositories.TemaNataleRepository;
-import com.azoth.somniazodiaca.repositories.UtenteRepository;
 import com.azoth.somniazodiaca.repositories.UtenteBadgeRepository;
 import com.azoth.somniazodiaca.repositories.UtenteFollowRepository;
+import com.azoth.somniazodiaca.repositories.UtenteRepository;
 
 import jakarta.transaction.Transactional;
 
@@ -140,6 +142,14 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         }
 
         utente.setRuolo(Ruolo.PREMIUM);
+        LocalDateTime adesso = LocalDateTime.now();
+        if (utente.getPremiumAttivatoAt() == null) {
+            utente.setPremiumAttivatoAt(adesso);
+        }
+        if (utente.getProssimoBonusPremiumAt() == null
+            || !utente.getProssimoBonusPremiumAt().isAfter(adesso)) {
+            utente.setProssimoBonusPremiumAt(adesso.plusMonths(1));
+        }
         return getConverter().fromEToD(getRepository().save(utente));
     }
 
@@ -153,6 +163,14 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
         }
 
         utente.setRuolo(Ruolo.BASE);
+        LocalDateTime prossimoBonus = utente.getProssimoBonusPremiumAt();
+        if (prossimoBonus != null) {
+            LocalDateTime adesso = LocalDateTime.now();
+            while (!prossimoBonus.isAfter(adesso)) {
+                prossimoBonus = prossimoBonus.plusMonths(1);
+            }
+            utente.setProssimoBonusPremiumAt(prossimoBonus);
+        }
         return getConverter().fromEToD(getRepository().save(utente));
     }
 
@@ -167,6 +185,39 @@ public class UtenteService extends GenericService<Long, Utente, UtenteDetail, Ut
 
         utente.setQi(utente.getQi() + quantitaQi);
         getRepository().save(utente);
+    }
+
+    @Transactional
+    @Scheduled(fixedDelay = 86_400_000L)
+    public int accreditaBonusPremium() {
+        LocalDateTime adesso = LocalDateTime.now();
+        int utentiAccreditati = 0;
+
+        for (Utente utente : getRepository().findByRuolo(Ruolo.PREMIUM)) {
+            LocalDateTime prossimoBonus = utente.getProssimoBonusPremiumAt();
+            if (prossimoBonus == null) {
+                prossimoBonus = (utente.getPremiumAttivatoAt() != null
+                        ? utente.getPremiumAttivatoAt()
+                        : adesso).plusMonths(1);
+            }
+
+            boolean accreditato = false;
+            while (!prossimoBonus.isAfter(adesso)) {
+                utente.setQi(utente.getQi() + appDomainProperties.getPremium().getQiMensili());
+                prossimoBonus = prossimoBonus.plusMonths(1);
+                accreditato = true;
+            }
+
+            if (accreditato || utente.getProssimoBonusPremiumAt() == null) {
+                utente.setProssimoBonusPremiumAt(prossimoBonus);
+                getRepository().save(utente);
+                if (accreditato) {
+                    utentiAccreditati++;
+                }
+            }
+        }
+
+        return utentiAccreditati;
     }
 
     @Transactional

@@ -23,6 +23,11 @@ public interface InterpretazioneRepository extends JpaRepository<Interpretazione
 
         long countBySogno_Utente_Id(Long utenteId);
 
+        long countBySogno_Utente_IdAndCreatedAtGreaterThanEqualAndCreatedAtLessThan(
+            Long utenteId,
+            LocalDateTime inizioSettimana,
+            LocalDateTime fineSettimana);
+
         @Query("""
                         SELECT i
                         FROM Interpretazione i
