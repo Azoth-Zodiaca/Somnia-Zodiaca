@@ -34,6 +34,13 @@ WHERE
     nome = 'LEONE'
 LIMIT 1;
 
+SELECT id INTO @segno_toro FROM segni_zodiacali WHERE nome = 'TORO' LIMIT 1;
+SELECT id INTO @segno_cancro FROM segni_zodiacali WHERE nome = 'CANCRO' LIMIT 1;
+SELECT id INTO @segno_gemelli FROM segni_zodiacali WHERE nome = 'GEMELLI' LIMIT 1;
+SELECT id INTO @segno_vergine FROM segni_zodiacali WHERE nome = 'VERGINE' LIMIT 1;
+SELECT id INTO @segno_sagittario FROM segni_zodiacali WHERE nome = 'SAGITTARIO' LIMIT 1;
+SELECT id INTO @segno_bilancia FROM segni_zodiacali WHERE nome = 'BILANCIA' LIMIT 1;
+
 -- Crea utenti demo se non esistono
 INSERT INTO
     utenti (
@@ -50,8 +57,8 @@ INSERT INTO
         updated_at
     )
 SELECT
-    'sofia_pesci',
-    'sofia.pesci@demo.it',
+    'sofia_rossi',
+    'sofia.rossi@demo.it',
     @password_demo,
     'BASE',
     500,
@@ -66,7 +73,7 @@ WHERE
         SELECT 1
         FROM utenti
         WHERE
-            username = 'sofia_pesci'
+            username = 'sofia_rossi'
     );
 
 INSERT INTO
@@ -84,8 +91,8 @@ INSERT INTO
         updated_at
     )
 SELECT
-    'marco_ariete',
-    'marco.ariete@demo.it',
+    'marco_bianchi',
+    'marco.bianchi@demo.it',
     @password_demo,
     'BASE',
     350,
@@ -100,7 +107,7 @@ WHERE
         SELECT 1
         FROM utenti
         WHERE
-            username = 'marco_ariete'
+            username = 'marco_bianchi'
     );
 
 INSERT INTO
@@ -118,8 +125,8 @@ INSERT INTO
         updated_at
     )
 SELECT
-    'ely_acquario',
-    'ely.acquario@demo.it',
+    'elisa_romano',
+    'elisa.romano@demo.it',
     @password_demo,
     'BASE',
     720,
@@ -134,7 +141,7 @@ WHERE
         SELECT 1
         FROM utenti
         WHERE
-            username = 'ely_acquario'
+            username = 'elisa_romano'
     );
 
 INSERT INTO
@@ -152,8 +159,8 @@ INSERT INTO
         updated_at
     )
 SELECT
-    'luca_leone',
-    'luca.leone@demo.it',
+    'luca_ferrari',
+    'luca.ferrari@demo.it',
     @password_demo,
     'BASE',
     640,
@@ -168,7 +175,7 @@ WHERE
         SELECT 1
         FROM utenti
         WHERE
-            username = 'luca_leone'
+            username = 'luca_ferrari'
     );
 
 INSERT INTO
@@ -186,8 +193,8 @@ INSERT INTO
         updated_at
     )
 SELECT
-    'giulia_leone',
-    'giulia.leone@demo.it',
+    'giulia_conti',
+    'giulia.conti@demo.it',
     @password_demo,
     'PREMIUM',
     480,
@@ -202,38 +209,83 @@ WHERE
         SELECT 1
         FROM utenti
         WHERE
-            username = 'giulia_leone'
+            username = 'giulia_conti'
     );
+
+    INSERT INTO utenti (
+        username, email, password_hash, ruolo, qi, giorni_consecutivi,
+        giorni_ricompensa_giornaliera, segno_zodiacale_id, ascendente_id,
+        created_at, updated_at
+    )
+    SELECT 'alice_moretti', 'alice.moretti@demo.it', @password_demo, 'PREMIUM', 810, 9,
+        9, @segno_toro, @segno_cancro, NOW(), NOW()
+    WHERE NOT EXISTS (SELECT 1 FROM utenti WHERE username = 'alice_moretti');
+
+    INSERT INTO utenti (
+        username, email, password_hash, ruolo, qi, giorni_consecutivi,
+        giorni_ricompensa_giornaliera, segno_zodiacale_id, ascendente_id,
+        created_at, updated_at
+    )
+    SELECT 'davide_esposito', 'davide.esposito@demo.it', @password_demo, 'BASE', 290, 2,
+        2, @segno_gemelli, @segno_vergine, NOW(), NOW()
+    WHERE NOT EXISTS (SELECT 1 FROM utenti WHERE username = 'davide_esposito');
+
+    INSERT INTO utenti (
+        username, email, password_hash, ruolo, qi, giorni_consecutivi,
+        giorni_ricompensa_giornaliera, segno_zodiacale_id, ascendente_id,
+        created_at, updated_at
+    )
+    SELECT 'sara_greco', 'sara.greco@demo.it', @password_demo, 'BASE', 560, 7,
+        7, @segno_cancro, @segno_toro, NOW(), NOW()
+    WHERE NOT EXISTS (SELECT 1 FROM utenti WHERE username = 'sara_greco');
+
+    INSERT INTO utenti (
+        username, email, password_hash, ruolo, qi, giorni_consecutivi,
+        giorni_ricompensa_giornaliera, segno_zodiacale_id, ascendente_id,
+        created_at, updated_at
+    )
+    SELECT 'matteo_russo', 'matteo.russo@demo.it', @password_demo, 'PREMIUM', 930, 12,
+        12, @segno_sagittario, @segno_leone, NOW(), NOW()
+    WHERE NOT EXISTS (SELECT 1 FROM utenti WHERE username = 'matteo_russo');
+
+    INSERT INTO utenti (
+        username, email, password_hash, ruolo, qi, giorni_consecutivi,
+        giorni_ricompensa_giornaliera, segno_zodiacale_id, ascendente_id,
+        created_at, updated_at
+    )
+    SELECT 'noemi_galli', 'noemi.galli@demo.it', @password_demo, 'BASE', 410, 3,
+        3, @segno_vergine, @segno_bilancia, NOW(), NOW()
+    WHERE NOT EXISTS (SELECT 1 FROM utenti WHERE username = 'noemi_galli');
 
 -- Recupera gli ID degli utenti
 SELECT id INTO @sofia_id
 FROM utenti
 WHERE
-    username = 'sofia_pesci'
+    username = 'sofia_rossi'
 LIMIT 1;
 
 SELECT id INTO @marco_id
 FROM utenti
 WHERE
-    username = 'marco_ariete'
+    username = 'marco_bianchi'
 LIMIT 1;
 
 SELECT id INTO @ely_id
 FROM utenti
 WHERE
-    username = 'ely_acquario'
+    username = 'elisa_romano'
 LIMIT 1;
 
 SELECT id INTO @luca_id
 FROM utenti
 WHERE
-    username = 'luca_leone'
+    username = 'luca_ferrari'
 LIMIT 1;
 
 SELECT id INTO @giulia_id
 FROM utenti
 WHERE
-    username = 'giulia_leone'
+    username = 'giulia_conti'
 LIMIT 1;
 
 -- Sogno e interpretazione di Sofia
@@ -938,10 +990,10 @@ FROM
     LEFT JOIN segni_zodiacali sz ON sz.id = u.segno_zodiacale_id
 WHERE
     u.username IN (
-        'sofia_pesci',
-        'marco_ariete',
-        'ely_acquario',
-        'luca_leone',
-        'giulia_leone'
+        'sofia_rossi',
+        'marco_bianchi',
+        'elisa_romano',
+        'luca_ferrari',
+        'giulia_conti'
     )
 ORDER BY p.data_pubblicazione DESC;
