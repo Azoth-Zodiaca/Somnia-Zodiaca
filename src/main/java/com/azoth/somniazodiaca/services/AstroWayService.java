@@ -3,22 +3,18 @@ package com.azoth.somniazodiaca.services;
 import java.time.Duration;
 
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.http.MediaType;
+import org.springframework.http.client.SimpleClientHttpRequestFactory;
 import org.springframework.stereotype.Service;
-import org.springframework.web.client.RestClientException;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.client.RestClient;
+import org.springframework.web.client.RestClientException;
 
 import com.azoth.somniazodiaca.dtos.records.AstroWayChartRequest;
 import com.azoth.somniazodiaca.dtos.records.AstroWayInterpretationRequest;
 import com.azoth.somniazodiaca.exceptions.AstroWayUnavailableException;
 import com.fasterxml.jackson.databind.JsonNode;
 import com.fasterxml.jackson.databind.ObjectMapper;
-
-import java.time.LocalDateTime;
-import java.time.ZoneId;
-import java.time.ZoneOffset;
 
 @Service
 public class AstroWayService {
