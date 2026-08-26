@@ -94,8 +94,7 @@ public class AuthController {
                 request,
                 response);
 
-        // Redirect impostato sulla dashboard
-        return "redirect:/app/dashboard";
+        return "redirect:/onboarding";
     }
 
 }

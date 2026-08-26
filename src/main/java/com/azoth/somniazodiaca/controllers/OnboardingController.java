@@ -36,7 +36,7 @@ public class OnboardingController {
                 this.astroWayService = astroWayService;
         }
 
-        @PostMapping("/onboarding/dati-nascita")
+        @PostMapping("/onboarding/conferma")
         public String datiNascita(
                         @RequestParam LocalDate dataNascita,
                         @RequestParam(required = false) LocalTime oraNascita,
@@ -45,6 +45,41 @@ public class OnboardingController {
                         @RequestParam BigDecimal latitudine,
                         @RequestParam BigDecimal longitudine,
                         @RequestParam String timezone,
+                        Authentication authentication) {
+
+                salvaDatiNascita(
+                                dataNascita, oraNascita, luogoNascita, geonameId,
+                                latitudine, longitudine, timezone, authentication);
+
+                return "redirect:/app/dashboard";
+        }
+
+        @PostMapping("/onboarding/dati-nascita")
+        public String aggiornaDatiNascita(
+                        @RequestParam LocalDate dataNascita,
+                        @RequestParam(required = false) LocalTime oraNascita,
+                        @RequestParam String luogoNascita,
+                        @RequestParam Long geonameId,
+                        @RequestParam BigDecimal latitudine,
+                        @RequestParam BigDecimal longitudine,
+                        @RequestParam String timezone,
+                        Authentication authentication) {
+
+                salvaDatiNascita(
+                                dataNascita, oraNascita, luogoNascita, geonameId,
+                                latitudine, longitudine, timezone, authentication);
+
+                return "redirect:/app/tema-natale";
+        }
+
+        private void salvaDatiNascita(
+                        LocalDate dataNascita,
+                        LocalTime oraNascita,
+                        String luogoNascita,
+                        Long geonameId,
+                        BigDecimal latitudine,
+                        BigDecimal longitudine,
+                        String timezone,
                         Authentication authentication) {
 
                 if (oraNascita == null) {
@@ -57,38 +92,22 @@ public class OnboardingController {
                                                 "Utente non trovato"));
 
                 ZoneId zoneId = ZoneId.of(timezone);
-
                 LocalDateTime dataOraLocale = LocalDateTime.of(dataNascita, oraNascita);
-
                 ZoneOffset offset = zoneId.getRules().getOffset(dataOraLocale);
-
                 double timezoneOffset = offset.getTotalSeconds() / 3600.0;
 
                 String oraFormattata = oraNascita
                                 .format(DateTimeFormatter.ofPattern("HH:mm:ss"));
 
                 AstroWayChartRequest richiesta = new AstroWayChartRequest(
-                                dataNascita.toString(),
-                                oraFormattata,
-                                timezoneOffset,
-                                latitudine.doubleValue(),
-                                longitudine.doubleValue(),
-                                "P");
+                                dataNascita.toString(), oraFormattata, timezoneOffset,
+                                latitudine.doubleValue(), longitudine.doubleValue(), "P");
 
                 String rispostaAstroWay = astroWayService.calculateChart(richiesta);
 
                 temaNataleService.creaTemaNatale(
-                                utente,
-                                dataNascita,
-                                oraNascita,
-                                luogoNascita,
-                                geonameId,
-                                latitudine,
-                                longitudine,
-                                timezone,
-                                rispostaAstroWay);
-
-                return "redirect:/app/tema-natale";
+                                utente, dataNascita, oraNascita, luogoNascita, geonameId,
+                                latitudine, longitudine, timezone, rispostaAstroWay);
         }
 
         @PostMapping("/onboarding/salta")
