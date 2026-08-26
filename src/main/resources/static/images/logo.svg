@@ -1,0 +1,71 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1000 1000" width="100%" height="100%">
+  <!-- Sfondo trasparente nativo con tratti ispessiti -->
+  <g fill="none" stroke="#d4ab53" stroke-width="8" stroke-linecap="round" stroke-linejoin="round">
+    <!-- Cerchio geometrico continuo esterno -->
+    <circle cx="500" cy="385" r="215" stroke-width="7" />
+    
+    <!-- Punti decorativi agganciati sul perimetro del cerchio -->
+    <circle cx="500" cy="170" r="8" fill="#d4ab53" />
+    <circle cx="625" cy="203" r="8" fill="#d4ab53" />
+    <circle cx="703" cy="281" r="8" fill="#d4ab53" />
+    <circle cx="703" cy="489" r="8" fill="#d4ab53" />
+    <circle cx="625" cy="567" r="8" fill="#d4ab53" />
+    <circle cx="375" cy="567" r="8" fill="#d4ab53" />
+    <circle cx="297" cy="489" r="8" fill="#d4ab53" />
+    <circle cx="297" cy="281" r="8" fill="#d4ab53" />
+    <circle cx="375" cy="203" r="8" fill="#d4ab53" />
+
+    <!-- Struttura intrecciata dell'acchiappasogni inferiore -->
+    <path d="M 375,567 C 410,605 455,625 500,625 C 545,625 590,605 625,567" stroke-width="6" />
+    <path d="M 375,567 C 425,660 455,675 500,675 C 545,675 575,660 625,567" stroke-width="6" />
+    <path d="M 375,567 L 500,675 L 625,567" stroke-width="5" />
+    <path d="M 432,605 L 500,625 L 568,605" stroke-width="5" />
+    <circle cx="500" cy="625" r="8" fill="#d4ab53" />
+
+    <!-- Stella a quattro punte Superiore (Grande e Slanciata) -->
+    <path fill="#d4ab53" d="M 500,105 Q 500,170 480,170 Q 500,170 500,235 Q 500,170 520,170 Q 500,170 500,105 Z" />
+    
+    <!-- Stelle minori sull'asse verticale -->
+    <path fill="#d4ab53" d="M 500,265 Q 500,290 490,290 Q 500,290 500,315 Q 500,290 510,290 Q 500,290 500,265 Z" />
+    <path fill="#d4ab53" d="M 500,435 Q 500,455 490,455 Q 500,455 500,475 Q 500,455 510,455 Q 500,455 500,435 Z" />
+    
+    <!-- Stella a quattro punte Inferiore -->
+    <path fill="#d4ab53" d="M 500,535 Q 500,560 490,560 Q 500,560 500,585 Q 500,560 510,560 Q 500,560 500,535 Z" />
+    
+    <!-- Stelle a quattro punte Laterali -->
+    <path fill="#d4ab53" d="M 282,355 Q 282,385 252,385 Q 282,385 282,415 Q 282,385 312,385 Q 282,385 282,355 Z" />
+    <path fill="#d4ab53" d="M 718,355 Q 718,385 688,385 Q 718,385 718,415 Q 718,385 748,385 Q 718,385 718,355 Z" />
+
+    <!-- Il Sole (Cerchio vuoto esterno con punto centrale pieno) -->
+    <circle cx="395" cy="385" r="58" stroke-width="8" />
+    <circle cx="395" cy="385" r="11" fill="#d4ab53" />
+    
+    <!-- La Luna (Piena, allineata e proporzionata al cerchio del sole) -->
+    <path fill="#d4ab53" stroke="none" d="M 565,327 C 600,327 638,350 638,385 C 638,420 600,443 565,443 C 598,428 615,410 615,385 C 615,360 598,342 565,327 Z" />
+
+    <!-- Allineamento punti centrali dell'asse cosmico -->
+    <circle cx="500" cy="245" r="6" fill="#d4ab53" />
+    <circle cx="500" cy="510" r="6" fill="#d4ab53" />
+    <circle cx="500" cy="348" r="4.5" fill="#d4ab53" />
+    <circle cx="500" cy="368" r="4.5" fill="#d4ab53" />
+    
+    <!-- Pendenti e Piume geometriche spesse -->
+    <!-- Sinistro -->
+    <line x1="375" y1="567" x2="375" y2="645" stroke-width="5" />
+    <circle cx="375" cy="605" r="6" fill="#d4ab53" />
+    <path d="M 375,645 C 360,670 360,725 375,750 C 390,725 390,670 375,645 Z" stroke-width="5" />
+    <line x1="375" y1="652" x2="375" y2="735" stroke-width="3" />
+    
+    <!-- Destro -->
+    <line x1="625" y1="567" x2="625" y2="645" stroke-width="5" />
+    <circle cx="625" cy="605" r="6" fill="#d4ab53" />
+    <path d="M 625,645 C 610,670 610,725 625,750 C 640,725 640,670 625,645 Z" stroke-width="5" />
+    <line x1="625" y1="652" x2="625" y2="735" stroke-width="3" />
+    
+    <!-- Centrale Lungo -->
+    <line x1="500" y1="675" x2="500" y2="710" stroke-width="5" />
+    <path d="M 500,710 L 491,723 L 500,736 L 509,723 Z" stroke-width="4" />
+    <path d="M 500,736 C 480,770 480,850 500,885 C 520,850 520,770 500,736 Z" stroke-width="5.5" />
+    <line x1="500" y1="745" x2="500" y2="865" stroke-width="4" />
+  </g>
+</svg>
