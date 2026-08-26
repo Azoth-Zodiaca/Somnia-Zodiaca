@@ -17,6 +17,15 @@ public class BadgeInitializer {
 
     public void inizializza() {
         creaBadge(
+                "MAPPA_DEL_CIELO",
+                "Carta del Cielo",
+                "Ottieni la tua prima mappa natale.",
+                "🌌",
+                TipoCondizione.MAPPA_NATALE,
+                1,
+                25);
+
+        creaBadge(
                 "PRIMO_SOGNO",
                 "Primo Sogno",
                 "Salva il tuo primo sogno.",
@@ -71,24 +80,6 @@ public class BadgeInitializer {
                 75);
 
         creaBadge(
-                "PREMIUM",
-                "Premium",
-                "Attiva un abbonamento Premium.",
-                "👑",
-                TipoCondizione.UTENTE_PREMIUM,
-                null,
-                0);
-
-        creaBadge(
-                "MAPPA_DEL_CIELO",
-                "Carta del Cielo",
-                "Ottieni la tua prima mappa natale.",
-                "🌌",
-                TipoCondizione.MAPPA_NATALE,
-                1,
-                25);
-
-        creaBadge(
                 "VOCE_DELLO_ZODIACO",
                 "Voce dello Zodiaco",
                 "Pubblica 20 commenti.",
@@ -96,6 +87,15 @@ public class BadgeInitializer {
                 TipoCondizione.NUMERO_COMMENTI,
                 20,
                 100);
+
+        creaBadge(
+                "PREMIUM",
+                "Premium",
+                "Attiva un abbonamento Premium.",
+                "👑",
+                TipoCondizione.UTENTE_PREMIUM,
+                null,
+                0);
 
         System.out.println("Badge verificati.");
     }

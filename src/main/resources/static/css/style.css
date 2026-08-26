@@ -2419,13 +2419,14 @@ h4 {
 
 .profile-overview-grid {
   display: grid;
-  grid-template-columns: minmax(0, 1fr) minmax(0, 1fr);
+  grid-template-columns: minmax(0, 2fr) minmax(220px, 1fr);
   gap: 20px;
-  align-items: start;
+  align-items: stretch;
 }
 
 .profile-overview-grid .badge-grid {
   grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 10px;
 }
 
 .badge-slot {
