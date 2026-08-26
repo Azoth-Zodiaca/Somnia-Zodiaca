@@ -20,7 +20,7 @@
       <h2 class="serif onboarding-title">Quando sei nato/a?</h2>
       <p class="text-muted onboarding-description">Ci serve per calcolare con precisione il tuo tema natale.</p>
 
-      <form th:action="@{/onboarding/dati-nascita}" method="post">
+      <form th:action="@{/onboarding/conferma}" method="post">
         <div class="field">
           <label for="data-nascita">Data di nascita</label>
           <input type="date" id="data-nascita" name="dataNascita" required>
@@ -62,7 +62,7 @@
           Potrai inserire i dati in seguito. La modifica dei dati del tema sarà disponibile
           solo con Premium.
         </p>
-        <button type="submit" class="btn btn-primary btn-block mt-20">Calcola il mio tema natale</button>
+        <button type="submit" class="btn btn-primary btn-block mt-20">Conferma i dati</button>
       </form>
     </div>
   </div>
