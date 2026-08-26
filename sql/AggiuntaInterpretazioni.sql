@@ -180,6 +180,46 @@ VALUES (
 
 COMMIT;
 
+INSERT INTO sogni (utente_id, testo, created_at, updated_at)
+SELECT u.id, dati.testo, NOW(), NOW()
+FROM utenti u
+JOIN (
+    SELECT 'alice_moretti' AS username, 'Ho sognato un sentiero tra le colline.' AS testo
+    UNION ALL SELECT 'davide_esposito', 'Ho sognato un libro con pagine bianche.'
+    UNION ALL SELECT 'sara_greco', 'Ho sognato una luce accesa nella notte.'
+    UNION ALL SELECT 'matteo_russo', 'Ho sognato una strada che portava lontano.'
+    UNION ALL SELECT 'noemi_galli', 'Ho sognato un laboratorio pieno di colori.'
+) dati ON dati.username = u.username
+WHERE NOT EXISTS (
+    SELECT 1 FROM sogni s
+    WHERE s.utente_id = u.id AND s.testo = dati.testo
+);
+
+INSERT INTO interpretazioni (
+    sogno_id, prompt, testo, umore, stile, scadenza_cache, created_at, updated_at
+)
+SELECT s.id, 'Interpretazione simbolica del sogno',
+    CASE u.username
+        WHEN 'alice_moretti' THEN 'Il sentiero richiama un percorso paziente verso un obiettivo concreto.'
+        WHEN 'davide_esposito' THEN 'Le pagine bianche rappresentano curiosita e nuove idee ancora da sviluppare.'
+        WHEN 'sara_greco' THEN 'La luce nella notte suggerisce conforto e una risorsa interiore presente.'
+        WHEN 'matteo_russo' THEN 'La strada simboleggia apertura al cambiamento e desiderio di scoperta.'
+        ELSE 'I colori richiamano attenzione, creativita e ordine da portare nella vita quotidiana.'
+    END,
+    'SERENO', 'SIMBOLICO', NULL, NOW(), NOW()
+FROM sogni s
+JOIN utenti u ON u.id = s.utente_id
+WHERE s.testo IN (
+    'Ho sognato un sentiero tra le colline.',
+    'Ho sognato un libro con pagine bianche.',
+    'Ho sognato una luce accesa nella notte.',
+    'Ho sognato una strada che portava lontano.',
+    'Ho sognato un laboratorio pieno di colori.'
+)
+AND NOT EXISTS (
+    SELECT 1 FROM interpretazioni i WHERE i.sogno_id = s.id
+);
+
 SELECT
     i.id,
     s.testo AS sogno,
