@@ -19,4 +19,8 @@ public class SognoService extends GenericService<Long, Sogno, AggiuntaSognoDto, 
     public List<AggiuntaSognoDto> findByUtenteId(Long utenteId) {
         return getRepository().findByUtenteId(utenteId).stream().map(getConverter()::fromEToD).toList();
     }
+
+    public long countSogniDisponibiliByUtenteId(Long utenteId, java.time.LocalDateTime data) {
+        return getRepository().countSogniDisponibiliByUtenteId(utenteId, data);
+    }
 }

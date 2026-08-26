@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Impostazioni - Somnia Zodiaca', responsive=true)}"></head>
+
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='impostazioni')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Impostazioni')}"></div>
+
+      <main class="app-content">
+        <h2 class="serif settings-title">Impostazioni</h2>
+
+        <div class="settings-layout">
+
+          <!-- Menu interno per cambiare sezione senza cambiare pagina. -->
+          <nav class="settings-menu">
+            <a href="#" class="active" data-target="sezione-account">Account</a>
+            <a href="#" data-target="sezione-sicurezza">Sicurezza</a>
+            <a href="#" data-target="sezione-premium">Premium</a>
+            <a href="#" data-target="sezione-danger">Zona pericolo</a>
+          </nav>
+
+          <div>
+            <!-- Dati identificativi e contatti dell'account. -->
+            <div id="sezione-account" class="card settings-section">
+              <h3>Account</h3>
+              <form th:action="@{/app/impostazioni/account}" method="post" action="#">
+                <div class="field">
+                  <label for="username">Username</label>
+                  <input type="text" id="username" name="username" th:value="${username}">
+                </div>
+                <div class="field">
+                  <label for="email">Email</label>
+                  <input type="email" id="email" name="email" th:value="${email}">
+                </div>
+                <button type="submit" class="btn btn-primary">Salva</button>
+              </form>
+            </div>
+
+            <!-- Credenziali e cambio password. -->
+            <div id="sezione-sicurezza" class="card settings-section is-hidden">
+              <h3>Sicurezza</h3>
+
+              <form th:action="@{/app/impostazioni/password}" method="post">
+                <div class="field">
+                  <label for="password-attuale">Password attuale</label>
+                  <input type="password" id="password-attuale" name="passwordAttuale" required>
+                </div>
+
+                <div class="field">
+                  <label for="nuova-password">Nuova password</label>
+                  <input type="password" id="nuova-password" name="nuovaPassword" minlength="8" required>
+                </div>
+
+                <div class="field">
+                  <label for="conferma-password">Conferma nuova password</label>
+                  <input type="password" id="conferma-password" name="confermaPassword" minlength="8" required>
+                </div>
+
+                <button type="submit" class="btn btn-primary">
+                  Cambia password
+                </button>
+              </form>
+            </div>
+
+            <!-- Stato Premium, gestione abbonamento e confronto piani. -->
+            <div id="sezione-premium" class="card settings-section premium-section is-hidden">
+              <h3>Premium</h3>
+              <div th:if="${ruolo.name() == 'BASE'}">
+                <p class="text-muted">Sei sul piano Base. Scegli Premium per sbloccare tutti i vantaggi.</p>
+                <div class="pricing-plans settings-pricing-plans">
+                  <div class="card plan-card">
+                    <span class="text-muted">BASE</span>
+                    <div class="plan-price">&euro;0<small>per sempre</small></div>
+                    <button class="btn btn-outline btn-block mt-20" disabled>Piano attuale</button>
+                  </div>
+                  <div class="card plan-card featured">
+                    <span class="text-muted">PREMIUM</span>
+                    <div class="plan-price">&euro;<span
+                        th:text="${#numbers.formatDecimal(appDomain.premium.prezzoMensile, 1, 2)}">-</span><small>al
+                        mese &middot; disdici quando vuoi</small></div>
+                    <form th:action="@{/app/impostazioni/premium/attiva}" method="post">
+                      <button type="submit" class="btn btn-gold btn-block mt-20">Attiva Premium</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+
+              <div th:if="${ruolo.name() == 'PREMIUM'}">
+                <p class="text-muted">Sei attualmente su Premium.</p>
+                <form class="premium-cancellation-form" th:action="@{/app/impostazioni/premium/cancella}" method="post">
+                  <button type="submit" class="btn btn-outline">Cancella abbonamento</button>
+                </form>
+              </div>
+
+              <div th:if="${ruolo.name() == 'ADMIN'}">
+                <p class="text-muted">Sei connesso come amministratore. L'attivazione Premium è disponibile per gli
+                  account Base.</p>
+              </div>
+
+              <div class="settings-comparison" th:if="${ruolo.name() == 'BASE'}">
+                <h4>Confronta i piani</h4>
+                <table class="comparison-table">
+                  <thead>
+                    <tr>
+                      <th>Funzionalità</th>
+                      <th>Base</th>
+                      <th>Premium</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr>
+                      <td>Tema natale interattivo</td>
+                      <td class="no">&#10005;</td>
+                      <td class="yes">&#10003;</td>
+                    </tr>
+                    <tr>
+                      <td>Oracolo dei sogni</td>
+                      <td><span th:text="${appDomain.premium.interpretazioniFreeSettimana}">-</span>/settimana</td>
+                      <td class="yes">Illimitato</td>
+                    </tr>
+                    <tr>
+                      <td>QI mensili in regalo</td>
+                      <td class="no">&#10005;</td>
+                      <td class="yes">+<span th:text="${appDomain.premium.qiMensili}">-</span> QI/mese</td>
+                    </tr>
+                    <tr>
+                      <td>Badge Premium</td>
+                      <td class="no">&#10005;</td>
+                      <td class="yes">&#10003;</td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+
+            <!-- Operazioni irreversibili sull'account. -->
+            <div id="sezione-danger" class="card settings-section danger-zone is-hidden">
+              <h3>Zona pericolo</h3>
+              <p>Eliminando l'account rimuoverai permanentemente sogni, post e QI.</p>
+              <form th:action="@{/app/impostazioni/account/elimina}" method="post">
+                <button type="submit" class="btn btn-danger-outline">
+                  Elimina account
+                </button>
+              </form>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+
+</html>

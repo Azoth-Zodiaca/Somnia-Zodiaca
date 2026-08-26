@@ -1,0 +1,258 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Oracolo - Somnia Zodiaca', responsive=true)}"></head>
+
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='oracolo')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Oracolo')}"></div>
+
+      <main class="app-content oracolo-page">
+        <div class="oracolo-layout">
+
+          <!-- Cronologia delle interpretazioni salvate. -->
+          <aside id="oracolo-history" class="oracolo-history">
+            <div class="history-header">
+              <span class="text-muted">Le tue interpretazioni</span>
+              <span id="history-count" class="history-count" th:text="${#lists.size(interpretazioni)}">
+                0
+              </span>
+            </div>
+
+            <div id="history-empty" th:if="${#lists.isEmpty(interpretazioni)}" class="history-empty text-muted">
+              Non hai ancora interpretazioni salvate.
+            </div>
+
+            <article class="history-item" th:each="interpretazione : ${interpretazioni}"
+              th:attr="data-interpretazione-id=${interpretazione.id}">
+              <div class="history-date" th:text="${interpretazione.createdAt != null
+                    ? #temporals.format(interpretazione.createdAt, 'dd/MM/yyyy HH:mm')
+                    : 'Data non disponibile'}">
+                22/08/2026 09:00
+              </div>
+
+              <div class="history-status">
+                <span th:if="${interpretazione.scadenzaCache == null}" class="status-permanent">
+                  Permanente
+                </span>
+
+                <span th:unless="${interpretazione.scadenzaCache == null}" class="status-temporary"
+                  th:attr="data-scadenza=${interpretazione.scadenzaCache}"
+                  th:text="${'Scade tra ' + appDomain.oracolo.durataCacheOre + ' ore'}">
+                </span>
+              </div>
+
+              <div class="history-dream-row">
+                <div class="history-dream" th:text="${interpretazione.testoSogno}">
+                  Testo del sogno
+                </div>
+                <div class="history-tags">
+                  <span th:if="${interpretazione.umore != null}" class="history-tag history-tag-mood"
+                    th:text="${interpretazione.umore}">SERENO</span>
+                  <span th:if="${interpretazione.stile != null}" class="history-tag history-tag-style"
+                    th:text="${interpretazione.stile}">ASTROLOGICO</span>
+                </div>
+              </div>
+
+              <button type="button" class="history-open" th:attr="
+                  data-interpretazione=${interpretazione.testo},
+                  data-testo-sogno=${interpretazione.testoSogno},
+                  data-umore=${interpretazione.umore},
+                  data-stile=${interpretazione.stile},
+                  data-interpretazione-id=${interpretazione.id},
+                  data-permanente=${interpretazione.scadenzaCache == null},
+                  data-scadenza=${interpretazione.scadenzaCache}">
+                Leggi
+              </button>
+            </article>
+          </aside>
+
+          <section class="oracolo-content">
+            <h2 class="serif">Racconta il tuo sogno</h2>
+
+            <!-- Inserimento del sogno e configurazione della lettura. -->
+            <div class="card oracolo-box">
+              <form id="oracolo-form" method="post"
+                th:data-costo-interpretazione="${appDomain.oracolo.costoInterpretazione}"
+                th:data-costo-permanenza="${appDomain.oracolo.costoPermanenza}"
+                th:data-durata-cache-ore="${appDomain.oracolo.durataCacheOre}"
+                th:data-limite-sogno-caratteri="${appDomain.oracolo.limiteSognoCaratteri}"
+                th:data-interpretazioni-residue="${interpretazioniResidue}"
+                th:data-interpretazione-id="${interpretazioneId}" th:data-azione="${azione}">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <input type="hidden" id="umore" value="Sereno">
+                <input type="hidden" id="stile" value="Astrologico">
+                <textarea id="dream-text" name="testoSogno" th:maxlength="${appDomain.oracolo.limiteSognoCaratteri}"
+                  th:text="${testoSogno}"
+                  placeholder="Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena..."></textarea>
+                <div class="oracolo-meta">
+                  <span id="dream-counter" class="text-muted oracolo-counter"
+                    th:text="${'0 / ' + appDomain.oracolo.limiteSognoCaratteri}">-</span>
+                  <span class="text-muted" th:if="${interpretazioniIllimitate}">Interpretazioni illimitate</span>
+                  <span id="interpretazioni-residue" class="text-muted" th:unless="${interpretazioniIllimitate}"
+                    th:text="${interpretazioniResidue + ' interpretazioni rimaste questa settimana'}">-</span>
+                </div>
+
+                <!-- Umore associato al sogno. -->
+                <div class="oracolo-options">
+                  <div>
+                    <span class="text-muted oracolo-option-label">Umore</span>
+                    <div class="chip-row mt-10">
+                      <button type="button" class="chip selected" data-group="umore" data-value="Sereno">
+                        &#128522; Sereno
+                      </button>
+                      <button type="button" class="chip" data-group="umore" data-value="Ansioso">
+                        &#128533; Ansioso
+                      </button>
+                      <button type="button" class="chip" data-group="umore" data-value="Confuso">
+                        &#128532; Confuso
+                      </button>
+                      <button type="button" class="chip" data-group="umore" data-value="Intenso">
+                        &#9889; Intenso
+                      </button>
+                    </div>
+                  </div>
+
+                  <!-- Stile scelto per l'interpretazione. -->
+                  <div>
+                    <span class="text-muted oracolo-option-label">Stile</span>
+                    <div class="chip-row mt-10">
+                      <button type="button" class="chip" data-group="stile" data-value="Junghiano">
+                        Junghiano
+                      </button>
+                      <button type="button" class="chip selected" data-group="stile" data-value="Astrologico">
+                        Astrologico
+                      </button>
+                      <button type="button" class="chip" data-group="stile" data-value="Simbolico">
+                        Simbolico
+                      </button>
+                    </div>
+                  </div>
+
+                  <div class="field-checkbox">
+                    <input type="checkbox" id="usa-tema" name="usaTemaNatale"
+                      th:attr="data-premium=${premiumTemaNatale}">
+                    <label for="usa-tema" class="oracolo-theme-label">Usa il mio tema natale per
+                      personalizzare</label>
+                  </div>
+                </div>
+
+                <div class="oracolo-footer">
+                  <span>&#8505; Ogni interpretazione costa <span
+                      th:text="${appDomain.oracolo.costoInterpretazione}">-</span> QI. Senza salvataggio permanente
+                    resta disponibile per <span th:text="${appDomain.oracolo.durataCacheOre}">-</span> ore.</span>
+                  <div class="flex gap-8">
+                    <button id="svuota-oracolo" type="button" class="btn btn-ghost btn-sm">
+                      Svuota
+                    </button>
+                    <button type="submit" class="btn btn-primary btn-sm"
+                      th:disabled="${!interpretazioniIllimitate and interpretazioniResidue == 0}"><span class="qi-symbol"
+                        aria-hidden="true">&#9791;</span> Interpreta il sogno - <span
+                        th:text="${appDomain.oracolo.costoInterpretazione}">-</span> QI</button>
+                  </div>
+                </div>
+              </form>
+            </div>
+
+            <!-- Risultato della lettura e azioni di salvataggio/condivisione. -->
+            <div class="card mt-20 oracolo-result" id="risultato-oracolo" hidden>
+              <div class="card-title">
+                <span><span class="qi-symbol" aria-hidden="true">&#9791;</span> Interpretazione</span>
+              </div>
+
+              <p id="testo-interpretazione" class="oracolo-result-text"></p>
+
+              <button id="salva-interpretazione" type="button" class="btn btn-primary btn-sm oracolo-save-button"
+                hidden>
+                Rendi permanente - <span th:text="${appDomain.oracolo.costoPermanenza}">-</span> QI
+              </button>
+
+              <div id="condivisione-interpretazione" class="social-create-post is-hidden">
+
+                <h3>Condividi questa interpretazione</h3>
+
+                <form method="post" th:action="@{/app/social/post}">
+                  <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+                  <input type="hidden" id="condivisione-interpretazione-id" name="interpretazioneId">
+
+                  <label for="testo-post">
+                    Descrizione
+                  </label>
+
+                  <textarea id="testo-post" name="testoVisibile"
+                    th:maxlength="${appDomain.contenuti.limitePostCaratteri}" required
+                    placeholder="Aggiungi un pensiero su questa interpretazione..."></textarea>
+
+                  <div class="oracolo-share-actions">
+                    <button id="pubblica-interpretazione" type="submit" class="btn btn-primary btn-sm" disabled>
+                      Pubblica nella community
+                    </button>
+                    <button id="condividi-esternamente" type="button" class="btn btn-ghost btn-sm" disabled>
+                      Condividi fuori dal sito
+                    </button>
+                  </div>
+                </form>
+              </div>
+            </div>
+          </section>
+
+        </div>
+
+        <dialog id="tema-premium-dialog" class="tema-premium-dialog">
+          <div class="tema-premium-dialog-content">
+            <span class="tema-premium-badge">PREMIUM</span>
+            <h3>Interpreta con il tuo tema natale</h3>
+            <p class="text-muted">Personalizza ogni lettura dei tuoi sogni con la tua carta astrale.</p>
+            <div class="tema-premium-dialog-actions">
+              <button id="chiudi-tema-premium" type="button" class="btn btn-ghost btn-sm">Chiudi</button>
+              <a href="/app/impostazioni?sezione=premium" class="btn btn-primary">Sblocca la funzione</a>
+            </div>
+          </div>
+        </dialog>
+
+        <dialog id="condivisione-esterna-dialog" class="external-share-dialog">
+          <div class="external-share-dialog-content">
+            <div class="external-share-dialog-header">
+              <div>
+                <span class="text-muted external-share-eyebrow">CONDIVIDI IL POST</span>
+                <h3>Porta il tuo cielo fuori da Somnia</h3>
+              </div>
+              <button id="chiudi-condivisione-esterna" type="button" class="dialog-close"
+                aria-label="Chiudi">&times;</button>
+            </div>
+            <article id="anteprima-condivisione-esterna" class="card external-share-preview">
+              <div class="external-share-preview-user">
+                <div id="anteprima-avatar-condivisione" class="avatar social-avatar">U</div>
+                <div>
+                  <strong id="anteprima-username-condivisione">@utente</strong>
+                  <div id="anteprima-segni-condivisione" class="text-muted">Segno non impostato</div>
+                </div>
+              </div>
+              <div class="external-share-section-label">SOGNO</div>
+              <div id="anteprima-descrizione-condivisione" class="external-share-description"></div>
+              <div class="external-share-section-label">INTERPRETAZIONE</div>
+              <div id="anteprima-testo-condivisione" class="external-share-interpretation"></div>
+              <div class="external-share-brand">Somnia Zodiaca <span>&#10022;</span></div>
+            </article>
+            <div class="external-share-actions">
+              <button id="copia-testo-condivisione" type="button" class="btn btn-ghost btn-sm">Copia testo</button>
+              <button id="copia-immagine-condivisione" type="button" class="btn btn-primary btn-sm">Copia
+                immagine</button>
+            </div>
+            <p id="esito-condivisione-esterna" class="text-muted external-share-status" role="status"></p>
+          </div>
+        </dialog>
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/vendor/marked.min.js}"></script>
+  <script th:src="@{/js/vendor/purify.min.js}"></script>
+  <script th:src="@{/js/main.js}"></script>
+</body>
+
+</html>

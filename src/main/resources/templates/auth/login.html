@@ -1,46 +1,31 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
-
-<head th:replace="~{fragments/layout :: head('Accesso', @{/css/login-style.css})}"></head>
-
+<head th:replace="~{fragments/head :: head(title='Accedi - Somnia Zodiaca', responsive=false)}"></head>
 <body>
+  <!-- Accesso all'area riservata. -->
+  <div class="auth-page login-page">
+    <div class="auth-form-panel">
+      <a href="/" class="brand"><img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt="Somnia Zodiaca"> Somnia Zodiaca</a>
+      <h2>Bentornato</h2>
 
-  <section class="auth-layout">
+      <!-- Credenziali di accesso. -->
+      <form th:action="@{/login}" method="post" action="#">
+        <div class="field">
+          <label for="usernameOrEmail">Username o email</label>
+          <input type="text" id="usernameOrEmail" name="usernameOrEmail" placeholder="Inserisci username o email" required>
+        </div>
+        <div class="field">
+          <label for="password">Password</label>
+          <input type="password" id="password" name="password" placeholder="Inserisci password" required>
+        </div>
 
-    <div class="auth-panel">
+        <button type="submit" class="btn btn-primary btn-block">Accedi</button>
+      </form>
 
-      <div class="auth-box">
-
-        <p class="label-caps text-accent">Accedi</p>
-        <h1 class="auth-title">Il tuo cielo ti attende</h1>
-
-        <p class="alert error" th:if="${param.error}">
-          Username o password non validi.
-        </p>
-        <p class="alert success" th:if="${param.logout}">
-          Disconnessione effettuata.
-        </p>
-
-        <form class="auth-form" th:action="@{/login}" method="post">
-
-          <label class="label-caps text-muted" for="username">Email o username</label>
-          <input class="form-input" id="username" name="username" type="text" autocomplete="username" required autofocus placeholder="Melinoe">
-
-          <label class="label-caps text-muted" for="password">Password</label>
-          <input class="form-input" type="password" id="password" name="password" autocomplete="current-password" required placeholder="••••••••">
-
-          <button class="btn btn-primary btn-large space-top-sm" type="submit" >Entra nel cielo →</button>
-
-        </form>
-
-        <p class="auth-footer text-center text-sm text-muted">Non hai un account? <a th:href= "@{/registrazione}"
-            class="text-accent font-medium">Creane uno</a></p>
-
-      </div>
-
+      <div class="auth-switch">Non hai un account? <a href="/register" class="login-register-link">Registrati</a></div>
     </div>
+  </div>
 
-  </section>
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
-
 </html>

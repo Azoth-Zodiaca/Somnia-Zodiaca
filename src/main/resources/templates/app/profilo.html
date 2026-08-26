@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Profilo - Somnia Zodiaca', responsive=true)}"></head>
+
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='profilo')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Profilo')}"></div>
+
+      <main class="app-content">
+
+        <!-- Immagini del profilo e form di caricamento. -->
+        <div class="profile-banner">
+          <img th:if="${profiloBannerPath != null}" class="profile-banner-image" th:src="@{${profiloBannerPath}}"
+            alt="Immagine banner">
+          <button th:if="${profiloProprio}" type="button" class="btn btn-ghost btn-sm profile-edit-button" id="mostra-upload-profilo">
+            &#9998; Modifica
+          </button>
+          <div class="profile-avatar-lg">
+            <img th:if="${profiloAvatarPath != null}" th:src="@{${profiloAvatarPath}}" alt="Immagine profilo">
+            <span th:unless="${profiloAvatarPath != null}" th:text="${profiloUsername != null and !profiloUsername.isEmpty()
+          ? #strings.toUpperCase(#strings.substring(profiloUsername, 0, 1))
+          : '?'}">
+              L
+            </span>
+          </div>
+        </div>
+        <form th:if="${profiloProprio}" id="upload-profilo-form" class="profile-upload-form is-hidden" method="post" enctype="multipart/form-data"
+          th:action="@{/app/profilo/immagini}">
+
+          <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+          <label for="avatar">Immagine profilo</label>
+          <input id="avatar" type="file" name="avatar" accept="image/png,image/jpeg,image/webp">
+
+          <label for="banner">Immagine banner</label>
+          <input id="banner" type="file" name="banner" accept="image/png,image/jpeg,image/webp">
+
+          <button type="submit" class="btn btn-primary btn-sm">
+            Salva immagini
+          </button>
+        </form>
+
+        <!-- Identita, ruolo e statistiche rapide. -->
+        <div class="profile-header-info">
+          <div class="profile-identity-row">
+            <h2><span th:text="${'@' + profiloUsername}">@username</span></h2>
+            <span class="badge badge-premium" th:text="${profiloRuolo}">ruolo</span>
+            <div th:if="${!profiloProprio}" class="profile-follow-action">
+              <form th:if="${!seguitoDaCurrentUser}" method="post"
+                th:action="@{'/app/social/utente/' + ${profiloUsername} + '/follow'}"
+                th:attr="data-follow-username=${profiloUsername},data-follow-action='follow'">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="btn btn-primary btn-sm">Segui</button>
+              </form>
+              <form th:if="${seguitoDaCurrentUser}" method="post"
+                th:action="@{'/app/social/utente/' + ${profiloUsername} + '/unfollow'}"
+                th:attr="data-follow-username=${profiloUsername},data-follow-action='unfollow'">
+                <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                <button type="submit" class="btn btn-ghost btn-sm">Smetti di seguire</button>
+              </form>
+            </div>
+          </div>
+        </div>
+        <p class="profile-meta">
+          <span th:if="${profiloSegnoZodiacale != null}" th:text="${#strings.capitalize(
+                #strings.toLowerCase(profiloSegnoZodiacale.segnoZodiacale.name())
+              )}">
+            Segno non impostato
+          </span>
+          &middot;
+
+          Asc.
+          <span th:if="${profiloAscendente != null}" th:text="${#strings.capitalize(
+                #strings.toLowerCase(profiloAscendente.segnoZodiacale.name())
+              )}">
+            Non impostato
+          </span>
+          &middot;
+          Membro dal
+              <span th:text="${profiloDataRegistrazione != null
+                ? #temporals.format(profiloDataRegistrazione, 'dd/MM/yyyy')
+                : 'Data non disponibile'}">
+            Data non disponibile
+          </span>
+          &middot;
+          Ultimo accesso
+          <span th:text="${profiloUltimoAccesso != null
+        ? #temporals.format(profiloUltimoAccesso, 'dd/MM/yyyy')
+        : 'Mai'}">
+            Mai
+          </span>
+        </p>
+        <div class="profile-quickstats">
+          <span th:if="${profiloProprio}"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${profiloSaldoQI}">0</span> QI</span>
+          <span>&#9825; <span th:text="${numeroLike}">0</span> Like</span>
+          <span>&#9789; <span th:text="${numeroSogni}">0</span> Sogni</span>
+          <span>&#128172; <span th:text="${numeroPost}">0</span> Post</span>
+        </div>
+
+        <!-- Viste del profilo: panoramica astrale e post pubblicati. -->
+        <div class="tab-row" data-tab-group="profilo-tabs">
+          <a href="#" class="js-tab active" data-target="tab-panoramica">
+            Panoramica
+          </a>
+          <a href="#" class="js-tab" data-target="tab-post">
+            Post
+          </a>
+        </div>
+        <div id="tab-panoramica" class="js-tab-panel profile-overview-grid">
+          <div class="card">
+            <div class="card-title">
+              <span>Identità astrale</span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Segno zodiacale:</span>
+              <span th:if="${profiloSegnoZodiacale != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(profiloSegnoZodiacale.segnoZodiacale.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Elemento:</span>
+              <span th:if="${elementoProfilo != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(elementoProfilo.elemento.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Modalità:</span>
+              <span th:if="${profiloSegnoZodiacale != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(profiloSegnoZodiacale.modalita.name())
+                    )}">
+                Non impostata
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Pianeta:</span>
+              <span th:if="${pianetaProfilo != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(pianetaProfilo.pianeta.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Metallo:</span>
+              <span th:if="${metalloProfilo != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(metalloProfilo.metallo.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+
+            <div class="info-row">
+              <span class="label">Ascendente:</span>
+              <span th:if="${profiloAscendente != null}"
+                    th:text="${#strings.capitalize(
+                      #strings.toLowerCase(profiloAscendente.segnoZodiacale.name())
+                    )}">
+                Non impostato
+              </span>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-title">
+              <span>&#127942; Badge</span>
+              <span class="text-muted"
+                    th:text="${badgeSbloccati + '/' + totaleBadge + ' sbloccati'}">
+                0/0 sbloccati
+              </span>
+            </div>
+
+            <div class="badge-grid">
+              <div th:each="badge : ${badges}"
+                   class="badge-slot"
+                 th:classappend="${badge.sbloccato} ? ' unlocked' : ''"
+                 th:title="${badge.descrizione}">
+                <div class="badge-icon"
+                     th:text="${badge.sbloccato ? badge.icona : '?'}">
+                  ?
+                </div>
+
+                <div class="badge-name"
+                     th:text="${badge.nome}">
+                  Nome badge
+                </div>
+
+                <div class="badge-progress"
+                     th:if="${!badge.sbloccato and badge.soglia != null}"
+                     th:text="${badge.progresso + '/' + badge.soglia}">
+                  0/0
+                </div>
+
+                <div class="badge-progress"
+                     th:if="${badge.sbloccato}"
+                     th:text="${badge.descrizione}">
+                  Badge ottenuto
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div id="tab-post" class="js-tab-panel is-hidden"
+             th:insert="~{fragments/social-fragments :: social-post-list(
+               posts=${postsProfilo},
+               currentUsername=${currentUsername},
+               emptyMessage='Non hai ancora pubblicato post.',
+               panelPrefix='profilo'
+             )}">
+        </div>
+    </main>
+  </div>
+  </div>
+
+  <script th:src="@{/js/vendor/marked.min.js}"></script>
+  <script th:src="@{/js/vendor/purify.min.js}"></script>
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+
+</html>

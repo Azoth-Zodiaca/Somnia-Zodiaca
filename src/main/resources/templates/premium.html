@@ -1,0 +1,73 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Premium - Somnia Zodiaca', responsive=true)}"></head>
+
+<body>
+
+  <!-- Navigazione pubblica condivisa. -->
+  <div th:replace="~{fragments/public-nav :: navbar}"></div>
+
+  <!-- Presentazione dell'offerta Premium. -->
+  <section class="container pricing-hero">
+    <span class="eyebrow">Premium</span>
+    <h1>Diventa <span class="highlight">Custode del Cielo</span></h1>
+    <p>Letture illimitate, +<span th:text="${appDomain.premium.qiMensili}">-</span> QI ogni mese e un badge esclusivo.</p>
+  </section>
+
+  <!-- Piani disponibili e confronto delle funzionalita. -->
+  <section class="container">
+    <div class="pricing-plans">
+      <div class="card plan-card">
+        <span class="text-muted">FREE</span>
+        <div class="plan-price">&euro;0<small>per sempre</small></div>
+        <button class="btn btn-outline btn-block mt-20" disabled>Piano attuale</button>
+      </div>
+      <div class="card plan-card featured">
+        <span class="text-muted">PREMIUM</span>
+        <div class="plan-price">&euro;<span
+            th:text="${#numbers.formatDecimal(appDomain.premium.prezzoMensile, 1, 2)}">-</span><small>al mese &middot;
+            disdici quando vuoi</small></div>
+        <a href="/checkout-premium" class="btn btn-gold btn-block mt-20">Attiva Premium</a>
+      </div>
+    </div>
+
+    <table class="comparison-table">
+      <thead>
+        <tr>
+          <th>Funzionalità</th>
+          <th>Free</th>
+          <th>Premium</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Tema natale interattivo</td>
+          <td class="no">&#10005;</td>
+          <td class="yes">&#10003;</td>
+        </tr>
+        <tr>
+          <td>Oracolo dei sogni</td>
+          <td><span th:text="${appDomain.premium.interpretazioniFreeSettimana}">-</span>/settimana</td>
+          <td class="yes">Illimitato</td>
+        </tr>
+        <tr>
+          <td>QI mensili in regalo</td>
+          <td class="no">&#10005;</td>
+          <td class="yes">+<span th:text="${appDomain.premium.qiMensili}">-</span> QI/mese</td>
+        </tr>
+        <tr>
+          <td>Badge Premium</td>
+          <td class="no">&#10005;</td>
+          <td class="yes">&#10003;</td>
+        </tr>
+      </tbody>
+    </table>
+  </section>
+
+  <div th:replace="~{fragments/public-footer :: footer}"></div>
+
+  <script th:src="@{/js/main.js}" src="../static/js/main.js"></script>
+</body>
+
+</html>

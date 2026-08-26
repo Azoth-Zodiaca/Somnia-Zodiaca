@@ -1,14 +1,11 @@
-// security 
+Focaboi
+-favicon 16x16p 32x32p in frammento head.html
 
 
-// (Auth controller Fatto)
-// JPA user detail service
-// pagina html che cripta
-// security change
-// cookie
-// Authentication provider (DAO outdated per noi, che non usiamo i DAO (?)
-// authentication manager
+-correggere il logo
+-grafico all'ingresso al sito (?)
 
 
-//UNA VOLTA FINITO LO SVILUPPO
-// rimuovere AdminInitializer nel package config, serve solo per non dover ricreare l'admin ad ogni wipe del db
+Tutti (max il 26)
+- docker/dominio
+- "ricaricare" il caricatore delle chiavi API per scongiurare smutandate in presentazione (cambiare chiavi in account nuovi intonsi nel .env e testare che funzionino)

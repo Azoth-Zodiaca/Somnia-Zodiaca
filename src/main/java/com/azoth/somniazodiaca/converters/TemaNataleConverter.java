@@ -23,6 +23,9 @@ public class TemaNataleConverter implements GenericConverter<TemaNatale, TemaNat
                 .longitudine(d.getLongitudine())
                 .timezone(d.getTimezone())
                 .dataCreazione(d.getDataCreazione())
+                .rispostaAstroWay(d.getRispostaAstroWay())
+                .interpretazioneAstroWay(d.getInterpretazioneAstroWay())
+                .analisiGemini(d.getAnalisiGemini())
                 .build();
 
         if (d.getUtenteId() != null) {
@@ -45,6 +48,9 @@ public class TemaNataleConverter implements GenericConverter<TemaNatale, TemaNat
                 .longitudine(e.getLongitudine())
                 .timezone(e.getTimezone())
                 .dataCreazione(e.getDataCreazione())
+                .rispostaAstroWay(e.getRispostaAstroWay())
+                .interpretazioneAstroWay(e.getInterpretazioneAstroWay())
+                .analisiGemini(e.getAnalisiGemini())
                 .build();
     }
 

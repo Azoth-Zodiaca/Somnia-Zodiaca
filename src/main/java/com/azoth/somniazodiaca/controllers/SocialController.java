@@ -1,13 +1,181 @@
 package com.azoth.somniazodiaca.controllers;
 
+import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
+import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Map;
+
+import com.azoth.somniazodiaca.dtos.UtenteDetail;
+import com.azoth.somniazodiaca.services.InterpretazioneService;
+import com.azoth.somniazodiaca.services.PostService;
+import com.azoth.somniazodiaca.services.UtenteService;
 
 @Controller
 public class SocialController {
 
-    @GetMapping("/social")
-    public String social() {
-        return "social/social";
+    private final PostService postService;
+    private final InterpretazioneService interpretazioneService;
+    private final UtenteService utenteService;
+
+    public SocialController(
+            PostService postService,
+            InterpretazioneService interpretazioneService,
+            UtenteService utenteService) {
+
+        this.postService = postService;
+        this.interpretazioneService = interpretazioneService;
+        this.utenteService = utenteService;
     }
+
+    @GetMapping("/social")
+    public String redirectSocial() {
+                return "redirect:/app/social";
+    }
+
+    @GetMapping("/app/social")
+    public String social(
+            Authentication authentication,
+            Model model) {
+
+        UtenteDetail utente = utenteService
+                .findByUsername(authentication.getName())
+                .orElseThrow(() -> new IllegalStateException(
+                        "Utente autenticato non trovato"));
+
+        model.addAttribute(
+                "feed",
+                postService.findFeed(authentication.getName()));
+
+        model.addAttribute(
+                "mieInterpretazioni",
+                interpretazioneService.findByUtenteId(utente.getId()));
+
+        model.addAttribute(
+                "feed",
+                postService.findFeed(authentication.getName()));
+
+        model.addAttribute(
+                "feedMioSegno",
+                postService.findFeedMioSegno(authentication.getName()));
+
+        model.addAttribute(
+                "feedSeguiti",
+                postService.findFeedSeguiti(authentication.getName()));
+
+        model.addAttribute(
+                "seguiti",
+                postService.findSeguiti(authentication.getName()));
+
+        model.addAttribute(
+                "currentUsername",
+                authentication.getName());
+
+        return "app/social";
+    }
+
+    @PostMapping("/app/social/post")
+    public String creaPost(
+            Authentication authentication,
+            @RequestParam Long interpretazioneId,
+            @RequestParam String testoVisibile) {
+
+        postService.creaPost(
+                authentication.getName(),
+                interpretazioneId,
+                testoVisibile);
+
+        return "redirect:/app/social";
+    }
+
+    @PostMapping("/app/social/post/{postId}/like")
+    public String toggleLike(
+            Authentication authentication,
+            @PathVariable Long postId) {
+
+        postService.toggleLike(authentication.getName(), postId);
+
+        return "redirect:/app/social";
+    }
+
+        @PostMapping("/app/social/post/{postId}/commento")
+        public String aggiungiCommento(
+                        Authentication authentication,
+                        @PathVariable Long postId,
+                        @RequestParam String testoCommento) {
+
+                postService.aggiungiCommento(
+                                authentication.getName(),
+                                postId,
+                                testoCommento);
+
+                return "redirect:/app/social";
+        }
+
+        @PostMapping("/app/social/post/{postId}/commento/ajax")
+        @ResponseBody
+        public Map<String, Object> aggiungiCommentoJson(
+                        Authentication authentication,
+                        @PathVariable Long postId,
+                        @RequestParam String testoCommento) {
+
+                PostService.CommentResult result = postService.aggiungiCommento(
+                                authentication.getName(), postId, testoCommento);
+
+                return Map.of("username", result.username(), "testo", result.testo(), "count", result.count());
+        }
+
+        @PostMapping("/app/social/post/{postId}/like/toggle")
+        @ResponseBody
+        public Map<String, Object> toggleLikeJson(
+                        Authentication authentication,
+                        @PathVariable Long postId) {
+
+                PostService.LikeResult result = postService.toggleLike(
+                                authentication.getName(),
+                                postId);
+
+                return Map.of(
+                                "liked", result.liked(),
+                                "count", result.count());
+        }
+
+    @PostMapping("/app/social/utente/{username}/follow")
+    public String segui(
+            Authentication authentication,
+            @PathVariable String username) {
+
+        postService.segui(authentication.getName(), username);
+
+        return "redirect:/app/social/utente/" + username;
+    }
+
+    @PostMapping("/app/social/utente/{username}/unfollow")
+    public String smettiDiSeguire(
+            Authentication authentication,
+            @PathVariable String username) {
+
+        postService.smettiDiSeguire(authentication.getName(), username);
+
+        return "redirect:/app/social/utente/" + username;
+    }
+
+        @PostMapping("/app/social/utente/{username}/follow/ajax")
+        @ResponseBody
+        public Map<String, Object> seguiJson(Authentication authentication, @PathVariable String username) {
+                postService.segui(authentication.getName(), username);
+                return Map.of("following", true);
+        }
+
+        @PostMapping("/app/social/utente/{username}/unfollow/ajax")
+        @ResponseBody
+        public Map<String, Object> smettiDiSeguireJson(Authentication authentication, @PathVariable String username) {
+                postService.smettiDiSeguire(authentication.getName(), username);
+                return Map.of("following", false);
+        }
 }

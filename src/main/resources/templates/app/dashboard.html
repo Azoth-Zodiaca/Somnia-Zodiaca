@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Dashboard - Somnia Zodiaca', responsive=true)}"></head>
+
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='dashboard')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Dashboard')}"></div>
+
+      <main class="app-content">
+
+        <!-- Riepilogo delle metriche principali dell'utente. -->
+        <div class="stats-grid">
+          <div class="card stat-card">
+            <div class="stat-label">QI</div>
+            <div class="stat-value"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span
+                th:text="${saldoQi}">-</span></div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Sogni</div>
+            <div class="stat-value">&#9789; <span th:text="${numeroSogni}">-</span></div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Like</div>
+            <div class="stat-value">&#9825; <span th:text="${numeroLike}">-</span></div>
+          </div>
+          <div class="card stat-card">
+            <div class="stat-label">Streak</div>
+            <div class="stat-value">&#128293; <span th:text="${streak}">-</span> gg</div>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <!-- Colonna principale: accesso rapido all'Oracolo e sogni in scadenza. -->
+          <div class="dashboard-col">
+
+            <!-- Form rapido per inviare un sogno all'Oracolo. -->
+            <div class="card oracolo-mini">
+              <div class="card-title">
+                <span>&#9789; Oracolo &mdash; Hai sognato stanotte?</span>
+              </div>
+              <form th:action="@{/app/oracolo}" method="get">
+                <textarea name="testoSogno" placeholder="Racconta il tuo sogno... l'oracolo ascolta."
+                  required></textarea>
+
+                <div class="oracolo-actions">
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <span class="qi-symbol" aria-hidden="true">&#9791;</span>
+                    Interpreta il sogno
+                  </button>
+                </div>
+              </form>
+            </div>
+
+            <!-- Anteprima dei sogni temporanei prossimi alla scadenza. -->
+            <div class="card">
+              <div class="card-title">
+                <span>&#9210; Sogni in scadenza</span>
+                <a th:href="@{/app/oracolo}" class="link">
+                  Vedi tutti &rarr;
+                </a>
+              </div>
+
+              <div th:if="${#lists.isEmpty(sogniInScadenza)}" class="text-muted">
+                Non hai sogni in scadenza.
+              </div>
+
+              <div class="dream-item" th:each="interpretazione : ${sogniInScadenza}">
+
+                <div class="flex-between">
+                  <span class="dream-title" th:text="${interpretazione.testoSogno}">
+                    Sogno
+                  </span>
+                </div>
+
+                <p th:text="${interpretazione.testo}">
+                  Interpretazione
+                </p>
+
+                <div class="dream-actions">
+                  <a class="btn btn-ghost btn-sm" th:href="@{/app/oracolo(
+              interpretazioneId=${interpretazione.id},
+              azione='salva')}">
+                    Salva
+                    &minus;
+                    <span th:text="${appDomain.oracolo.costoPermanenza}">-</span>
+                    QI
+                  </a>
+
+                  <a class="btn btn-primary btn-sm" th:href="@{/app/oracolo(
+              interpretazioneId=${interpretazione.id},
+              azione='pubblica')}">
+                    Pubblica nella community
+                  </a>
+                </div>
+              </div>
+            </div>
+          </div>
+
+          <!-- Colonna laterale: progressi, obiettivi, profilo e attività. -->
+          <div class="dashboard-col">
+
+            <!-- Accesso rapido alla personalizzazione del profilo. -->
+            <div class="card text-center">
+              <span class="text-muted dashboard-avatar-label">Il tuo avatar</span>
+              <div class="avatar dashboard-avatar">
+                <img th:if="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:src="@{${avatarPath}}"
+                  alt="Immagine profilo">
+
+                <span th:unless="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:text="${username != null and !username.isEmpty()
+          ? #strings.toUpperCase(#strings.substring(username, 0, 1))
+          : '?'}">
+                  L
+                </span>
+              </div>
+
+              <div class="dashboard-username" th:text="${'@' + username}">
+                @username
+              </div>
+              <a href="/app/profilo" class="btn btn-outline btn-sm mt-20">Personalizza</a>
+            </div>
+
+            <!-- Contatti -->
+            <div class="card dashboard-contact-card">
+              <div class="card-title">
+                <span>&#9993; Contatti</span>
+              </div>
+
+              <p class="text-muted">
+                Hai bisogno di aiuto o vuoi mandarci un suggerimento?
+              </p>
+
+              <a class="btn btn-outline btn-sm" href="mailto:#">
+                Scrivici
+              </a>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+
+</html>

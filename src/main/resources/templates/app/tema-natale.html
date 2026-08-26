@@ -1,0 +1,510 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Tema Natale - Somnia Zodiaca', responsive=true)}"></head>
+
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='tema-natale')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Tema Natale')}"></div>
+
+      <main class="app-content">
+
+        <!-- Intestazione del tema e dati di nascita. -->
+        <div class="natal-header">
+          <div>
+            <h2 class="serif natal-title">Il tuo cielo di nascita</h2>
+            <div class="subtitle" th:if="${temaNatale != null}">
+              <span th:text="${#temporals.format(temaNatale.dataNascita, 'dd/MM/yyyy')}"></span>
+              <span> - </span>
+              <span th:text="${#temporals.format(temaNatale.oraNascita, 'HH:mm')}"></span>
+              <span> - </span>
+              <span th:text="${temaNatale.luogoNascita}"></span>
+            </div>
+
+            <div class="subtitle" th:unless="${temaNatale != null}">
+              Dati di nascita non ancora disponibili
+            </div>
+          </div>
+
+          <!-- <a th:if="${temaNatale != null and temaSbloccato}" th:href="@{/app/tema-natale/modifica}"
+            class="btn btn-outline btn-sm">
+            Modifica dati
+          </a>
+
+          <span th:if="${temaNatale != null and !temaSbloccato}" class="text-muted natal-edit-locked">
+            Modifica disponibile con Premium
+          </span> -->
+        </div>
+
+        <div th:if="${temaNatale == null}" class="card natal-empty-card">
+          <div class="card-title">Dati di nascita</div>
+
+          <p class="text-muted">
+            Inserisci i tuoi dati per calcolare il tema natale.
+          </p>
+
+          <a href="/onboarding" class="btn btn-gold mt-10">
+            Inserisci i dati di nascita
+          </a>
+        </div>
+
+        <!-- Riepilogo dei dati anagrafici e della triade principale. -->
+        <div class="natal-data-layout natal-protected-summary"
+          th:classappend="${!temaSbloccato and temaNatale != null ? ' is-locked' : ''}">
+
+          <div class="natal-summary-column">
+
+            <div class="card natal-birth-card" th:if="${temaNatale != null}">
+              <div class="card-title">Dati di nascita</div>
+
+              <p>
+                <strong>Luogo:</strong>
+                <span th:text="${temaNatale.luogoNascita}">Napoli</span>
+              </p>
+
+              <p>
+                <strong>Latitudine:</strong>
+                <span th:text="${temaNatale.latitudine}">40.8518</span>
+              </p>
+
+              <p>
+                <strong>Longitudine:</strong>
+                <span th:text="${temaNatale.longitudine}">14.2681</span>
+              </p>
+
+              <p>
+                <strong>Fuso orario:</strong>
+                <span th:text="${temaNatale.timezone}">Europe/Rome</span>
+              </p>
+            </div>
+
+            <div class="card natal-triad-card" th:if="${pianeti != null}">
+              <div class="card-title">
+                <span>Triade principale</span>
+              </div>
+              <p class="natal-card-subtitle">
+                La tua firma stellare
+              </p>
+
+              <!-- SOLE -->
+              <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
+                th:if="${pianeta.nome == 'Sole'}">
+                <div class="triad-label-group">
+                  <span class="col-symbol planet-symbol sun-symbol" th:text="${pianeta.simbolo}">☉</span>
+                  <span class="triad-name">SOLE</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♏︎</span>
+                  <span class="col-sign-name" th:text="${pianeta.segno}">Scorpione</span>
+                  <span class="col-separator">·</span>
+                  <span class="col-house" th:text="${pianeta.casaRomana}">VIII</span>
+                </div>
+              </div>
+
+              <!-- LUNA -->
+              <div class="triad-item triad-item-aligned" th:each="pianeta : ${pianeti}"
+                th:if="${pianeta.nome == 'Luna'}">
+                <div class="triad-label-group">
+                  <span class="col-symbol planet-symbol moon-symbol" th:text="${pianeta.simbolo}">☽</span>
+                  <span class="triad-name">LUNA</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${pianeta.simboloSegno}">♑</span>
+                  <span class="col-sign-name" th:text="${pianeta.segno}">Capricorno</span>
+                  <span class="col-separator">·</span>
+                  <span class="col-house" th:text="${pianeta.casaRomana}">X</span>
+                </div>
+              </div>
+
+              <!-- ASCENDENTE -->
+              <div class="triad-item triad-item-aligned">
+                <div class="triad-label-group">
+                  <!-- Colonna simbolo vuota per l'Ascendente per mantenere l'allineamento perfetto -->
+                  <span class="col-symbol ascendant-empty-symbol"></span>
+                  <span class="triad-name">ASCENDENTE</span>
+                </div>
+                <div class="triad-value">
+                  <span class="col-sign-symbol sign-symbol" th:text="${ascendenteSimbolo}">♑︎</span>
+                  <span class="col-sign-name" th:text="${ascendenteSegno}">Capricorno</span>
+                  <span class="col-separator"></span>
+                  <span class="col-house"></span>
+                </div>
+              </div>
+            </div>
+
+
+          </div>
+
+          <div class="card natal-planets-card" th:if="${pianeti != null}">
+            <div class="planet-row planet-row-header">
+              <span>Pianeta</span>
+              <span>Segno</span>
+              <span>Casa</span>
+              <span>Angolo</span>
+              <span>Stato</span>
+            </div>
+
+            <div class="planet-row" th:each="pianeta : ${pianeti}">
+              <span class="natal-planet-name">
+                <span class="planet-symbol" th:text="${pianeta.simbolo}">
+                  ☉
+                </span>
+                <span th:text="${pianeta.nome}">Sole</span>
+              </span>
+
+              <span class="planet-sign">
+                <span class="sign-symbol" th:text="${pianeta.simboloSegno}">
+                  ♏︎
+                </span>
+                <span th:text="${pianeta.segno}">Scorpione</span>
+              </span>
+
+              <span class="planet-house" th:text="${pianeta.casaRomana}">
+                VIII
+              </span>
+
+              <span class="planet-angle">
+                <span th:text="${#numbers.formatDecimal(pianeta.longitudine, 1, 2)}">
+                  228.77
+                </span>
+                °
+              </span>
+
+              <span class="planet-retrograde">
+                <span th:if="${pianeta.retrogrado}">Retrogrado</span>
+                <span th:unless="${pianeta.retrogrado}">Diretto</span>
+              </span>
+            </div>
+          </div>
+
+          <div th:if="${!temaSbloccato and temaNatale != null}" class="natal-inline-paywall">
+            <div class="natal-paywall-box">
+              <span class="badge badge-premium">Premium</span>
+
+              <h3>Il tuo cielo ti aspetta</h3>
+
+              <p>Questa funzionalità è riservata agli utenti Premium.</p>
+
+              <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                Scopri Premium
+              </a>
+            </div>
+          </div>
+        </div>
+
+
+        <!-- Viste del tema: riepilogo, carta, pianeti e case. -->
+        <div class="tab-row" data-tab-group="natale-tabs">
+          <a href="#" class="js-tab active" data-target="tab-riepilogo">Riepilogo</a>
+          <a href="#" class="js-tab" data-target="tab-carta">Carta</a>
+          <a href="#" class="js-tab" data-target="tab-pianeti">Pianeti</a>
+          <a href="#" class="js-tab" data-target="tab-case">Case</a>
+        </div>
+
+
+        <div id="tab-riepilogo" class="js-tab-panel">
+          <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
+            <div class="natal-tab-content">
+              <div class="natal-grid natal-summary-grid">
+                <div class="natal-summary-top">
+                  <div class="card">
+                    <div class="card-title">Elementi</div>
+                    <div class="element-bar-row" th:each="elemento : ${elementi}">
+                      <div class="element-label"><span th:text="${elemento.nome}">Fuoco</span><span
+                          th:text="${elemento.percentuale + '%'}">40%</span></div>
+                      <div class="progress-bar">
+                        <div class="progress-bar-fill" th:classappend="${elemento.classeCss}"
+                          th:style="|--width-fill: ${elemento.percentuale}%;|">
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                  <div class="card">
+                    <div class="card-title">Modalità</div>
+                    <div class="element-bar-row" th:each="modalitaItem : ${modalita}">
+                      <div class="element-label"><span th:text="${modalitaItem.nome}">Cardinale</span><span
+                          th:text="${modalitaItem.percentuale + '%'}">40%</span></div>
+                      <div class="progress-bar">
+                        <div class="progress-bar-fill" th:classappend="${modalitaItem.classeCss}"
+                          th:attr="data-percentuale=${modalitaItem.percentuale}"></div>
+                      </div>
+                    </div>
+                    <p class="text-muted mt-10">Distribuzione calcolata sui pianeti principali.</p>
+                  </div>
+                </div>
+
+                <div class="card natal-interpretation-card natal-interpretation-wide">
+                  <div class="card-title">Lettura del profilo</div>
+                  <div th:if="${analisiGemini != null}" class="natal-analysis-content">
+                    <h3>Sintesi del profilo</h3>
+                    <p th:text="${analisiGemini.path('sintesi').asText('')}"></p>
+                    <h3>Triade principale</h3>
+                    <div class="natal-triad-reading-grid">
+                      <div><strong>Sole</strong>
+                        <p th:text="${analisiGemini.path('triade').path('sole').asText('')}"></p>
+                      </div>
+                      <div><strong>Luna</strong>
+                        <p th:text="${analisiGemini.path('triade').path('luna').asText('')}"></p>
+                      </div>
+                      <div><strong>Ascendente</strong>
+                        <p th:text="${analisiGemini.path('triade').path('ascendente').asText('')}"></p>
+                      </div>
+                    </div>
+                    <div class="natal-analysis-columns">
+                      <div>
+                        <h3>Punti di forza</h3>
+                        <ul>
+                          <li th:each="voce : ${analisiGemini.path('puntiForza')}" th:text="${voce.asText()}"></li>
+                        </ul>
+                      </div>
+                      <div>
+                        <h3>Aree di crescita</h3>
+                        <ul>
+                          <li th:each="voce : ${analisiGemini.path('areeCrescita')}" th:text="${voce.asText()}"></li>
+                        </ul>
+                      </div>
+                    </div>
+                    <h3>Compatibilità e relazioni</h3>
+                    <p th:text="${analisiGemini.path('compatibilita').asText('')}"></p>
+                  </div>
+                  <div
+                    th:if="${analisiGemini == null and temaNatale != null and temaNatale.interpretazioneAstroWay != null}"
+                    class="js-markdown-content natal-interpretation-text"
+                    th:text="${temaNatale.interpretazioneAstroWay}">Interpretazione del tema natale.</div>
+                  <div
+                    th:if="${analisiGemini == null and (temaNatale == null or temaNatale.interpretazioneAstroWay == null)}">
+                    <span>La tua interpretazione non è ancora stata generata.</span>
+                    <form th:if="${temaNatale != null and temaSbloccato}"
+                      th:action="@{/app/tema-natale/interpretazione}" method="post" class="mt-10">
+                      <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+                      <button type="submit" class="btn btn-gold">Genera interpretazione</button>
+                    </form>
+                  </div>
+                </div>
+              </div>
+            </div>
+            <div th:if="${!temaSbloccato}" class="natal-tab-paywall">
+              <div class="natal-paywall-box"><span class="badge badge-premium">Premium</span>
+                <h3>Il tuo tema natale</h3>
+                <p>Questa funzionalità è riservata agli utenti Premium.</p><a href="/app/impostazioni?sezione=premium"
+                  class="btn btn-gold">Scopri Premium</a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-carta" class="js-tab-panel is-hidden">
+          <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
+
+            <div class="natal-tab-content natal-chart-content">
+              <div id="natal-chart" th:attr="data-chart=${temaChartJson}">
+              </div>
+              <div class="natal-chart-legend">
+                <span><strong>ASC</strong> Ascendente</span>
+                <span><strong>MC</strong> Medio Cielo</span>
+                <span><strong>Linee radiali</strong> case astrologiche</span>
+                <span><strong>Simboli</strong> pianeti e segni</span>
+              </div>
+            </div>
+
+            <div th:if="${!temaSbloccato}" class="natal-tab-paywall">
+              <div class="natal-paywall-box">
+                <span class="badge badge-premium">Premium</span>
+
+                <h3>La tua carta astrale</h3>
+
+                <p>Questa funzionalità è riservata agli utenti Premium.</p>
+
+                <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                  Sblocca la carta
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-pianeti" class="js-tab-panel is-hidden">
+          <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
+
+            <div class="natal-tab-content natal-tab-content-wide">
+              <div class="natal-wiki-layout">
+                <div class="card natal-wiki-card">
+                  <div class="card-title">Pianeti e Metalli</div>
+
+                  <!-- Trafiletto storico sui metalli alchemici e Mercurio/QI -->
+                  <div class="alchemical-history-note">
+                    <p id="alchemical-history">Nella tradizione ermetica, i metalli sono
+                      manifestazioni fisiche di archetipi celesti. La trasmutazione dei metalli vili in oro simboleggia
+                      l'evoluzione interiore per purificare l'anima e raggiungere un sé superiore.</p>
+                    <p id="mercurio-history">Il <bold>Mercurio ☿ (<strong id="q">Q</strong>uicksilver <strong id="i">I</strong>ngots): Simbolo QI </bold> funge
+                      all'interno della piattaforma da unita di misura energetica. In alchimia esso è il
+                      <em>catalizzatore universale</em> necessario a consentire l'ascensione verso un sé più noto,
+                      un'anima più pura e un metallo più nobile.
+                    </p>
+                  </div>
+
+                  <div class="natal-wiki-list">
+                    <!-- Sole / Oro -->
+                    <article>
+                      <h3 id="sun-color">Sole ☉</h3>
+                      <p>Identità, vitalità e direzione personale.</p>
+                      <span>Metallo: oro</span>
+                    </article>
+
+                    <!-- Luna / Argento -->
+                    <article>
+                      <h3 id="moon-color">Luna ☽</h3>
+                      <p>Emozioni, bisogni e senso di appartenenza.</p>
+                      <span>Metallo: argento</span>
+                    </article>
+
+                    <!-- Mercurio / Mercurio (Valuta QI) -->
+                    <article>
+                      <h3 id="mercurio-color">Mercurio ☿</h3>
+                      <p>Pensiero, apprendimento e comunicazione. Governa i segni dei Gemelli e della Vergine.</p>
+                      <span>Metallo: mercurio (Valuta QI)</span>
+                    </article>
+
+                    <!-- Venere / Rame -->
+                    <article>
+                      <h3 id="venere-color">Venere ♀</h3>
+                      <p>Affetti, valori, piacere e armonia.</p>
+                      <span>Metallo: rame</span>
+                    </article>
+
+                    <!-- Marte / Ferro -->
+                    <article>
+                      <h3 id="marte-color">Marte ♂</h3>
+                      <p>Energia, iniziativa e modo di affrontare i conflitti.</p>
+                      <span>Metallo: ferro</span>
+                    </article>
+
+                    <!-- Giove / Stagno -->
+                    <article>
+                      <h3 id="giove-color"></span>Giove ♃</h3>
+                      <p>Crescita, fiducia e apertura alle opportunità.</p>
+                      <span>Metallo: stagno</span>
+                    </article>
+
+                    <!-- Saturno / Piombo -->
+                    <article>
+                      <h3 id="saturno-color"></span>Saturno ♄</h3>
+                      <p>Responsabilità, limiti e costruzione nel tempo.</p>
+                      <span>Metallo: piombo</span>
+                    </article>
+
+                    <!-- Urano -->
+                    <article>
+                      <h3 id="urano-color">Urano ♅</h3>
+                      <p>Cambiamento improvviso, intuizione superiore, ribellione e innovazione.</p>
+                    </article>
+
+                    <!-- Nettuno -->
+                    <article>
+                      <h3 id="nettuno-color">Nettuno ♆</h3>
+                      <p>Sogni, misticismo, ispirazione artistica e dissoluzione dell'ego.</p>
+                    </article>
+
+                    <!-- Plutone -->
+                    <article>
+                      <h3 id="plutone-color">Plutone ♇</h3>
+                      <p>Metamorfosi profonda, eliminazione, rigenerazione e potere sotterraneo.</p>
+                    </article>
+                  </div>
+                </div>
+
+                <div class="card natal-specific-card">
+                  <div class="card-title">Nel tuo tema</div>
+                  <article th:each="pianeta : ${analisiGemini != null ? analisiGemini.path('pianeti') : {}}">
+                    <h3 th:text="${pianeta.path('nome').asText('Pianeta')}">Pianeta</h3>
+                    <p th:text="${pianeta.path('posizione').asText('')}"></p>
+                    <p th:text="${pianeta.path('testo').asText('')}"></p>
+                    <p th:text="${pianeta.path('relazioni').asText('')}"></p>
+                  </article>
+                </div>
+              </div>
+            </div>
+
+            <div th:if="${!temaSbloccato}" class="natal-tab-paywall">
+              <div class="natal-paywall-box">
+                <span class="badge badge-premium">Premium</span>
+                <h3>Interpretazioni astrologiche</h3>
+                <p>Questa funzionalità è riservata agli utenti Premium.</p>
+                <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                  Scopri Premium
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div id="tab-case" class="js-tab-panel is-hidden">
+          <div class="natal-tab-protected" th:classappend="${!temaSbloccato ? ' is-locked' : ''}">
+
+            <div class="natal-tab-content">
+              <div class="natal-wiki-layout">
+                <div class="card natal-wiki-card">
+                  <div class="card-title">Case Astrologiche</div>
+                  <!-- <p class="text-muted">Significato generale delle dodici case astrologiche.
+
+
+                  </p> -->
+                  <div class="natal-wiki-list natal-house-wiki">
+                    <article th:each="numero : ${#numbers.sequence(1, 12)}">
+                      <h3 th:text="${'Casa ' + numero}">Casa 1</h3>
+                      <p th:switch="${numero}">
+                        <span th:case="1">Identità e presenza personale.</span><span th:case="2">Risorse, valori e
+                          sicurezza.</span>
+                        <span th:case="3">Comunicazione, studio e ambiente vicino.</span><span th:case="4">Radici, casa
+                          e famiglia.</span>
+                        <span th:case="5">Creatività, piacere ed espressione.</span><span th:case="6">Abitudini, lavoro
+                          quotidiano e benessere.</span>
+                        <span th:case="7">Relazioni e partnership.</span><span th:case="8">Trasformazione e risorse
+                          condivise.</span>
+                        <span th:case="9">Visione, viaggi e conoscenza.</span><span th:case="10">Vocazione, carriera e
+                          immagine pubblica.</span>
+                        <span th:case="11">Amicizie, comunità e aspirazioni.</span><span th:case="12">Interiorità,
+                          ritiro e dimensione inconscia.</span>
+                      </p>
+                    </article>
+                  </div>
+                </div>
+                <div class="card natal-specific-card">
+                  <div class="card-title">Nel tuo tema</div>
+                  <article th:each="casa : ${analisiGemini != null ? analisiGemini.path('case') : {}}">
+                    <h3 th:text="${'Casa ' + casa.path('numero').asText()}">Casa</h3>
+                    <p th:text="${casa.path('titolo').asText('')}"></p>
+                    <p th:text="${casa.path('testo').asText('')}"></p>
+                  </article>
+                </div>
+              </div>
+            </div>
+
+            <div th:if="${!temaSbloccato}" class="natal-tab-paywall">
+              <div class="natal-paywall-box">
+                <span class="badge badge-premium">Premium</span>
+                <h3>Le tue case astrologiche</h3>
+                <p>Questa funzionalità è riservata agli utenti Premium.</p>
+                <a href="/app/impostazioni?sezione=premium" class="btn btn-gold">
+                  Scopri Premium
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+
+
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/vendor/marked.min.js}"></script>
+  <script th:src="@{/js/vendor/purify.min.js}"></script>
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+  <script th:src="@{/js/natal-chart.js}"></script>
+</body>
+
+</html>

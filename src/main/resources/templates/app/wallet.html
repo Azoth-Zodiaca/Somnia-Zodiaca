@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Wallet - Somnia Zodiaca', responsive=true)}"></head>
+
+<body>
+  <div class="app-layout">
+    <div th:replace="~{fragments/app-shell :: sidebar(active='wallet')}"></div>
+
+    <div class="app-main">
+      <div th:replace="~{fragments/app-shell :: topbar(pageTitle='Wallet QI')}"></div>
+
+      <main class="app-content">
+        <h2 class="serif wallet-title">Wallet QI</h2>
+
+        <!-- Saldo QI disponibile. -->
+        <div class="card wallet-balance">
+          <div class="label">Saldo attuale</div>
+          <div class="amount">
+            <span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${utente.qi}">0</span>
+          </div>
+          <div class="sub">QI &middot; Quicksilver Ingots</div>
+        </div>
+
+        <!-- Pacchetti per acquistare QI. -->
+        <div class="recharge-grid">
+          <div class="card recharge-card" th:each="pacchetto : ${pacchettiQi}">
+            <div class="text-muted wallet-package-label" th:text="${pacchetto.nome}">STELLA</div>
+            <div class="amount"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${pacchetto.quantitaQi + pacchetto.bonusQi}">100</span></div>
+            <div class="bonus" th:text="${'+' + pacchetto.bonusQi + ' bonus'}">+0 bonus</div>
+            <form th:action="@{/app/wallet/ricarica}" method="post">
+              <input type="hidden" name="quantitaQi" th:value="${pacchetto.quantitaQi}">
+              <button type="submit" class="btn btn-primary btn-block">
+                &euro; <span th:text="${#numbers.formatDecimal(pacchetto.prezzo, 1, 2)}">0,99</span>
+              </button>
+            </form>
+          </div>
+        </div>
+
+        <!-- Progressione delle ricompense giornaliere e riscatto odierno. -->
+        <div class="card">
+          <div class="card-title">
+            <span>Ricompensa giornaliera</span>
+            <span class="text-muted" th:text="${'Giorno ' + giorniRicompense + ' di ' + appDomain.wallet.ricompenseGiornaliere.size()}">
+              Giorno 0 di 7
+            </span>
+          </div>
+          <div class="daily-rewards">
+            <div class="daily-reward" th:each="ricompensa, stato : ${appDomain.wallet.ricompenseGiornaliere}"
+              th:classappend="${giorniRicompense >= stato.index + 1 ? 'claimed' : (giornoRicompensa == stato.index + 1 ? 'available' : 'locked')}">
+              <span th:text="${'+' + ricompensa + ' QI'}">+10 QI</span>
+            </div>
+          </div>
+          <form th:if="${!ricompensaRiscossa}" th:action="@{/app/wallet/ricompensa}" method="post">
+            <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+            <button type="submit" class="btn btn-gold btn-block">
+              Riscuoti oggi
+            </button>
+          </form>
+          <div th:if="${ricompensaRiscossa}" class="text-muted text-center">
+            Ricompensa già riscossa oggi
+          </div>
+        </div>
+        
+      </main>
+    </div>
+  </div>
+
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+
+</html>

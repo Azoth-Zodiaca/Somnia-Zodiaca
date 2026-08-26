@@ -12,7 +12,8 @@ public class InterpretazioneConverter implements GenericConverter<Interpretazion
     public Interpretazione fromDToE(RichiestaInterpretazioneDto d) {
         Interpretazione e = Interpretazione.builder()
                 .id(d.getId())
-                .interpretazioneEnum(d.getInterpretazioneEnum())
+                .umore(d.getUmore())
+                .stile(d.getStile())
                 .prompt(d.getPrompt())
                 .testo(d.getTesto())
                 .build();
@@ -28,10 +29,18 @@ public class InterpretazioneConverter implements GenericConverter<Interpretazion
     public RichiestaInterpretazioneDto fromEToD(Interpretazione e) {
         return RichiestaInterpretazioneDto.builder()
                 .id(e.getId())
-                .sognoId(e.getSogno() != null ? e.getSogno().getId() : null)
-                .interpretazioneEnum(e.getInterpretazioneEnum())
+                .sognoId(e.getSogno() != null
+                        ? e.getSogno().getId()
+                        : null)
+                .testoSogno(e.getSogno() != null
+                        ? e.getSogno().getTesto()
+                        : null)
+                .umore(e.getUmore())
+                .stile(e.getStile())
                 .prompt(e.getPrompt())
                 .testo(e.getTesto())
+                .createdAt(e.getCreatedAt())
+                .scadenzaCache(e.getScadenzaCache())
                 .build();
     }
 }

@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+
+<head th:replace="~{fragments/head :: head(title='Crea il tuo tema natale - Somnia Zodiaca', responsive=false)}"></head>
+
+<body>
+
+  <div class="onboarding-page">
+    <a href="/" class="brand onboarding-brand"><img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt="Somnia Zodiaca"> Somnia
+      Zodiaca</a>
+
+    <!-- Indicatore dei passaggi della configurazione iniziale. -->
+    <div class="onboarding-steps" aria-label="Passaggio 2 di 2">
+      <div class="step-dot done"></div>
+      <div class="step-dot active"></div>
+    </div>
+
+    <!-- Raccolta dei dati di nascita e calcolo del segno solare. -->
+    <div class="card">
+      <h2 class="serif onboarding-title">Quando sei nato/a?</h2>
+      <p class="text-muted onboarding-description">Ci serve per calcolare con precisione il tuo tema natale.</p>
+
+      <form th:action="@{/onboarding/dati-nascita}" method="post">
+        <div class="field">
+          <label for="data-nascita">Data di nascita</label>
+          <input type="date" id="data-nascita" name="dataNascita" required>
+        </div>
+        <div class="field">
+          <label for="ora-nascita">Ora di nascita (se la conosci)</label>
+          <input type="time" id="ora-nascita" name="oraNascita" value="12:00">
+          <span class="field-hint">
+            Per una fotografia dettagliata del tuo cielo, l'orario esatto è caldamente consigliata.
+          </span>
+        </div>
+        <div class="field">
+          <label for="luogo-nascita">Luogo di nascita</label>
+
+          <input type="text" id="luogo-nascita" name="luogoNascita" placeholder="Napoli, IT" required>
+
+          <div id="risultati-localita"></div>
+        </div>
+
+        <input type="hidden" id="geoname-id" name="geonameId">
+        <input type="hidden" id="latitudine" name="latitudine">
+        <input type="hidden" id="longitudine" name="longitudine">
+        <input type="hidden" id="timezone" name="timezone">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+
+        <!-- Segno solare associato alla data inserita. -->
+        <div class="card onboarding-zodiac-card">
+          <span class="text-muted">SEGNO SOLARE RILEVATO</span>
+          <div id="segno-solare" class="onboarding-zodiac-value">
+            Inserisci la data di nascita
+          </div>
+        </div>
+        <button type="submit" formaction="/onboarding/salta" formmethod="post" formnovalidate
+          class="btn btn-outline btn-block mt-10">
+          Salta per ora
+        </button>
+
+        <p class="field-hint">
+          Potrai inserire i dati in seguito. La modifica dei dati del tema sarà disponibile
+          solo con Premium.
+        </p>
+        <button type="submit" class="btn btn-primary btn-block mt-20">Calcola il mio tema natale</button>
+      </form>
+    </div>
+  </div>
+
+  <!-- Stato di caricamento mostrato durante il calcolo del tema. -->
+  <div class="onboarding-page onboarding-loading" id="loading-step">
+    <div class="spinner"></div>
+    <h3 class="serif onboarding-loading-title">
+      Stiamo leggendo il tuo cielo...
+    </h3>
+
+    <p class="text-muted onboarding-loading-description mt-10">
+      Posizioniamo pianeti, case e aspetti astrali.
+    </p>
+  </div>
+
+  <script th:src="@{/js/main.js}"></script>
+  <script th:src="@{/js/onboarding.js}"></script>
+</body>
+
+</html>

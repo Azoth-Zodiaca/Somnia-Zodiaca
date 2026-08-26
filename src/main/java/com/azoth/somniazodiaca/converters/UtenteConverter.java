@@ -23,6 +23,11 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .ruolo(d.getRuolo())
                 .qi(d.getQi())
                 .ultimoAccesso(d.getUltimoAccesso())
+                .giorniConsecutivi(d.getGiorniConsecutivi())
+                .giorniRicompensaGiornaliera(d.getGiorniRicompensaGiornaliera())
+                .ultimaRicompensaGiornaliera(d.getUltimaRicompensaGiornaliera())
+                .avatarPath(d.getAvatarPath())
+                .bannerPath(d.getBannerPath())
                 .build();
 
         if (d.getSegnoZodiacale() != null) {
@@ -48,7 +53,14 @@ public class UtenteConverter implements GenericConverter<Utente, UtenteDetail> {
                 .email(e.getEmail())
                 .ruolo(e.getRuolo())
                 .qi(e.getQi())
+                .dataRegistrazione(e.getCreatedAt())
                 .ultimoAccesso(e.getUltimoAccesso())
+                .giorniConsecutivi(e.getGiorniConsecutivi())
+                .giorniRicompensaGiornaliera(e.getGiorniRicompensaGiornaliera())
+                .ultimaRicompensaGiornaliera(e.getUltimaRicompensaGiornaliera())
+                .avatarPath(e.getAvatarPath())
+                .bannerPath(e.getBannerPath())
+                .dataRegistrazione(e.getCreatedAt())
                 .build();
 
         if (e.getSegnoZodiacale() != null) {

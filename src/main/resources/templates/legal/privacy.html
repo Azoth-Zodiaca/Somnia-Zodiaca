@@ -1,0 +1,51 @@
+<!DOCTYPE html>
+<html lang="it" xmlns:th="http://www.thymeleaf.org">
+<head th:replace="~{fragments/head :: head(title='Privacy - Somnia Zodiaca', responsive=true)}"></head>
+<body>
+  <!-- Navigazione pubblica condivisa. -->
+  <div th:replace="~{fragments/public-nav :: navbar}"></div>
+  <!-- Informativa organizzata per categorie di trattamento. -->
+  <section class="container legal-page">
+    <div class="legal-header">
+      <span class="eyebrow">Informazioni</span>
+      <h1 class="serif">Informativa sulla Privacy</h1>
+      <p class="text-muted">Questa bozza descrive in modo semplice come vengono trattati i dati nell'utilizzo di Somnia Zodiaca.</p>
+    </div>
+
+    <div class="legal-content">
+      <p class="legal-notice"><strong>Nota importante:</strong> questo testo è un fac-simile informativo e deve essere verificato e adattato prima della pubblicazione definitiva.</p>
+
+      <h2>1. Quali dati trattiamo</h2>
+      <p>Quando crei un account possiamo trattare username, indirizzo email, password in forma cifrata, data di nascita e le informazioni astrologiche che scegli di inserire, come luogo e ora di nascita.</p>
+      <p>Possiamo inoltre trattare i contenuti che decidi di salvare o pubblicare, inclusi sogni, interpretazioni, post, commenti, reazioni, immagini profilo e preferenze del tuo spazio personale.</p>
+      <p>Durante la navigazione vengono raccolti i dati tecnici necessari al funzionamento del servizio, come indirizzo IP, tipo di dispositivo, browser, orari di accesso e informazioni di sicurezza della sessione.</p>
+
+      <h2>2. Perché usiamo i dati</h2>
+      <p>I dati vengono utilizzati per creare e gestire l'account, autenticarti, mostrarti il tema natale, conservare le tue letture, fornire le funzioni dell'Oracolo e permettere le interazioni nella Community.</p>
+      <p>Vengono inoltre utilizzati per proteggere il servizio, prevenire abusi, risolvere problemi tecnici, gestire i QI e gli eventuali servizi Premium e rispettare gli obblighi applicabili.</p>
+
+      <h2>3. Contenuti condivisi</h2>
+      <p>I contenuti pubblicati nelle aree social possono essere visibili agli altri utenti secondo le impostazioni e le regole della Community. Prima di pubblicare un contenuto, evita di inserire dati personali tuoi o di altre persone che non vuoi rendere pubblici.</p>
+
+      <h2>4. Conservazione e sicurezza</h2>
+      <p>Conserviamo i dati per il tempo necessario a fornire il servizio e a gestire gli obblighi connessi. Quando l'account viene eliminato, i dati vengono cancellati o resi anonimi entro tempi tecnici ragionevoli, salvo ciò che deve essere conservato per legge o per la tutela del servizio.</p>
+      <p>Adottiamo misure tecniche e organizzative ragionevoli per proteggere i dati da accessi non autorizzati, perdita e alterazione. Nessun sistema online può però garantire una sicurezza assoluta.</p>
+
+      <h2>5. Condivisione con terzi</h2>
+      <p>I dati possono essere trattati da fornitori tecnici che supportano hosting, archiviazione, invio email, sicurezza e pagamenti, esclusivamente per le attività necessarie al servizio e secondo istruzioni documentate. Non vendiamo i dati personali degli utenti.</p>
+
+      <h2>6. Cookie e sessioni</h2>
+      <p>Utilizziamo cookie tecnici e strumenti equivalenti necessari per mantenere la sessione, ricordare le preferenze essenziali e proteggere i moduli. Le funzionalità principali possono non funzionare correttamente se questi strumenti vengono disabilitati.</p>
+
+      <h2>7. I tuoi diritti</h2>
+      <p>Puoi chiedere accesso, rettifica, aggiornamento, cancellazione o limitazione del trattamento dei tuoi dati, oltre a opporti a trattamenti non necessari, nei casi previsti dalla normativa applicabile. Puoi anche esportare o eliminare i contenuti attraverso le funzioni disponibili nell'account o chiedendo assistenza tramite i canali del servizio.</p>
+
+      <h2>8. Minori e aggiornamenti</h2>
+      <p>Il servizio non è pensato per chi non ha l'età minima richiesta dalla normativa applicabile. Se ritieni che un minore abbia fornito dati senza autorizzazione, chiedi la rimozione del relativo account.</p>
+      <p>Questa informativa può essere aggiornata per riflettere cambiamenti del servizio o della normativa. La versione pubblicata in questa pagina è quella applicabile al momento dell'utilizzo.</p>
+    </div>
+  </section>
+  <div th:replace="~{fragments/public-footer :: footer}"></div>
+  <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
+</body>
+</html>

@@ -1,0 +1,118 @@
+<!-- Fragment condivisi dell'area autenticata: sidebar e topbar. -->
+<html xmlns:th="http://www.thymeleaf.org" xmlns:sec="http://www.thymeleaf.org/extras/spring-security">
+
+<body>
+
+  <!-- Navigazione principale dell'area autenticata. -->
+  <nav th:fragment="sidebar(active)" class="sidebar" id="sidebar">
+    <a href="/app/dashboard" class="brand">
+      <img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt="Somnia Zodiaca">
+      Somnia Zodiaca
+    </a>
+
+    <div class="sidebar-nav">
+      <a href="/app/dashboard" th:classappend="${active == 'dashboard'} ? 'active' : ''">
+        <span class="icon">&#9673;</span> Dashboard
+      </a>
+      <a href="/app/tema-natale" th:classappend="${active == 'tema-natale'} ? 'active' : ''">
+        <span class="icon">&#9737;</span> Tema Natale
+      </a>
+      <a href="/app/oracolo" th:classappend="${active == 'oracolo'} ? 'active' : ''">
+        <span class="icon">&#9789;</span> Oracolo
+      </a>
+      <a href="/app/social" th:classappend="${active == 'social'} ? 'active' : ''">
+        <span class="icon">&#9752;</span> Social
+      </a>
+      <a href="/app/wallet" th:classappend="${active == 'wallet'} ? 'active' : ''">
+        <span class="icon qi-symbol" aria-hidden="true">&#9791;</span> Wallet
+      </a>
+
+    </div>
+
+    <!-- Promozione visibile agli account Base e Admin. -->
+    <div class="sidebar-promo" sec:authorize="hasAnyRole('BASE', 'ADMIN')">
+      <span class="badge badge-premium">Premium</span>
+      <p>Custode del Cielo<br>+<span th:text="${appDomain.premium.qiMensili}">-</span> QI mensili e letture illimitate.</p>
+      <a href="/app/impostazioni?sezione=premium">Scopri di più &rarr;</a>
+    </div>
+
+    <div class="sidebar-settings">
+      <a href="/app/impostazioni" th:classappend="${active == 'impostazioni'} ? 'active' : ''">
+        <span class="icon">&#9881;</span> Impostazioni
+      </a>
+    </div>
+
+    <div class="sidebar-user">
+      <div class="avatar">
+        <img th:if="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:src="@{${avatarPath}}"
+          alt="Immagine profilo">
+        <span th:unless="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:text="${username != null and !username.isEmpty()
+          ? #strings.toUpperCase(#strings.substring(username, 0, 1))
+          : '?'}">
+          L
+        </span>
+      </div>
+      <div>
+        <a th:href="@{/app/profilo}">
+          <div class="username" th:text="${'@' + username}">
+            @username
+          </div>
+          <div class="sign">
+            <span th:if="${segnoZodiacaleAbbreviato != null}">
+              <span th:text="${segnoZodiacaleAbbreviato}">Leo</span>
+
+              <span class="sign-symbol" th:text="${segnoZodiacaleSimbolo}">
+                ♌︎
+              </span>
+
+              <span th:if="${ascendenteSimbolo != null}">
+                · Asc.
+                <span class="sign-symbol" th:text="${ascendenteSimbolo}">
+                  ♏︎
+                </span>
+              </span>
+            </span>
+
+            <span th:unless="${segnoZodiacaleAbbreviato != null}">
+              Segno non impostato
+            </span>
+          </div>
+        </a>
+      </div>
+    </div>
+  </nav>
+  <div id="sidebar-backdrop" class="sidebar-backdrop" aria-hidden="true"></div>
+
+  <!-- Barra superiore con saluto, titolo pagina e saldo QI. -->
+  <header th:fragment="topbar(pageTitle)" class="topbar">
+    <button id="sidebar-toggle" class="sidebar-toggle" type="button" aria-label="Apri menu di navigazione"
+      aria-controls="sidebar" aria-expanded="false">
+      <span></span>
+      <span></span>
+      <span></span>
+    </button>
+
+    <div class="greeting">
+      <strong id="saluto-orario">Buongiorno</strong>,
+      <strong th:text="${username}">username</strong> &#9789;
+    </div>
+    <div class="topbar-right">
+      <a th:if="${!ricompensaRiscossa}" th:href="@{/app/wallet}" class="btn btn-gold btn-sm"
+        title="Riscatta la ricompensa giornaliera">
+        Ricompensa
+      </a>
+      <a href="/app/wallet" class="qi-pill" title="Apri il wallet">
+        <span class="qi-symbol" aria-hidden="true">&#9791;</span>
+        <span id="saldo-qi" th:text="${saldoQi}">0</span>
+        QI
+      </a>
+      <form method="post" action="/logout" class="public-logout-form">
+        <input type="hidden" th:name="${_csrf.parameterName}" th:value="${_csrf.token}">
+        <button type="submit" class="public-logout-button" aria-label="Esci" title="Esci">Esci</button>
+      </form>
+    </div>
+  </header>
+
+</body>
+
+</html>

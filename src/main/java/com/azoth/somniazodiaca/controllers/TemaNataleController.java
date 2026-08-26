@@ -4,34 +4,130 @@ import org.springframework.security.core.Authentication;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PostMapping;
 
 import com.azoth.somniazodiaca.dtos.TemaNataleDto;
 import com.azoth.somniazodiaca.entities.Utente;
+import com.azoth.somniazodiaca.enums.Ruolo;
 import com.azoth.somniazodiaca.repositories.UtenteRepository;
+import com.azoth.somniazodiaca.services.AstroWayService;
+import com.azoth.somniazodiaca.services.TemaNataleService;
+import com.azoth.somniazodiaca.services.TemaNataleViewService;
+import com.fasterxml.jackson.databind.JsonNode;
 
 @Controller
 public class TemaNataleController {
 
-    private final UtenteRepository utenteRepository;
+        private final UtenteRepository utenteRepository;
+        private final TemaNataleService temaNataleService;
+        private final AstroWayService astroWayService;
+        private final TemaNataleViewService temaNataleViewService;
 
-    public TemaNataleController(UtenteRepository utenteRepository) {
-        this.utenteRepository = utenteRepository;
-    }
+        public TemaNataleController(
+                        UtenteRepository utenteRepository,
+                        TemaNataleService temaNataleService,
+                        AstroWayService astroWayService,
+                        TemaNataleViewService temaNataleViewService) {
 
-    @GetMapping("/tema-natale")
-    public String temaNatale(Model model, Authentication auth) {
+                this.utenteRepository = utenteRepository;
+                this.temaNataleService = temaNataleService;
+                this.astroWayService = astroWayService;
+                this.temaNataleViewService = temaNataleViewService;
+        }
 
-        String username = auth.getName(); 
-        // username dell’utente loggato, serve per fare una query
-        // è marginale ai fini della performance, anzi è pratica usuale in progetti con la security
+        @GetMapping("/tema-natale")
+        public String redirectTemaNatale() {
+                return "redirect:/app/tema-natale";
+        }
 
-        Utente u = utenteRepository.findByUsername(username)
-                .orElseThrow(); // impossibile fallire se loggato
+        @GetMapping("/app/tema-natale")
+        public String temaNatale(
+                        Authentication authentication,
+                        Model model) {
 
-        model.addAttribute("input", TemaNataleDto.builder()
-                .utenteId(u.getId())
-                .build());
+                Utente utente = utenteRepository
+                                .findByUsername(authentication.getName())
+                                .orElseThrow(() -> new IllegalArgumentException(
+                                                "Utente non trovato"));
 
-        return "tema-natale/tema-natale";
-    }
+                boolean temaSbloccato = utente.getRuolo() == Ruolo.PREMIUM
+                                || utente.getRuolo() == Ruolo.ADMIN;
+
+                model.addAttribute("temaSbloccato", temaSbloccato);
+
+                TemaNataleDto temaNatale = temaNataleService
+                                .findByUtenteId(utente.getId())
+                                .orElse(null);
+
+                model.addAttribute("temaNatale", temaNatale);
+
+                JsonNode analisiGemini = null;
+                if (temaNatale != null && temaNatale.getAnalisiGemini() != null
+                                && !temaNatale.getAnalisiGemini().isBlank()) {
+                        analisiGemini = astroWayService.parseChart(temaNatale.getAnalisiGemini());
+                }
+                model.addAttribute("analisiGemini", analisiGemini);
+
+                if (temaNatale != null && temaNatale.getRispostaAstroWay() != null) {
+
+                        JsonNode temaChart = astroWayService.parseChart(
+                                        temaNatale.getRispostaAstroWay());
+
+                        if (!temaChart.path("ok").asBoolean(false)) {
+                                throw new IllegalStateException(
+                                                "AstroWay ha restituito una risposta non valida");
+                        }
+
+                        JsonNode datiTema = temaChart.path("data");
+
+                        JsonNode houses = datiTema.path("houses");
+                        double ascendente = houses.path("ascendant").asDouble();
+
+                        String segnoAscendente = temaNataleViewService.segnoDaLongitudine(ascendente);
+
+                        model.addAttribute("ascendenteSegno", segnoAscendente);
+                        model.addAttribute(
+                                        "ascendenteSimbolo",
+                                        temaNataleViewService.simboloDaSegno(segnoAscendente));
+
+                        model.addAttribute("temaChart", datiTema);
+                        model.addAttribute("temaChartJson", datiTema.toString());
+
+                        var pianeti = temaNataleViewService.estraiPianeti(datiTema);
+
+                        model.addAttribute("pianeti", pianeti);
+                        model.addAttribute(
+                                        "elementi",
+                                        temaNataleViewService.estraiElementi(pianeti));
+                        model.addAttribute(
+                                        "modalita",
+                                        temaNataleViewService.estraiModalita(pianeti));
+                }
+
+                return "app/tema-natale";
+        }
+
+        @GetMapping("/app/tema-natale/modifica")
+        public String modificaTemaNatale(Authentication authentication, Model model) {
+                Utente utente = utenteRepository
+                                .findByUsername(authentication.getName())
+                                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+                TemaNataleDto temaNatale = temaNataleService.findByUtenteId(utente.getId())
+                                .orElseThrow(() -> new IllegalArgumentException("Tema natale non trovato"));
+
+                model.addAttribute("temaNatale", temaNatale);
+                return "app/tema-natale-modifica";
+        }
+
+        @PostMapping("/app/tema-natale/interpretazione")
+        public String generaInterpretazione(Authentication authentication) {
+                Utente utente = utenteRepository
+                                .findByUsername(authentication.getName())
+                                .orElseThrow(() -> new IllegalArgumentException("Utente non trovato"));
+
+                temaNataleService.generaInterpretazione(utente);
+                return "redirect:/app/tema-natale";
+        }
+
 }

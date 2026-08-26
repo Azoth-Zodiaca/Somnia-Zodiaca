@@ -5,6 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.time.LocalTime;
 
+
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotNull;
 import lombok.Getter;
@@ -19,6 +20,7 @@ import lombok.experimental.SuperBuilder;
 public class TemaNataleDto implements GenericDto {
 
     private Long id;
+    private String rispostaAstroWay;
 
     @NotNull(message = "L'id dell'utente è obbligatorio")
     private Long utenteId;
@@ -36,4 +38,8 @@ public class TemaNataleDto implements GenericDto {
     private BigDecimal longitudine;
     private String timezone;
     private LocalDateTime dataCreazione;
+
+    private String interpretazioneAstroWay;
+
+    private String analisiGemini;
 }
