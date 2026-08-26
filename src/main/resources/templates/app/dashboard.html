@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html lang="it" xmlns:th="http://www.thymeleaf.org">
+
 <head th:replace="~{fragments/head :: head(title='Dashboard - Somnia Zodiaca', responsive=true)}"></head>
+
 <body>
   <div class="app-layout">
     <div th:replace="~{fragments/app-shell :: sidebar(active='dashboard')}"></div>
@@ -14,23 +16,20 @@
         <div class="stats-grid">
           <div class="card stat-card">
             <div class="stat-label">QI</div>
-            <div class="stat-value"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span th:text="${appDomain.dashboard.qi}">-</span></div>
-            <div class="stat-delta">+<span th:text="${appDomain.dashboard.qiSettimanali}">-</span> sett.</div>
+            <div class="stat-value"><span class="qi-symbol" aria-hidden="true">&#9791;</span> <span
+                th:text="${saldoQi}">-</span></div>
           </div>
           <div class="card stat-card">
             <div class="stat-label">Sogni</div>
-            <div class="stat-value">&#9789; <span th:text="${appDomain.dashboard.sogni}">-</span></div>
-            <div class="stat-delta">+12 sett.</div>
+            <div class="stat-value">&#9789; <span th:text="${numeroSogni}">-</span></div>
           </div>
           <div class="card stat-card">
             <div class="stat-label">Like</div>
-            <div class="stat-value">&#9825; <span th:text="${appDomain.dashboard.like}">-</span></div>
-            <div class="stat-delta">+8 sett.</div>
+            <div class="stat-value">&#9825; <span th:text="${numeroLike}">-</span></div>
           </div>
           <div class="card stat-card">
             <div class="stat-label">Streak</div>
-            <div class="stat-value">&#128293; <span th:text="${appDomain.dashboard.streak}">-</span> gg</div>
-            <div class="stat-delta">+<span th:text="${appDomain.dashboard.qiDomani}">-</span> QI domani</div>
+            <div class="stat-value">&#128293; <span th:text="${streak}">-</span> gg</div>
           </div>
         </div>
 
@@ -43,10 +42,15 @@
               <div class="card-title">
                 <span>&#9789; Oracolo &mdash; Hai sognato stanotte?</span>
               </div>
-              <form th:action="@{/app/oracolo/interpreta}" method="post" action="#">
-                <textarea name="testoSogno" placeholder="Racconta il tuo sogno... l'oracolo ascolta."></textarea>
+              <form th:action="@{/app/oracolo}" method="get">
+                <textarea name="testoSogno" placeholder="Racconta il tuo sogno... l'oracolo ascolta."
+                  required></textarea>
+
                 <div class="oracolo-actions">
-                  <button type="submit" class="btn btn-primary btn-sm"><span class="qi-symbol" aria-hidden="true">&#9791;</span> Interpreta con AI</button>
+                  <button type="submit" class="btn btn-primary btn-sm">
+                    <span class="qi-symbol" aria-hidden="true">&#9791;</span>
+                    Interpreta il sogno
+                  </button>
                 </div>
               </form>
             </div>
@@ -55,16 +59,42 @@
             <div class="card">
               <div class="card-title">
                 <span>&#9210; Sogni in scadenza</span>
-                <a href="/app/oracolo/storico" class="link">Vedi tutti &rarr;</a>
+                <a th:href="@{/app/oracolo}" class="link">
+                  Vedi tutti &rarr;
+                </a>
               </div>
-              <div class="dream-item">
+
+              <div th:if="${#lists.isEmpty(sogniInScadenza)}" class="text-muted">
+                Non hai sogni in scadenza.
+              </div>
+
+              <div class="dream-item" th:each="interpretazione : ${sogniInScadenza}">
+
                 <div class="flex-between">
-                  <span class="dream-title">04:11:29 &mdash; "Volavo sul mare"</span>
+                  <span class="dream-title" th:text="${interpretazione.testoSogno}">
+                    Sogno
+                  </span>
                 </div>
-                <p>Ero sospeso a pochi metri dall'acqua, sentivo il vento salato e la luna piena illuminava tutto. Non avevo paura, solo un senso di libertà...</p>
+
+                <p th:text="${interpretazione.testo}">
+                  Interpretazione
+                </p>
+
                 <div class="dream-actions">
-                  <button class="btn btn-ghost btn-sm">Salva &minus;<span th:text="${appDomain.oracolo.costoPermanenza}">-</span> QI</button>
-                  <button class="btn btn-primary btn-sm">Pubblica</button>
+                  <a class="btn btn-ghost btn-sm" th:href="@{/app/oracolo(
+              interpretazioneId=${interpretazione.id},
+              azione='salva')}">
+                    Salva
+                    &minus;
+                    <span th:text="${appDomain.oracolo.costoPermanenza}">-</span>
+                    QI
+                  </a>
+
+                  <a class="btn btn-primary btn-sm" th:href="@{/app/oracolo(
+              interpretazioneId=${interpretazione.id},
+              azione='pubblica')}">
+                    Pubblica nella community
+                  </a>
                 </div>
               </div>
             </div>
@@ -73,57 +103,24 @@
           <!-- Colonna laterale: progressi, obiettivi, profilo e attività. -->
           <div class="dashboard-col">
 
-            <!-- Livello e progresso dell'utente. -->
-            <div class="card">
-              <div class="dashboard-level">Livello 7 &middot; Sognatore</div>
-              <div class="progress-bar mt-10">
-                <div class="progress-bar-fill dashboard-progress"></div>
-              </div>
-              <p class="text-muted mt-10 dashboard-xp"><span th:text="${appDomain.dashboard.xp}">-</span>/<span th:text="${appDomain.dashboard.xpProssimoLivello}">-</span> XP &middot; Prossimo: Interprete</p>
-            </div>
-
-            <!-- Obiettivi disponibili nella giornata corrente. -->
-            <div class="card">
-              <div class="card-title"><span>Obiettivi di oggi</span></div>
-              <div class="goal-list">
-                <div class="goal-item done">
-                  <div class="goal-left">&#10003; <span class="goal-name">Accedi</span></div>
-                  <span class="goal-reward">+<span th:text="${appDomain.dashboard.ricompensaAccesso}">-</span> QI</span>
-                </div>
-                <div class="goal-item">
-                  <div class="goal-left">&#9633; <span class="goal-name">Interpreta 1 sogno</span></div>
-                  <span class="goal-reward">+<span th:text="${appDomain.dashboard.ricompensaSogno}">-</span> QI</span>
-                </div>
-                <div class="goal-item">
-                  <div class="goal-left">&#9633; <span class="goal-name">Metti <span th:text="${appDomain.dashboard.likeObiettivo}">-</span> like (1/<span th:text="${appDomain.dashboard.likeObiettivo}">-</span>)</span></div>
-                  <span class="goal-reward">+<span th:text="${appDomain.dashboard.ricompensaLike}">-</span> QI</span>
-                </div>
-              </div>
-            </div>
-
             <!-- Accesso rapido alla personalizzazione del profilo. -->
             <div class="card text-center">
               <span class="text-muted dashboard-avatar-label">Il tuo avatar</span>
-              <div class="avatar dashboard-avatar">L</div>
-              <div class="dashboard-username">@lunadark</div>
-              <a href="/app/profilo" class="btn btn-outline btn-sm mt-20">Personalizza</a>
-            </div>
+              <div class="avatar dashboard-avatar">
+                <img th:if="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:src="@{${avatarPath}}"
+                  alt="Immagine profilo">
 
-            <!-- Ultime variazioni del saldo e delle attività. -->
-            <div class="card">
-              <div class="card-title"><span>Attività</span><a href="/app/wallet" class="link">Storico &rarr;</a></div>
-              <div class="activity-item">
-                <span>Cornice d'Oro</span>
-                <span class="activity-negative">-<span th:text="${appDomain.dashboard.spesaCorniceOro}">-</span></span>
+                <span th:unless="${avatarPath != null and !#strings.isEmpty(avatarPath)}" th:text="${username != null and !username.isEmpty()
+          ? #strings.toUpperCase(#strings.substring(username, 0, 1))
+          : '?'}">
+                  L
+                </span>
               </div>
-              <div class="activity-item">
-                <span>Obiettivo giornaliero</span>
-                <span class="activity-positive">+<span th:text="${appDomain.dashboard.ricompensaSogno}">-</span></span>
+
+              <div class="dashboard-username" th:text="${'@' + username}">
+                @username
               </div>
-              <div class="activity-item">
-                <span>Login giornaliero</span>
-                <span class="activity-positive">+<span th:text="${appDomain.dashboard.ricompensaAccesso}">-</span></span>
-              </div>
+              <a href="/app/profilo" class="btn btn-outline btn-sm mt-20">Personalizza</a>
             </div>
           </div>
         </div>
@@ -133,4 +130,5 @@
 
   <script th:src="@{/js/main.js}" src="../../static/js/main.js"></script>
 </body>
+
 </html>

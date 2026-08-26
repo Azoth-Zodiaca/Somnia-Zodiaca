@@ -117,19 +117,19 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                         likePostRepository.delete(likeEsistente.get());
                         post.setNumeroLike(Math.max(0, post.getNumeroLike() - 1));
                 } else {
-                    likePostRepository.save(LikePost.builder()
-                            .post(post)
-                            .utente(utente)
-                            .build());
-                
-                    post.setNumeroLike(post.getNumeroLike() + 1);
-                    likeAggiunto = true;
+                        likePostRepository.save(LikePost.builder()
+                                        .post(post)
+                                        .utente(utente)
+                                        .build());
+
+                        post.setNumeroLike(post.getNumeroLike() + 1);
+                        likeAggiunto = true;
                 }
 
                 getRepository().save(post);
                 if (likeAggiunto) {
-                    badgeService.verificaBadge(
-                            post.getUtente().getUsername());
+                        badgeService.verificaBadge(
+                                        post.getUtente().getUsername());
                 }
 
                 return new LikeResult(
@@ -276,5 +276,9 @@ public class PostService extends GenericService<Long, Post, PostDto, PostConvert
                                                 follower.getId(),
                                                 seguito.getId())
                                 .ifPresent(utenteFollowRepository::delete);
+        }
+
+        public long countLikeRicevuti(Long utenteId) {
+                return likePostRepository.countLikeRicevuti(utenteId);
         }
 }
