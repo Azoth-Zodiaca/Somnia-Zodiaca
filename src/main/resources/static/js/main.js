@@ -26,6 +26,7 @@ document.addEventListener("DOMContentLoaded", function () {
   initSettingsMenu();
   initDeleteAccountConfirmation();
   initHistoryButtons();
+  apriInterpretazioneDaQuery();
   initSvuotaOracolo();
   aggiornaScadenze();
   setInterval(aggiornaScadenze, 60000);
@@ -35,9 +36,18 @@ document.addEventListener("DOMContentLoaded", function () {
 });
 
 function configurazioneOracolo() {
-  return window.somniaDomain && window.somniaDomain.oracolo
-    ? window.somniaDomain.oracolo
-    : {};
+  var form = document.getElementById("oracolo-form");
+
+  if (!form) {
+    return {};
+  }
+
+  return {
+    costoInterpretazione: Number(form.dataset.costoInterpretazione),
+    costoPermanenza: Number(form.dataset.costoPermanenza),
+    durataCacheOre: Number(form.dataset.durataCacheOre),
+    limiteSognoCaratteri: Number(form.dataset.limiteSognoCaratteri)
+  };
 }
 
 /* ---------------------------------------------------------
@@ -244,6 +254,64 @@ function initChipSelectors() {
       }
     });
   });
+}
+
+/* ---------------------------------------------------------
+  DASHBOARD
+--------------------------------------------------------- */
+
+function apriInterpretazioneDaQuery() {
+  var form = document.getElementById("oracolo-form");
+
+  if (!form) {
+    return;
+  }
+
+  var interpretazioneId = form.dataset.interpretazioneId;
+  var azione = form.dataset.azione;
+
+  if (!interpretazioneId) {
+    return;
+  }
+
+  var historyButton = document.querySelector(
+    '.history-open[data-interpretazione-id="' +
+    interpretazioneId +
+    '"]'
+  );
+
+  if (!historyButton) {
+    return;
+  }
+
+  historyButton.click();
+
+  if (azione === "salva") {
+    window.setTimeout(function () {
+      var saveButton = document.getElementById(
+        "salva-interpretazione"
+      );
+
+      if (saveButton && saveButton.dataset.action !== "delete") {
+        saveButton.click();
+      }
+    }, 100);
+  }
+
+  if (azione === "pubblica") {
+    window.setTimeout(function () {
+      var shareBox = document.getElementById(
+        "condivisione-interpretazione"
+      );
+
+      if (shareBox) {
+        shareBox.scrollIntoView({
+          behavior: "smooth",
+          block: "center"
+        });
+      }
+    }, 100);
+  }
 }
 
 /* ---------------------------------------------------------
@@ -524,7 +592,7 @@ function aggiungiInterpretazioneAllaLista(
       saveButton.textContent = permanente
         ? "Cancella interpretazione"
         : "Salva interpretazione - " +
-          configurazioneOracolo().costoPermanenza + " QI";
+        configurazioneOracolo().costoPermanenza + " QI";
       saveButton.dataset.action = permanente ? "delete" : "save";
       saveButton.classList.toggle("btn-ghost", permanente);
       saveButton.classList.toggle("btn-primary", !permanente);
@@ -889,7 +957,7 @@ function initHistoryButtons() {
         saveButton.textContent = permanente
           ? "Cancella interpretazione"
           : "Salva interpretazione - " +
-            configurazioneOracolo().costoPermanenza + " QI";
+          configurazioneOracolo().costoPermanenza + " QI";
       }
 
       if (externalShareButton) {
@@ -1408,10 +1476,14 @@ function initComments() {
     initialTargetId = savedPanelId;
   }
 
-  var initialTarget = document.getElementById(initialTargetId);
-  var initialButton = document.querySelector(
-    '[data-comments-target="' + initialTargetId + '"]'
-  );
+  var initialTarget = initialTargetId
+    ? document.getElementById(initialTargetId)
+    : null;
+  var initialButton = initialTargetId
+    ? document.querySelector(
+      '[data-comments-target="' + initialTargetId + '"]'
+    )
+    : null;
 
   if (initialTarget && initialButton) {
     initialTarget.classList.remove("is-hidden");

@@ -13,7 +13,6 @@ public class AppDomainProperties {
     private final Wallet wallet = new Wallet();
     private final Premium premium = new Premium();
     private final Contenuti contenuti = new Contenuti();
-    private final Dashboard dashboard = new Dashboard();
 
     public Oracolo getOracolo() {
         return oracolo;
@@ -29,10 +28,6 @@ public class AppDomainProperties {
 
     public Contenuti getContenuti() {
         return contenuti;
-    }
-
-    public Dashboard getDashboard() {
-        return dashboard;
     }
 
     public static class Oracolo {
@@ -219,48 +214,5 @@ public class AppDomainProperties {
         public void setLimitePasswordCaratteri(int limitePasswordCaratteri) {
             this.limitePasswordCaratteri = limitePasswordCaratteri;
         }
-    }
-
-    public static class Dashboard {
-        private int qi;
-        private int qiSettimanali;
-        private int sogni;
-        private int like;
-        private int streak;
-        private int qiDomani;
-        private int xp;
-        private int xpProssimoLivello;
-        private int ricompensaAccesso;
-        private int ricompensaSogno;
-        private int ricompensaLike;
-        private int likeObiettivo;
-        private int spesaCorniceOro;
-
-        public int getQi() { return qi; }
-        public void setQi(int qi) { this.qi = qi; }
-        public int getQiSettimanali() { return qiSettimanali; }
-        public void setQiSettimanali(int qiSettimanali) { this.qiSettimanali = qiSettimanali; }
-        public int getSogni() { return sogni; }
-        public void setSogni(int sogni) { this.sogni = sogni; }
-        public int getLike() { return like; }
-        public void setLike(int like) { this.like = like; }
-        public int getStreak() { return streak; }
-        public void setStreak(int streak) { this.streak = streak; }
-        public int getQiDomani() { return qiDomani; }
-        public void setQiDomani(int qiDomani) { this.qiDomani = qiDomani; }
-        public int getXp() { return xp; }
-        public void setXp(int xp) { this.xp = xp; }
-        public int getXpProssimoLivello() { return xpProssimoLivello; }
-        public void setXpProssimoLivello(int xpProssimoLivello) { this.xpProssimoLivello = xpProssimoLivello; }
-        public int getRicompensaAccesso() { return ricompensaAccesso; }
-        public void setRicompensaAccesso(int ricompensaAccesso) { this.ricompensaAccesso = ricompensaAccesso; }
-        public int getRicompensaSogno() { return ricompensaSogno; }
-        public void setRicompensaSogno(int ricompensaSogno) { this.ricompensaSogno = ricompensaSogno; }
-        public int getRicompensaLike() { return ricompensaLike; }
-        public void setRicompensaLike(int ricompensaLike) { this.ricompensaLike = ricompensaLike; }
-        public int getLikeObiettivo() { return likeObiettivo; }
-        public void setLikeObiettivo(int likeObiettivo) { this.likeObiettivo = likeObiettivo; }
-        public int getSpesaCorniceOro() { return spesaCorniceOro; }
-        public void setSpesaCorniceOro(int spesaCorniceOro) { this.spesaCorniceOro = spesaCorniceOro; }
     }
 }

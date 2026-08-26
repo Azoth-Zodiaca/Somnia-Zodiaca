@@ -45,8 +45,8 @@ public class AdminInitializer {
                             .passwordHash(encoder.encode("admin"))
                             .ruolo(Ruolo.ADMIN)
                             .qi(10000)
-                            .giorniConsecutivi(6)
-                            .giorniRicompensaGiornaliera(6)
+                            .giorniConsecutivi(2)
+                            .giorniRicompensaGiornaliera(2)
                             .build();
 
                     return utenteRepository.save(nuovoAdmin);
