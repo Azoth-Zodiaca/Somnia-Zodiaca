@@ -1,0 +1,40 @@
+# Query: somnia-zodiaca-logo
+# Flags: CaseSensitive
+# ContextLines: 1
+
+14 results - 7 files
+
+src\main\resources\templates\error.html:
+  10        <a href="/" class="brand">
+  11:         <img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt="">
+  12          Somnia Zodiaca
+
+src\main\resources\templates\onboarding.html:
+  8    <div class="onboarding-page">
+  9:     <a href="/" class="brand onboarding-brand"><img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt=""> Somnia
+  10        Zodiaca</a>
+
+src\main\resources\templates\auth\login.html:
+  7      <div class="auth-form-panel">
+  8:       <a href="/" class="brand"><img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt=""> Somnia Zodiaca</a>
+  9        <h2>Bentornato</h2>
+
+src\main\resources\templates\auth\register.html:
+   9      <div class="auth-form-panel">
+  10:       <a href="/" class="brand"><img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt=""> Somnia Zodiaca</a>
+  11        <h2>Crea il tuo account</h2>
+
+src\main\resources\templates\fragments\app-shell.html:
+  8      <a href="/app/dashboard" class="brand">
+  9:       <img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt="">
+  10        Somnia Zodiaca
+
+src\main\resources\templates\fragments\public-footer.html:
+  5      <div class="footer-brand">
+  6:       <div class="brand"><img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt=""> Somnia Zodiaca</div>
+  7        <p class="mt-10">Un modo più consapevole di leggere il cielo, i sogni e le connessioni.</p>
+
+src\main\resources\templates\fragments\public-nav.html:
+  5      <a href="/" class="brand">
+  6:       <img class="brand-logo" th:src="@{/images/logo.svg}" src="/images/logo.svg" alt="">
+  7        Somnia Zodiaca

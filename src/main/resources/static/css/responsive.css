@@ -273,10 +273,6 @@ button {
         grid-template-columns: repeat(2, minmax(0, 1fr));
     }
 
-    .dashboard-progress {
-        width: 100%;
-    }
-
     .profile-quickstats {
         flex-wrap: wrap;
         gap: 8px 14px;
@@ -554,20 +550,7 @@ button {
         gap: 12px;
     }
 
-    .goal-item .goal-left {
-        min-width: 0;
-    }
-
     .goal-item .goal-name {
-        overflow-wrap: anywhere;
-    }
-
-    .activity-item {
-        gap: 12px;
-    }
-
-    .activity-item span:first-child {
-        min-width: 0;
         overflow-wrap: anywhere;
     }
 }

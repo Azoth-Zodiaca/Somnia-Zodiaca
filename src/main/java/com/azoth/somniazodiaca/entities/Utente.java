@@ -70,8 +70,9 @@ public class Utente extends BaseEntity {
     @Builder.Default
     private Integer giorniRicompensaGiornaliera = 0;
 
-    @Column(name = "ultima_ricompensa_giornaliera")
-    private LocalDate ultimaRicompensaGiornaliera;
+    @Column(name = "ultima_ricompensa_giornaliera", nullable = false)
+    @Builder.Default
+    private LocalDate ultimaRicompensaGiornaliera = LocalDate.now();
 
     @Column(name = "avatar_path", length = 255)
     private String avatarPath;

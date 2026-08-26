@@ -10,6 +10,7 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseBody;
 
 import com.azoth.somniazodiaca.dtos.RichiestaInterpretazioneDto;
@@ -56,7 +57,10 @@ public class OracoloController {
         @GetMapping("/app/oracolo")
         public String oracolo(
                         Authentication authentication,
-                        Model model) {
+                        Model model,
+                        @RequestParam(required = false) String testoSogno,
+                        @RequestParam(required = false) Long interpretazioneId,
+                        @RequestParam(required = false) String azione) {
 
                 UtenteDetail utente = utenteService
                                 .findByUsername(authentication.getName())
@@ -68,6 +72,10 @@ public class OracoloController {
                 model.addAttribute("interpretazioni", interpretazioni);
                 model.addAttribute("premiumTemaNatale",
                                 !"BASE".equals(utente.getRuolo().name()));
+
+                model.addAttribute("testoSogno", testoSogno);
+                model.addAttribute("interpretazioneId", interpretazioneId);
+                model.addAttribute("azione", azione);
 
                 return "app/oracolo";
         }

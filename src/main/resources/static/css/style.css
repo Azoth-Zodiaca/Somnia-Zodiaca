@@ -1396,48 +1396,6 @@ h4 {
   margin-top: 10px;
 }
 
-.goal-list {
-  display: flex;
-  flex-direction: column;
-  gap: 10px;
-}
-
-.goal-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  font-size: 13px;
-}
-
-.goal-item .goal-left {
-  display: flex;
-  align-items: center;
-  gap: 8px;
-}
-
-.goal-item.done .goal-name {
-  text-decoration: line-through;
-  color: var(--text-muted);
-}
-
-.goal-item .goal-reward {
-  color: var(--accent-gold);
-  font-size: 12px;
-}
-
-.activity-item {
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
-  padding: 8px 0;
-  border-bottom: 1px solid var(--border-color);
-  font-size: 13px;
-}
-
-.activity-item:last-child {
-  border-bottom: none;
-}
-
 /* Profilo */
 .profile-banner {
   height: 160px;
@@ -2733,19 +2691,6 @@ h4 {
   grid-template-columns: repeat(4, 1fr);
 }
 
-.dashboard-level {
-  font-weight: 700;
-  font-size: 16px;
-}
-
-.dashboard-progress {
-  width: 72%;
-}
-
-.dashboard-xp {
-  font-size: 12px;
-}
-
 .dashboard-avatar-label {
   font-size: 11px;
   text-transform: uppercase;
@@ -2760,14 +2705,6 @@ h4 {
 
 .dashboard-username {
   font-weight: 600;
-}
-
-.activity-negative {
-  color: var(--accent-red);
-}
-
-.activity-positive {
-  color: var(--accent-green);
 }
 
 .settings-title {
