@@ -92,6 +92,7 @@ public class SecurityConfig {
                                                                 "/css/**",
                                                                 "/js/**",
                                                                 "/fonts/**",
+                                                                "/images/**",
                                                                 "/favicon.ico")
                                                 .permitAll()
 
@@ -185,7 +186,7 @@ public class SecurityConfig {
                                                                 "default-src 'self'; " +
                                                                                 "script-src 'self'; " +
                                                                                 "style-src 'self'; " +
-                                                                                "img-src 'self' data:; " +
+                                                                                "img-src 'self' data: blob:; " +
                                                                                 "object-src 'none'; " +
                                                                                 "base-uri 'self'; " +
                                                                                 "frame-ancestors 'none'; " +
