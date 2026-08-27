@@ -37,7 +37,7 @@ services:
       APP_UPLOAD_DIR: /app/uploads/profiles
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/somniazodiaca?useSSL=false&serverTimezone=UTC
     ports:
-      - "10000:10000"
+      - "10000:8080"
     volumes:
       - profiles_data:/app/uploads/profiles
 
