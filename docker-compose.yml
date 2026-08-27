@@ -36,6 +36,7 @@ services:
       ASTROWAY_API_KEY: ${ASTROWAY_API_KEY}
       APP_UPLOAD_DIR: /app/uploads/profiles
       SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/somniazodiaca?useSSL=false&serverTimezone=UTC
+      PORT: 8080
     ports:
       - "10000:8080"
     volumes:
