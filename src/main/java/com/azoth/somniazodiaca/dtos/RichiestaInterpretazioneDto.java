@@ -1,12 +1,11 @@
 package com.azoth.somniazodiaca.dtos;
 
-import com.azoth.somniazodiaca.enums.InterpretazioneEnum;
+import java.time.LocalDateTime;
+
 import com.azoth.somniazodiaca.enums.StileEnum;
 import com.azoth.somniazodiaca.enums.UmoreEnum;
 
 import jakarta.validation.constraints.NotBlank;
-import jakarta.validation.constraints.NotNull;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -23,9 +22,6 @@ public class RichiestaInterpretazioneDto implements GenericDto {
     private Long sognoId;
 
     private String testoSogno;
-
-    @NotNull(message = "La tipologia di interpretazione è obbligatoria")
-    private InterpretazioneEnum interpretazioneEnum;
 
     private UmoreEnum umore;
 

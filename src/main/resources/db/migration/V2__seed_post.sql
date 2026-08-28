@@ -9,12 +9,8 @@ WHERE
     username = 'admin'
 LIMIT 1;
 
--- Recupera i segni zodiacali
-SELECT id INTO @segno_ariete
-FROM segni_zodiacali
-WHERE
-    nome = 'ARIETE'
-LIMIT 1;
+-- Password demo: "Password123!" (hash bcrypt, valido per tutti gli utenti demo)
+SET @password_demo = '$2b$10$KM5dc/e4KR8SeI/bPOKfx.ltVAF2YyaRQgsv1/82M.WvdSfplY37.';
 
 SELECT id INTO @segno_pesci
 FROM segni_zodiacali
