@@ -1,10 +1,11 @@
 package com.azoth.somniazodiaca.dtos;
 
+import java.time.LocalDateTime;
+
 import com.azoth.somniazodiaca.enums.StileEnum;
 import com.azoth.somniazodiaca.enums.UmoreEnum;
 
 import jakarta.validation.constraints.NotBlank;
-import java.time.LocalDateTime;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
