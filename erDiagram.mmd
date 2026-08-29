@@ -5,12 +5,17 @@ erDiagram
         string email UK
         string password_hash
         string ruolo
+        string avatar_path
+        string banner_path
         int segno_zodiacale_id FK
         int ascendente_id FK
         int qi
         datetime ultimo_accesso
         int giorni_consecutivi
+        int giorni_ricompensa_giornaliera
         date ultima_ricompensa_giornaliera
+        datetime premium_attivato_at
+        datetime prossimo_bonus_premium_at
         datetime created_at
         datetime updated_at
     }
@@ -18,7 +23,7 @@ erDiagram
     SEGNI_ZODIACALI {
         int id PK
         string nome UK
-        string modalita UK
+        string modalita
         string descrizione
         int elemento_id FK
         int pianeta_id FK
@@ -60,6 +65,10 @@ erDiagram
         decimal latitudine
         decimal longitudine
         string timezone
+        int geoname_id
+        string analisi_gemini
+        string interpretazione_astroway
+        string risposta_astroway
         datetime data_creazione
         datetime created_at
         datetime updated_at
@@ -78,7 +87,8 @@ erDiagram
         int sogno_id FK
         string prompt
         string testo
-        string tipo
+        string stile
+        string umore
         datetime scadenza_cache
         datetime created_at
         datetime updated_at
@@ -91,6 +101,23 @@ erDiagram
         string testo_visibile
         datetime data_pubblicazione
         int numero_like
+        datetime created_at
+        datetime updated_at
+    }
+
+    COMMENTI {
+        int id PK
+        int post_id FK
+        int utente_id FK
+        string testo
+        datetime created_at
+        datetime updated_at
+    }
+
+    LIKE_POST {
+        int id PK
+        int post_id FK
+        int utente_id FK
         datetime created_at
         datetime updated_at
     }
@@ -114,6 +141,36 @@ erDiagram
         datetime updated_at
     }
 
+    BADGE {
+        int id PK
+        string codice UK
+        string nome
+        string descrizione
+        string icona
+        string tipo_condizione
+        int soglia
+        int ricompensa_qi
+        boolean attivo
+        datetime created_at
+        datetime updated_at
+    }
+
+    UTENTI_BADGE {
+        int id PK
+        int utente_id FK
+        int badge_id FK
+        datetime created_at
+        datetime updated_at
+    }
+
+    UTENTI_FOLLOW {
+        int id PK
+        int follower_id FK
+        int seguito_id FK
+        datetime created_at
+        datetime updated_at
+    }
+
     ELEMENTI ||--o{ SEGNI_ZODIACALI : contiene
     PIANETI ||--o{ SEGNI_ZODIACALI : caratterizza
     METALLI ||--o{ SEGNI_ZODIACALI : associato
@@ -128,5 +185,17 @@ erDiagram
     UTENTI o|--o{ POST : pubblica
     INTERPRETAZIONI o|--o{ POST : condivisa
 
+    UTENTI ||--o{ COMMENTI : scrive
+    POST ||--o{ COMMENTI : riceve
+
+    UTENTI ||--o{ LIKE_POST : mette
+    POST ||--o{ LIKE_POST : riceve
+
     UTENTI ||--o{ INVENTARI_COSMETICI : possiede
     COSMETICI ||--o{ INVENTARI_COSMETICI : incluso
+
+    UTENTI ||--o{ UTENTI_BADGE : ottiene
+    BADGE ||--o{ UTENTI_BADGE : assegnato
+
+    UTENTI ||--o{ UTENTI_FOLLOW : segue
+    UTENTI ||--o{ UTENTI_FOLLOW : seguito_da
