@@ -1,0 +1,46 @@
+services:
+  db:
+    image: mysql:8.4
+    container_name: somniazodiaca-db
+    restart: unless-stopped
+    environment:
+      MYSQL_DATABASE: somniazodiaca
+      MYSQL_USER: ${DATABASE_USERNAME}
+      MYSQL_PASSWORD: ${DATABASE_PASSWORD}
+      MYSQL_ROOT_PASSWORD: ${DATABASE_ROOT_PASSWORD}
+    ports:
+      - "3307:3306"
+    volumes:
+      - mysql_data:/var/lib/mysql
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost", "-u${DATABASE_USERNAME}", "-p${DATABASE_PASSWORD}"]
+      interval: 10s
+      timeout: 5s
+      retries: 10
+
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    container_name: somniazodiaca-app
+    restart: unless-stopped
+    depends_on:
+      db:
+        condition: service_healthy
+    environment:
+      DATABASE_USERNAME: ${DATABASE_USERNAME}
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD}
+      DATABASE_URL: jdbc:mysql://db:3306/somniazodiaca?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+      GEMINI_API_KEY: ${GEMINI_API_KEY}
+      GEONAMES_USERNAME: ${GEONAMES_USERNAME}
+      ASTROWAY_API_KEY: ${ASTROWAY_API_KEY}
+      APP_UPLOAD_DIR: /app/uploads/profiles
+      SPRING_DATASOURCE_URL: jdbc:mysql://db:3306/somniazodiaca?useSSL=false&allowPublicKeyRetrieval=true&serverTimezone=UTC
+    ports:
+      - "8080:8080"
+    volumes:
+      - profiles_data:/app/uploads/profiles
+
+volumes:
+  mysql_data:
+  profiles_data:
