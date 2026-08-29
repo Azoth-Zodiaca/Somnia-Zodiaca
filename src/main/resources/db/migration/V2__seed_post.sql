@@ -2,15 +2,8 @@ USE somniazodiaca;
 
 START TRANSACTION;
 
--- Recupera l'hash dell'admin per permettere il login agli utenti demo
-SELECT password_hash INTO @password_demo
-FROM utenti
-WHERE
-    username = 'admin'
-LIMIT 1;
-
 -- Password demo: "Password123!" (hash bcrypt, valido per tutti gli utenti demo)
-SET @password_demo = '$2b$10$KM5dc/e4KR8SeI/bPOKfx.ltVAF2YyaRQgsv1/82M.WvdSfplY37.';
+SET @password_demo = '{bcrypt}$2b$10$KM5dc/e4KR8SeI/bPOKfx.ltVAF2YyaRQgsv1/82M.WvdSfplY37.';
 
 SELECT id INTO @segno_pesci
 FROM segni_zodiacali
