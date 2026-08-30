@@ -13,7 +13,6 @@
 - [Parametri di dominio configurabili](#parametri-di-dominio-configurabili)
 - [API esterne utilizzate](#api-esterne-utilizzate)
 - [Troubleshooting](#troubleshooting)
-- [Contesto del corso / project work](#contesto-del-corso--project-work)
 - [Autore](#autore)
 
 ---
@@ -78,9 +77,11 @@ o flowchart) che mostra: db -> flyway -> hibernate validate -> runners. -->
 
 ## Avvio del progetto
 
+> Istruzioni testate solo su Windows, i comandi potrebbero essere diversi per altri sistemi operativi
+
 ### Docker
 
-Assicurati di avere Docker Engine avviato, poi clona il progetto:
+Assicurati di avere Docker Engine avviato, poi clona il progetto usando Git Bash:
 
 ```bash
 git clone <url-repository>
@@ -109,6 +110,8 @@ Avvia l'applicazione:
 docker compose up --build
 ```
 
+Per collegarsi all'applicazione bisogna connettersi a http://localhost:8080/
+
 Per spegnere l'applicazione e il database, scegli una delle due opzioni:
 
 - Premere `Ctrl + C` nel terminale in cui è in esecuzione
@@ -126,7 +129,7 @@ docker compose up --build
 
 ### Esecuzione locale
 
-Clona il progetto:
+Assicurati di avere un'istanza MYSQL 8.x in esecuzione e raggiungibile alla porta 3306, poi clona il progetto usando Git Bash:
 
 ```bash
 git clone <url-repository>
@@ -149,11 +152,16 @@ DATABASE_PASSWORD=...
 DATABASE_USERNAME=...
 ```
 
-Richiede un'istanza MySQL 8.x in esecuzione e raggiungibile su `localhost:3306`. Crea il database:
+Crea il database, scegli una delle tre opzioni:
+- avendo configurato la variabile PATH per mysql ([vedi istruzioni](https://dev.mysql.com/doc/mysql-windows-excerpt/8.0/en/mysql-installation-windows-path.html)) esegui questo comando e immetti la password di MYSQL richiesta:
 
 ```bash
 mysql -u root -p < ./GenerazioneDatabase.sql
 ```
+
+- avendo creato una connessione al server MYSQL con l'IDE scelto ([vedi istruzioni per VSCode](https://dev.mysql.com/doc/mysql-shell-gui/en/mysql-shell-for-vscode-setup.html#mysql-shell-for-vscode-setup-install)) apri GenerazioneDatabase.sql ed eseguilo
+
+- avendo installato MYSQL Workbench ([vedi istruzioni](https://dev.mysql.com/downloads/workbench/)) esegui il file GenerazioneDatabase.sql dentro il workbench
 
 Avvia l'applicazione:
 
@@ -181,7 +189,7 @@ Al primo avvio, in automatico:
 
 ## Credenziali demo
 
-> Solo per ambiente locale/sviluppo — non usare in produzione.
+> Solo per ambiente locale/sviluppo - non usare in produzione.
 
 | Ruolo   | Username         | Password           |
 |---------|-------------------|----------------------|
@@ -488,16 +496,8 @@ docker compose down -v
 docker compose up --build
 ```
 
-<!-- Aggiungi qui altri problemi incontrati durante lo sviluppo -->
+## Autori
 
-## Contesto del corso / project work
-
-<!--
-- Nome del corso
-- Obiettivi richiesti dalla consegna
-- Vincoli specifici imposti dall'assegnazione
--->
-
-## Autore
-
-<!-- Nome, eventuali contatti/link -->
+- Maurizio Carugo
+- Davide Focarete
+- Alberto Camoirano | [github](https://github.com/Hutch9910)
