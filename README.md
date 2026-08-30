@@ -173,11 +173,7 @@ Per spegnere l'applicazione:
 
 - Premere `Ctrl + C` nel terminale in cui è in esecuzione
 
-Per ripartire da un database completamente pulito, con l'applicazione spenta:
-
-```bash
-mysql -u root -p < ./GenerazioneDatabase.sql
-```
+Per ripartire da un database completamente pulito, con l'applicazione spenta esegui il file GenerazioneDatabase.sql
 
 ### Cosa accade all'avvio
 
@@ -194,7 +190,7 @@ Al primo avvio, in automatico:
 | Ruolo   | Username         | Password           |
 |---------|-------------------|----------------------|
 | Admin   | `admin`            | `SomniaDemo2026!`     |
-| Base/Premium    | `alice_moretti`, `davide_esposito`, `sara_greco`, `matteo_russo`, `noemi_galli` <!-- verifica elenco completo --> | `Password123!` |
+| Base/Premium    | `sofia_rossi`,`luca_ferrari`,`marco_bianchi`,`giulia_conti`,`elisa_romano` | `Password123!` |
 
 ## Database e migration
 
