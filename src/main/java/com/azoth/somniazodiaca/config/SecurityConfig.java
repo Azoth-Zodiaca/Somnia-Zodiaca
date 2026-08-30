@@ -15,7 +15,6 @@ import org.springframework.security.web.context.HttpSessionSecurityContextReposi
 import org.springframework.security.web.context.SecurityContextRepository;
 
 import com.azoth.somniazodiaca.security.JpaUserDetailsService;
-import com.azoth.somniazodiaca.security.LoginSuccessHandler;
 
 /**
  * Configurazione centrale della sicurezza dell'applicazione.
@@ -37,12 +36,6 @@ import com.azoth.somniazodiaca.security.LoginSuccessHandler;
 @Configuration
 @EnableMethodSecurity
 public class SecurityConfig {
-
-        private final LoginSuccessHandler loginSuccessHandler;
-
-        public SecurityConfig(LoginSuccessHandler loginSuccessHandler) {
-                this.loginSuccessHandler = loginSuccessHandler;
-        }
 
         /**
          * Costruisce la catena principale di regole della sicurezza HTTP.
@@ -98,7 +91,7 @@ public class SecurityConfig {
 
                                                 // Tutte le pagine e gli endpoint sotto /app richiedono autenticazione
                                                 .requestMatchers("/app/**").authenticated()
-                                                        
+
                                                 .requestMatchers("/onboarding/**").authenticated()
 
                                                 // TODO DA PROTEGGERE CON RATE LIMITING
@@ -114,23 +107,12 @@ public class SecurityConfig {
                                 // poi Spring crea una sessione e non chiede più di reinserire le credenziali a
                                 // ogni pagina.
                                 .formLogin(form -> form
-                                                // Qui diciamo a Spring di usare la nostra pagina di login
-                                                // personalizzata.
-                                                // Se non la indicassimo, Spring userebbe una schermata di login
-                                                // predefinita.
                                                 .loginPage("/login")
+                                                .loginProcessingUrl("/login")
                                                 .usernameParameter("usernameOrEmail")
-                                                // Dopo un login corretto, l'utente viene portato alla home.
-                                                // Il secondo parametro true significa: vai lì sempre, anche se l'utente
-                                                // aveva provato
-                                                // prima ad aprire una pagina diversa.
-                                                // .defaultSuccessUrl("/app/dashboard", true)
-                                                .successHandler(loginSuccessHandler)
-                                                // Se username o password sono sbagliati, torniamo alla login con un
-                                                // parametro error.
-                                                // La pagina può usare quel parametro per mostrare un messaggio
-                                                // all'utente.
+                                                .passwordParameter("password")
                                                 .failureUrl("/login?error")
+                                                .defaultSuccessUrl("/dashboard", true)
                                                 .permitAll())
 
                                 // Logout significa chiudere la sessione dell'utente.
